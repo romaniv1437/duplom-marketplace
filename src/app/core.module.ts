@@ -19,6 +19,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {PushModule} from "@ngrx/component";
 import {MatCardModule} from "@angular/material/card";
 import {NgOptimizedImage} from "@angular/common";
+import {MatSidenavModule} from "@angular/material/sidenav";
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import {NgOptimizedImage} from "@angular/common";
     PushModule,
     MatCardModule,
     NgOptimizedImage,
+    MatSidenavModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

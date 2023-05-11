@@ -1,5 +1,9 @@
 <main class="products-container">
 
+  <ng-container *ngIf="category === 'no-category'">
+    <div *ngTemplateOutlet="homePage"></div>
+  </ng-container>
+
   <div class="products">
     <mat-card class="products--card" *ngFor="let product of products$ | ngrxPush">
       <mat-card-header>
@@ -7,17 +11,53 @@
       </mat-card-header>
       <img mat-card-image [ngSrc]="product.image" alt="{{product.title}} image" width="150" height="150">
       <mat-card-content class="content">
-          <p style="flex: 1 1 auto">
-            {{product.description}}
-          </p>
-          <p class="price">
-            {{product.price}} ₴
-          </p>
+        <p style="flex: 1 1 auto">
+          {{product.description}}
+        </p>
+        <p class="price">
+          {{product.price}} ₴
+        </p>
       </mat-card-content>
       <mat-card-actions class="actions">
-          <button mat-icon-button><mat-icon>favorite</mat-icon></button>
-          <button mat-icon-button><mat-icon>add_shopping_cart</mat-icon></button>
+        <button mat-icon-button>
+          <mat-icon>favorite</mat-icon>
+        </button>
+        <button mat-icon-button>
+          <mat-icon>add_shopping_cart</mat-icon>
+        </button>
       </mat-card-actions>
     </mat-card>
   </div>
 </main>
+
+<ng-template #homePage>
+  <div class="home-content">
+    <mat-card>
+      <mat-card-title>Ласкаво просимо на наш маркетплейс!</mat-card-title>
+      <mat-card-content>
+        <p>Знайти все, що вам потрібно, ще ніколи не було так просто. Наш маркетплейс - це місце, де зустрічаються
+          продавці та покупці з усього світу, щоб забезпечити вас широким асортиментом товарів та послуг. Незалежно від
+          вашого запиту, у нас ви знайдете все, що задовольнить ваші потреби.</p>
+        <p>
+          Чому обирати наш маркетплейс?
+          <br>
+          1) Різноманітність товарів: Ми пропонуємо широкий вибір товарів в різних категоріях, щоб ви могли знайти все
+          на одному місці. Від електроніки та моди до товарів для дому та косметики - у нас є все, що вам може
+          знадобитися.
+          <br>
+          2) Надійні продавці: Ми співпрацюємо лише з надійними продавцями, які гарантують якість своїх товарів та
+          послуг. Ми пильно відбираємо наших партнерів, щоб забезпечити вашу задоволеність покупкою.
+          <br>
+          3) Зручність та безпека: Наш маркетплейс пропонує зручну та безпечну платформу для здійснення покупок. Ви
+          можете легко шукати товари, порівнювати ціни та здійснювати оплату без будь-яких турбот.
+          <br>
+          4) Відгуки та рейтинги: Думка наших клієнтів має велике значення для нас. Ви можете переглядати відгуки та
+          рейтинги продавців, щоб прийняти відповідне рішення перед покупкою.
+          <br>
+          5) Доставка по всьому світу: Незалежно від вашого місця проживання, ми гарантуємо доставку вам замовлення. Ми
+          співпрацюємо з провідними службами доставки, щоб забезпечити швидку та надійну доставку товарів.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-template>

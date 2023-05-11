@@ -1,6 +1,11 @@
 
 .products-container {
   padding: 10px;
+
+  .home-content {
+    margin-bottom: 10px;
+  }
+
   .products {
     display: flex;
     justify-content: center;

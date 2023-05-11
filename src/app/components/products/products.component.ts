@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ProductsFacade} from "../../facades/products.facade";
 import {Product} from "../../models/products.interface";
@@ -17,12 +17,17 @@ export class ProductsComponent implements OnInit {
 
   public products$: Observable<Product[]> = new Observable<Product[]>();
 
-  constructor(private route: ActivatedRoute, private productsFacade: ProductsFacade) { }
+  constructor(private route: ActivatedRoute, private productsFacade: ProductsFacade) {
+  }
 
   ngOnInit(): void {
     this.category = this.route.snapshot.params['category'] || 'no-category'
 
-    this.products$ = this.productsFacade.products$;
+    if (!this.route.snapshot.params['category']) {
+      this.products$ = this.productsFacade.homePageProducts$;
+    } else {
+      this.products$ = this.productsFacade.products$;
+    }
 
     this.productsFacade.loadProducts({} as PaginationData, '')
   }

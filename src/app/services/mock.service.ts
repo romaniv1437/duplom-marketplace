@@ -6,7 +6,7 @@ import { Product } from '../models/products.interface';
 })
 export class MockService {
 
-  private productNames: string[] = ['Айфон 11', "Самсунг С23 Ультра", "Айфон 14 Про Макс", "Макбук"]
+  private productNames: string[] = ['Айфон 11', "Самсунг 23", "Айфон 14", "Макбук"]
   private productDescriptions: string[] = ['Підходить дизайнерам', "Використовується у бізнесі", "Для закоханих"]
   private productImages: string[] = [
     'https://images.freeimages.com/images/large-previews/198/orange-paint-texture-1638432.jpg',
