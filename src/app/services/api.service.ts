@@ -15,7 +15,7 @@ export class ApiService {
   loadProducts(loadData: {paginationData: PaginationData, category: string}): Observable<ProductsResponse> {
     return of({
       ...loadData.paginationData,
-      items: this.mockService.generateProducts(55)
+      items: this.mockService.products.filter(product => loadData.category !== 'all' ? product.category === loadData.category : product)
     });
   }
 }

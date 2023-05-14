@@ -1,0 +1,39 @@
+
+<div class="category-description">
+  <p>
+
+  </p>
+</div>
+
+<div class="products">
+  <mat-card class="products--card" *ngFor="let product of productsDataSource">
+    <mat-card-header>
+      <mat-card-title class="title">{{product.title}}</mat-card-title>
+    </mat-card-header>
+    <img mat-card-image [src]="product.image" alt="{{product.title}} image" width="150" height="150">
+    <mat-card-content class="content">
+      <p style="flex: 1 1 auto">
+        {{product.description}}
+      </p>
+      <p class="price">
+        {{product.price}} ₴
+      </p>
+    </mat-card-content>
+    <mat-card-actions class="actions">
+      <button mat-icon-button>
+        <mat-icon>favorite</mat-icon>
+      </button>
+      <button mat-icon-button>
+        <mat-icon>add_shopping_cart</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+<br>
+<mat-paginator [length]="length"
+               [pageSize]="pageSize"
+               [pageIndex]="pageIndex"
+               [pageSizeOptions]="pageSizeOptions"
+               (page)="pageEvent = getData($event)"
+               aria-label="Select page" #paginator>
+</mat-paginator>

@@ -1,0 +1,33 @@
+.products {
+  display: flex;
+  justify-content: center;
+  gap: 10px 10px;
+  flex-wrap: wrap;
+
+  &--card {
+    display: flex;
+    flex-direction: column;
+    width: 153.8px;
+
+    .title {
+      width: 100%;
+    }
+
+    .content {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+
+      .price {
+        flex: 0 1 auto;
+        text-align: end;
+      }
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+  }
+}

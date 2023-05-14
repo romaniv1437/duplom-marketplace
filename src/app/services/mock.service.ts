@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../models/products.interface';
+import {categories} from "../mock/mock.data";
 
 @Injectable({
   providedIn: 'root'
@@ -15,17 +16,22 @@ export class MockService {
     'https://media.istockphoto.com/id/1044292966/uk/%D0%B2%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%BD%D1%96-%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F/%D0%B7%D0%BD%D0%B5%D1%88%D0%BA%D0%BE%D0%B4%D0%B6%D0%B5%D0%BD%D0%B8%D0%B9-%D0%B0%D0%B1%D1%81%D1%82%D1%80%D0%B0%D0%BA%D1%82%D0%BD%D0%B8%D0%B9-%D1%81%D0%B8%D0%BD%D1%96%D0%B9-%D1%96-%D0%B7%D0%B5%D0%BB%D0%B5%D0%BD%D0%B8%D0%B9-%D1%84%D0%BE%D0%BD.jpg?s=612x612&w=0&k=20&c=sir9CSRRJxXcBNoqfAMHq2QnD2v8dKrEkQ1TKNdyRp4='
   ]
 
+
+  public products = this.generateProducts(150);
+
   constructor() { }
 
-  public generateProducts(count: number): Product[] {
+  private generateProducts(count: number): Product[] {
     const products: Product[] = []
 
     for (let i = 0; i <= count; i++) {
+      const category = categories[Math.floor(Math.random() * categories.length)]
       const product = {
-        title: this.productNames[Math.floor(Math.random() * this.productNames.length)],
+        title: category.displayName + ' ' + (i+1),
         description: this.productDescriptions[Math.floor(Math.random() * this.productDescriptions.length)],
         image: this.productImages[Math.floor(Math.random() * this.productImages.length)],
-        price: Math.floor(Math.random() * 100) + 1
+        price: Math.floor(Math.random() * 100) + 1,
+        category: category.key,
       } as Product
 
       products.push(product)

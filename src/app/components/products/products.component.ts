@@ -4,6 +4,7 @@ import {ProductsFacade} from "../../facades/products.facade";
 import {Product} from "../../models/products.interface";
 import {Observable} from "rxjs";
 import {PaginationData} from "../../models/core.interface";
+import {PageEvent} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-products',
@@ -14,22 +15,28 @@ import {PaginationData} from "../../models/core.interface";
 export class ProductsComponent implements OnInit {
 
   public category: string = 'no-category'
-
   public products$: Observable<Product[]> = new Observable<Product[]>();
 
   constructor(private route: ActivatedRoute, private productsFacade: ProductsFacade) {
   }
 
   ngOnInit(): void {
-    this.category = this.route.snapshot.params['category'] || 'no-category'
 
-    if (!this.route.snapshot.params['category']) {
+    this.route.params
+      .subscribe(() => {
+        this.category = this.route.snapshot.params['category'] || 'no-category';
+        this.loadProducts(this.category, {} as PaginationData)
+      })
+
+    if (!this.category) {
       this.products$ = this.productsFacade.homePageProducts$;
     } else {
       this.products$ = this.productsFacade.products$;
     }
 
-    this.productsFacade.loadProducts({} as PaginationData, '')
   }
 
+  private loadProducts(category: string, params: PaginationData): void {
+    this.productsFacade.loadProducts(params, category)
+  }
 }

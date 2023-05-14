@@ -16,16 +16,20 @@ import { ProductsComponent } from './components/products/products.component';
 import {baseFeatureKey, baseReducer} from "./store/reducer";
 import {BaseEffects} from "./store/effects";
 import {HttpClientModule} from "@angular/common/http";
-import {PushModule} from "@ngrx/component";
+import {LetModule, PushModule} from "@ngrx/component";
 import {MatCardModule} from "@angular/material/card";
 import {NgOptimizedImage} from "@angular/common";
 import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatTreeModule} from "@angular/material/tree";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import { ProductsDisplayComponent } from './components/products/products-display/products-display.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    ProductsComponent
+    ProductsComponent,
+    ProductsDisplayComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +46,9 @@ import {MatSidenavModule} from "@angular/material/sidenav";
     MatCardModule,
     NgOptimizedImage,
     MatSidenavModule,
+    MatTreeModule,
+    MatPaginatorModule,
+    LetModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
