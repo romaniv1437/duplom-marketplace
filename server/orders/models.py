@@ -16,7 +16,7 @@ class Photo(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True, db_index=True, verbose_name='Категорія')
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
-    is_active = models.BooleanField(default=True)
+    # is_active = models.BooleanField(default=True)
 
 
     class Meta:
@@ -37,7 +37,7 @@ class Orders(models.Model):
     time_update = models.DateTimeField(auto_now=True)
     number_photo = models.IntegerField(null=True)
     is_active = models.BooleanField(default=True)
-    cat = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, db_index=True, verbose_name='Категорія')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, db_index=True, verbose_name='Категорія')
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
 
 

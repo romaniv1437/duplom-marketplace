@@ -86,7 +86,7 @@ class AddOrdersSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Orders
-        fields = ["title", "description", "price", "slug", "images",
+        fields = ["title", "description", "price", "images",
                   "photo", "cat", "user"]
     
     def create(self, validated_data):
@@ -94,7 +94,9 @@ class AddOrdersSerializer(serializers.ModelSerializer):
         image_part_id = 1 if Photo.objects.last() is None else Photo.objects.last().number_photo + 1
         username = self.context['request'].user.pk
         user = Profile.objects.filter(profile=username)[0]
+        post_id =  1 if Orders.objects.last() is None else Orders.objects.last().pk + 1
 
+        validated_data['slug'] = slugify(self.validated_data['title'] + '-' + str(post_id))
         validated_data['number_photo'] = image_part_id
         validated_data['user'] = user
         product = Orders.objects.create(**validated_data)
