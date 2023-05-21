@@ -17,7 +17,7 @@ urlpatterns = [
     path('orders/', OrdersListView.as_view(), name='home'),
     path('myorders/', MyOrdersView.as_view()),
     path('add-orders/', AddOrdersView.as_view(), name='add-orders'),
-    path('orders/<int:pk>/', OrdersUpdateView.as_view()),
+    path('orders/<slug:slug>/', OrdersUpdateView.as_view()),
     path('delete/<int:pk>/', OrdersDestroyView.as_view()),
     
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

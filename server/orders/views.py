@@ -1,32 +1,59 @@
-from django.shortcuts import render
-from django.http import Http404, HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.http import Http404
 
 from rest_framework.response import Response
 from rest_framework import generics, views
-from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework_simplejwt.views import TokenViewBase
 
 from .serializer import OrdersSerializer, AddOrdersSerializer, TokenObtainLifetimeSerializer, TokenRefreshLifetimeSerializer
-from .models import Orders, Category
-from .permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
+from .models import Orders, Photo
+from .permissions import IsOwnerOrReadOnly
+from .utils import DataMixinOrders
+
 from users.models import Profile
-from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
 
 
 class OrdersListView(generics.ListAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
     # permission_classes = (IsAuthenticatedOrReadOnly,)
+    
+
+    # def get(self, request, *args, **kwargs):
+    #     data = Orders.objects.all()
+
+    #     response = {}
+
+    #     if not data:
+    #         raise Http404()
+        
+    #     for i in data:
+    #         response[i.pk] = model_to_dict(i)
+    #         photos = Photo.objects.filter(number_photo=i.number_photo)
+    #         photo = ['http://127.0.0.1:8000' + i.photo.url for i in photos]
+    #         response[i.pk]['photo'] = photo
 
 
-class OrdersUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    #     return Response(response)
+    
+    
+class OrdersUpdateView(DataMixinOrders, generics.RetrieveUpdateDestroyAPIView):
     """
         ЗГОДОМ ДОБАВИТИ UPDATE SERIALIZER ДЛЯ АПДЕЙТІВ
     """
     queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+    lookup_field = 'slug'
+
+    # def get(self, request, *args, **kwargs):
+    #     return super().get(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        context = super().get_context_data(**kwargs)    # звертання до супер-функції super та батьківського методу get_context_data
+
+        return Response(context)
 
 
 class AddOrdersView(generics.CreateAPIView):

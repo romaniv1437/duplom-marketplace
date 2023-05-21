@@ -6,7 +6,7 @@ from users.models import Profile
 class Photo(models.Model):
     photo = models.ImageField()
     time_create = models.DateTimeField(auto_now_add=True)
-    number_photo = models.IntegerField(default=True, blank=True, null=True)
+    number_photo = models.IntegerField(null=False, default=True, blank=True)
 
 
     def __str__(self):
@@ -35,7 +35,8 @@ class Orders(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
-    number_photo = models.IntegerField(null=True)
+    number_photo = models.IntegerField(null=True, db_index=True, verbose_name='Фотографії')
+    # number_photo = models.ForeignKey(Photo, on_delete=models.CASCADE, blank=True, null=True, db_index=True, verbose_name='Фотографії')
     is_active = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, db_index=True, verbose_name='Категорія')
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)

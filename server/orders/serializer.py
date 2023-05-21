@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django import forms
+from rest_framework.fields import empty
 from .models import Orders, Photo
 from users.models import Profile
 from django.contrib.auth.models import User
@@ -14,7 +15,6 @@ class OrdersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orders
         fields = '__all__'
-
 
 # class AddOrdersSerializer(serializers.ModelSerializer):
 
@@ -87,7 +87,7 @@ class AddOrdersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orders
         fields = ["title", "description", "price", "images",
-                  "photo", "cat", "user"]
+                  "photo", "category", "user"]
     
     def create(self, validated_data):
         photos = validated_data.pop("photo")
@@ -95,13 +95,13 @@ class AddOrdersSerializer(serializers.ModelSerializer):
         username = self.context['request'].user.pk
         user = Profile.objects.filter(profile=username)[0]
         post_id =  1 if Orders.objects.last() is None else Orders.objects.last().pk + 1
-
         validated_data['slug'] = slugify(self.validated_data['title'] + '-' + str(post_id))
-        validated_data['number_photo'] = image_part_id
         validated_data['user'] = user
-        product = Orders.objects.create(**validated_data)
+        validated_data['number_photo'] = image_part_id
 
         for photo in photos:
             Photo.objects.create(photo=photo, number_photo=image_part_id)
+
+        product = Orders.objects.create(**validated_data)
 
         return product
