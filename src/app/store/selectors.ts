@@ -16,3 +16,16 @@ export const selectProductsForHome = createSelector(
   selectFeature,
   (state) => state.products.filter((item, i) => i < 7)
 );
+
+export const selectCartProductLength = createSelector(
+  selectFeature,
+  (state) => state.cart.products?.length || 0
+);
+export const selectCartProducts = createSelector(
+  selectFeature,
+  (state) => state.cart.products
+);
+export const selectCart = createSelector(
+  selectFeature,
+  (state) => state.cart
+);

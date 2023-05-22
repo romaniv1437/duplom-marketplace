@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import {Category, Product} from '../models/products.interface';
 import * as actions from './actions'
+import {Cart} from "../models/cart.interface";
 
 export const baseFeatureKey = "store";
 
@@ -9,6 +10,8 @@ export interface State {
   error: string;
 
   category: Category[];
+
+  cart: Cart;
 
   products: Product[];
   currentProduct: Product;
@@ -19,6 +22,8 @@ export const initialState: State = {
   error: '',
 
   category: [],
+
+  cart: {} as Cart,
 
   products: [],
   currentProduct: {} as Product
@@ -57,5 +62,23 @@ export const baseReducer = createReducer(
 
       product: action.product
     }
-  })
+  }),
+  on(actions.addProductToCart, (state, action) => {
+    return {
+      ...state,
+      cart: {
+        ...state.cart,
+        products: state.cart.products ? [...state.cart.products, action.product] : [action.product]
+      }
+    }
+  }),
+  on(actions.removeProductFromCart, (state, action) => {
+    return {
+      ...state,
+      cart: {
+        ...state.cart,
+        products: state.cart.products?.filter(product => product.id !== action.product.id)
+      }
+    }
+  }),
 );

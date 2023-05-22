@@ -1,47 +1,50 @@
-<mat-drawer-container class="container">
-  <mat-drawer #drawer>
-    <div class="drawer-content">
-      <mat-card>
-        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-            <button mat-icon-button disabled></button>
-            <a class="nav-link" [routerLink]="'/' + node.url" (click)="drawer.toggle()">{{node.name}}</a>
-          </mat-tree-node>
-          <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-            <button mat-icon-button matTreeNodeToggle
-                    [attr.aria-label]="'Toggle ' + node.name">
-              <mat-icon class="mat-icon-rtl-mirror">
-                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-              </mat-icon>
-            </button>
-            <a class="nav-link" (click)="drawer.toggle()" [routerLink]="'/' + node.url">{{node.name}}</a>
-          </mat-tree-node>
-        </mat-tree>
-      </mat-card>
-    </div>
-  </mat-drawer>
-  <mat-drawer-content>
+<div class="container">
+  <mat-drawer-container>
+    <mat-drawer #drawer>
+      <div class="drawer-content">
+        <mat-card>
+          <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+              <button mat-icon-button disabled></button>
+              <a class="nav-link" [routerLink]="'/' + node.url" (click)="drawer.toggle()">{{node.name}}</a>
+            </mat-tree-node>
+            <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+              <button mat-icon-button matTreeNodeToggle
+                      [attr.aria-label]="'Toggle ' + node.name">
+                <mat-icon class="mat-icon-rtl-mirror">
+                  {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                </mat-icon>
+              </button>
+              <a class="nav-link" (click)="drawer.toggle()" [routerLink]="'/' + node.url">{{node.name}}</a>
+            </mat-tree-node>
+          </mat-tree>
+        </mat-card>
+      </div>
+    </mat-drawer>
+    <mat-drawer-content style="height:100%">
 
-    <mat-toolbar color="primary">
-      <button (click)="drawer.toggle()" mat-icon-button aria-label="menu icon">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span [routerLink]="'/'" style="cursor: pointer;">AK-19-03 marketplace</span>
-      <span class="example-spacer"></span>
-      <button mat-icon-button aria-label="favorite icon">
-        <mat-icon>favorite</mat-icon>
-      </button>
-      <button mat-icon-button aria-label="cart icon">
-        <mat-icon>shopping_cart</mat-icon>
-      </button>
-    </mat-toolbar>
+      <mat-toolbar color="primary">
+        <button (click)="drawer.toggle()" mat-icon-button aria-label="menu icon">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span [routerLink]="'/'" style="cursor: pointer;">AK-19-03 marketplace</span>
+        <span class="example-spacer"></span>
+        <button mat-icon-button aria-label="favorite icon">
+          <mat-icon>favorite</mat-icon>
+        </button>
+        <button mat-icon-button aria-label="cart icon" [routerLink]="'/cart'">
+          <mat-icon [matBadge]="(countProductsInCart$ | ngrxPush) || ''" matBadgeColor="warn">shopping_cart</mat-icon>
+        </button>
+      </mat-toolbar>
 
-    <div class="content">
-      <router-outlet></router-outlet>
-    </div>
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
 
-    <footer class="footer">
+      <footer class="footer">
 
-    </footer>
-  </mat-drawer-content>
-</mat-drawer-container>
+      </footer>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>
+

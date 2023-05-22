@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import {Store} from "@ngrx/store";
 import {Product} from "../models/products.interface";
 import {Observable} from "rxjs";
-import {selectCurrentProduct, selectProducts, selectProductsForHome} from "../store/selectors";
-import {loadProductById, loadProducts} from "../store/actions";
+import {selectCartProductLength, selectCurrentProduct, selectProducts, selectProductsForHome} from "../store/selectors";
+import {addProductToCart, loadProductById, loadProducts} from "../store/actions";
 import {PaginationData} from "../models/core.interface";
+import {CartProduct} from "../models/cart.interface";
 
 @Injectable({
   providedIn: 'root',
