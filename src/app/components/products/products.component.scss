@@ -7,3 +7,32 @@
   }
 
 }
+
+:host::ng-deep {
+  .products--card {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+
+    .title {
+      width: 100%;
+    }
+
+    .content {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+
+      .price {
+        flex: 0 1 auto;
+        text-align: end;
+      }
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+  }
+}

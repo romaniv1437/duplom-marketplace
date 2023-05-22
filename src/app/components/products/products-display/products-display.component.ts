@@ -14,7 +14,7 @@ export class ProductsDisplayComponent implements OnInit {
   @Input() set products(products: Product[]) {
     this.productsItems = products;
     this.paginator?.firstPage();
-    this.length = products.length;
+    this.length = products?.length;
     this.getData(this.pageEvent);
   };
 
@@ -26,6 +26,7 @@ export class ProductsDisplayComponent implements OnInit {
   pageSize = 7;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   pageEvent!: PageEvent;
+  mockImage: string = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
 
   constructor() {
   }
@@ -35,7 +36,7 @@ export class ProductsDisplayComponent implements OnInit {
 
   getData(event?: PageEvent) {
     const page = event ? event : {pageIndex: this.pageIndex, pageSize: this.pageSize};
-    this.productsDataSource = this.productsItems.slice(page.pageIndex * page.pageSize, page.pageIndex * page.pageSize + page.pageSize);
+    this.productsDataSource = this.productsItems?.slice(page.pageIndex * page.pageSize, page.pageIndex * page.pageSize + page.pageSize);
     return event || this.pageEvent;
   }
 }

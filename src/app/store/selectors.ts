@@ -7,6 +7,10 @@ export const selectProducts = createSelector(
   selectFeature,
   (state) => state.products
 );
+export const selectCurrentProduct = createSelector(
+  selectFeature,
+  (state) => state.currentProduct
+);
 
 export const selectProductsForHome = createSelector(
   selectFeature,

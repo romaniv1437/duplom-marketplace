@@ -6,11 +6,11 @@
 </div>
 
 <div class="products">
-  <mat-card class="products--card" *ngFor="let product of productsDataSource">
+  <mat-card class="products--card" *ngFor="let product of productsDataSource" [routerLink]="'/products/item/' + product.url">
     <mat-card-header>
       <mat-card-title class="title">{{product.title}}</mat-card-title>
     </mat-card-header>
-    <img mat-card-image [src]="product.image" alt="{{product.title}} image" width="150" height="150">
+    <img mat-card-image [src]="product.images || mockImage" alt="{{product.title}} image" width="150" height="150">
     <mat-card-content class="content">
       <p style="flex: 1 1 auto">
         {{product.description}}
@@ -19,7 +19,7 @@
         {{product.price}} ₴
       </p>
     </mat-card-content>
-    <mat-card-actions class="actions">
+    <mat-card-actions class="actions" (click)="$event.stopPropagation()">
       <button mat-icon-button>
         <mat-icon>favorite</mat-icon>
       </button>

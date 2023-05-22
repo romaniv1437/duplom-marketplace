@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { Product } from '../models/products.interface';
+import {Category, Product} from '../models/products.interface';
 import * as actions from './actions'
 
 export const baseFeatureKey = "store";
@@ -8,14 +8,20 @@ export interface State {
   isLoading: boolean;
   error: string;
 
+  category: Category[];
+
   products: Product[];
+  currentProduct: Product;
 }
 
 export const initialState: State = {
   isLoading: false,
   error: '',
 
-  products: []
+  category: [],
+
+  products: [],
+  currentProduct: {} as Product
 };
 
 export const baseReducer = createReducer(
@@ -34,6 +40,22 @@ export const baseReducer = createReducer(
       error: '',
 
       products: action.productsResponse.items
+    }
+  }),
+  on(actions.loadProductById, (state) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.loadProductByIdSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: '',
+
+      product: action.product
     }
   })
 );

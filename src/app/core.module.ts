@@ -23,13 +23,15 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatTreeModule} from "@angular/material/tree";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import { ProductsDisplayComponent } from './components/products/products-display/products-display.component';
+import { ProductsPageComponent } from './components/products/products-page/products-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     ProductsComponent,
-    ProductsDisplayComponent
+    ProductsDisplayComponent,
+    ProductsPageComponent
   ],
   imports: [
     BrowserModule,

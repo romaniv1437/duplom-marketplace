@@ -1,0 +1,18 @@
+<div class="product" *ngrxLet="product$ | ngrxPush as product">
+  <mat-card *ngIf="!!product?.id;else noProduct" class="products--card">
+    <mat-card-header>
+      <mat-card-title class="title">{{product?.title}}</mat-card-title>
+    </mat-card-header>
+    <img mat-card-image [src]="product?.image" alt="{{product?.title}} image" width="150" height="150">
+    <mat-card-content class="content">
+      <p style="flex: 1 1 auto">
+        {{product?.description}}
+      </p>
+      <p class="price">
+        {{product?.price}} ₴
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<ng-template #noProduct>Отакої, щось пішло не так</ng-template>
