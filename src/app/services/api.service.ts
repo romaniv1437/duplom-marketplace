@@ -10,6 +10,7 @@ import {map} from "rxjs/operators";
   providedIn: 'root'
 })
 export class ApiService {
+  public mockProducts = this.mockService.products;
   BASE_URL = 'http://127.0.0.1:8000/\n'
   constructor(private http: HttpClient, private mockService: MockService) { }
 
@@ -26,9 +27,10 @@ export class ApiService {
   }
 
   loadProducts(loadData: {paginationData: PaginationData, category: string}): Observable<ProductsResponse> {
-    return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/').pipe(map(res => (
+    /*return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/').pipe(map(res => (
       {items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse
-    )))
+    )))*/
+    return of({items: this.mockProducts} as ProductsResponse)
   }
 
   loadProductById(productId: string): Observable<Product> {

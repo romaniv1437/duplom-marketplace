@@ -31,7 +31,18 @@
             </p>
           </mat-card-content>
           <mat-card-actions class="actions" (click)="$event.stopPropagation()">
-
+            <div class="actions-qty">
+              <button mat-icon-button (click)="changeProductQty(product.id, true)">
+                <mat-icon>add</mat-icon>
+              </button>
+              <button mat-icon-button (click)="changeProductQty(product.id, false)">
+                <mat-icon>remove</mat-icon>
+              </button>
+            </div>
+            <span *ngIf="(cart.products | getCartProduct: product.id) as cartProduct">Кількість: {{cartProduct.qty}}, Загалом: {{cartProduct.totalPrice}}</span>
+            <button mat-icon-button (click)="removeFromCart(product)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </mat-card-actions>
         </mat-card>
       </div>
@@ -39,7 +50,7 @@
     </section>
 
     <section class="total">
-
+      <h4>Загалом: {{cart.totalPrice}} ₴</h4>
     </section>
 
   </div>

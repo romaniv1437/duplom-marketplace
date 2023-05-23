@@ -45,7 +45,7 @@ export class ProductsDisplayComponent implements OnInit {
   }
 
   addProductToCart(product: Product): void {
-    const cartProduct = {...product} as CartProduct;
+    const cartProduct = {...product, qty: 1, userId: 'no-user', totalPrice: product.price} as CartProduct;
     this.cartFacade.addProductToCart(cartProduct)
   }
 }

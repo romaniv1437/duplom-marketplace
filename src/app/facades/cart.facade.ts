@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {selectCart, selectCartProductLength, selectCartProducts} from "../store/selectors";
-import {addProductToCart} from "../store/actions";
+import {addProductToCart, changeProductQty, removeProductFromCart} from "../store/actions";
 import {Cart, CartProduct} from "../models/cart.interface";
 
 @Injectable({
@@ -22,5 +22,12 @@ export class CartFacade {
 
   public addProductToCart(product: CartProduct): void {
     this.store$.dispatch(addProductToCart({product}))
+  }
+
+  public removeProductFromCart(product: CartProduct): void {
+    this.store$.dispatch(removeProductFromCart({product}))
+  }
+  public changeProductQty(productId: number, isIncrease: boolean): void {
+    this.store$.dispatch(changeProductQty({productId, isIncrease}))
   }
 }

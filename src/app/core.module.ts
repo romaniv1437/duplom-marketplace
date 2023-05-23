@@ -27,6 +27,7 @@ import {ProductsPageComponent} from './components/products/products-page/product
 import {MatBadgeModule} from "@angular/material/badge";
 import {IsProductInCartPipe} from './pipes/is-product-in-cart.pipe';
 import {CartComponent} from './components/cart/cart.component';
+import {GetCartProductPipe} from "./pipes/get-cart-product.pipe";
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import {CartComponent} from './components/cart/cart.component';
     ProductsPageComponent,
     IsProductInCartPipe,
     CartComponent,
+    GetCartProductPipe
   ],
   imports: [
     BrowserModule,

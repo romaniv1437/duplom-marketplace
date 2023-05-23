@@ -1,7 +1,7 @@
-import { createReducer, on } from '@ngrx/store';
+import {createReducer, on} from '@ngrx/store';
 import {Category, Product} from '../models/products.interface';
 import * as actions from './actions'
-import {Cart} from "../models/cart.interface";
+import {Cart, CartProduct} from "../models/cart.interface";
 
 export const baseFeatureKey = "store";
 
@@ -64,21 +64,48 @@ export const baseReducer = createReducer(
     }
   }),
   on(actions.addProductToCart, (state, action) => {
+    const cartProducts = state.cart.products ? [...state.cart.products, action.product] : [action.product]
     return {
       ...state,
       cart: {
         ...state.cart,
-        products: state.cart.products ? [...state.cart.products, action.product] : [action.product]
+        products: cartProducts,
+        totalPrice: getTotalPrice(cartProducts)
       }
     }
   }),
   on(actions.removeProductFromCart, (state, action) => {
+    const cartProducts = state.cart.products?.filter(product => product.id !== action.product.id)
     return {
       ...state,
       cart: {
         ...state.cart,
-        products: state.cart.products?.filter(product => product.id !== action.product.id)
+        products: cartProducts,
+        totalPrice: getTotalPrice(cartProducts)
+      }
+    }
+  }),
+  on(actions.changeProductQty, (state, action) => {
+    const cartProduct = state.cart.products?.filter(product => product.id === action.productId)[0];
+    const cartProducts = state.cart.products.map(product => product.id === cartProduct.id ? ({
+      ...cartProduct,
+      qty: action.isIncrease ? cartProduct.qty + 1 : cartProduct.qty - 1,
+      totalPrice: action.isIncrease ? cartProduct.totalPrice + cartProduct.price : cartProduct.totalPrice - cartProduct.price
+    }) : product)
+    if (cartProduct.qty === 1 && !action.isIncrease) {
+      return {...state}
+    }
+    return {
+      ...state,
+      cart: {
+        ...state.cart,
+        products: cartProducts,
+        totalPrice: getTotalPrice(cartProducts)
       }
     }
   }),
 );
+
+const getTotalPrice = (products: CartProduct[]): number => {
+  return products.reduce((totalPrice, product) => totalPrice + (product.totalPrice), 0);
+}
