@@ -12,7 +12,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from '@angular/material/button';
-import { ProductsComponent } from './components/products/products.component';
+import {ProductsComponent} from './components/products/products.component';
 import {baseFeatureKey, baseReducer} from "./store/reducer";
 import {BaseEffects} from "./store/effects";
 import {HttpClientModule} from "@angular/common/http";
@@ -22,14 +22,21 @@ import {NgOptimizedImage} from "@angular/common";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatTreeModule} from "@angular/material/tree";
 import {MatPaginatorModule} from "@angular/material/paginator";
-import { ProductsDisplayComponent } from './components/products/products-display/products-display.component';
+import {ProductsDisplayComponent} from './components/products/products-display/products-display.component';
+import {ProductsPageComponent} from './components/products/products-page/products-page.component';
+import {MatBadgeModule} from "@angular/material/badge";
+import {IsProductInCartPipe} from './pipes/is-product-in-cart.pipe';
+import {CartComponent} from './components/cart/cart.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     ProductsComponent,
-    ProductsDisplayComponent
+    ProductsDisplayComponent,
+    ProductsPageComponent,
+    IsProductInCartPipe,
+    CartComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,6 +56,7 @@ import { ProductsDisplayComponent } from './components/products/products-display
     MatTreeModule,
     MatPaginatorModule,
     LetModule,
+    MatBadgeModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

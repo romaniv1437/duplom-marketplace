@@ -5,6 +5,8 @@ import {Product} from "../../models/products.interface";
 import {Observable} from "rxjs";
 import {PaginationData} from "../../models/core.interface";
 import {PageEvent} from "@angular/material/paginator";
+import {CartProduct} from "../../models/cart.interface";
+import { CartFacade } from 'src/app/facades/cart.facade';
 
 @Component({
   selector: 'app-products',
@@ -16,8 +18,13 @@ export class ProductsComponent implements OnInit {
 
   public category: string = 'no-category'
   public products$: Observable<Product[]> = new Observable<Product[]>();
+  public cartProducts$: Observable<CartProduct[]> = new Observable<CartProduct[]>();
 
-  constructor(private route: ActivatedRoute, private productsFacade: ProductsFacade) {
+  constructor(
+    private route: ActivatedRoute,
+    private productsFacade: ProductsFacade,
+    private cartFacade: CartFacade
+  ) {
   }
 
   ngOnInit(): void {
@@ -33,6 +40,8 @@ export class ProductsComponent implements OnInit {
     } else {
       this.products$ = this.productsFacade.products$;
     }
+
+    this.cartProducts$ = this.cartFacade.cartProducts$;
 
   }
 

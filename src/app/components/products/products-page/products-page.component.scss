@@ -1,0 +1,13 @@
+@import url('.././products.component.scss');
+
+.product {
+  padding: 20px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .products--card {
+    width: 100%;
+  }
+}

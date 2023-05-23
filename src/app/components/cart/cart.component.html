@@ -1,0 +1,49 @@
+<main class="cart-container" *ngIf="cart$ | ngrxPush as cart">
+
+  <div *ngIf="cart.products?.length; else cartEmpty">
+
+    <div class="cart-content">
+      <mat-card>
+        <mat-card-title>Ваш кошик</mat-card-title>
+        <mat-card-content>
+          <p>Тут ви можете редагувати ваше замовлення</p>
+          <a [routerLink]="'/'">Продовжити покупки</a>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <section class="selected-products">
+      <h4>Вибрані товари</h4>
+      <div class="products">
+        <mat-card class="products--card" *ngFor="let product of cart.products"
+                  [routerLink]="'/products/item/' + product.url">
+          <mat-card-header>
+            <mat-card-title class="title">{{product.title}}</mat-card-title>
+          </mat-card-header>
+          <img mat-card-image [src]="product.images || mockImage" alt="{{product.title}} image" width="150"
+               height="150">
+          <mat-card-content class="content">
+            <p style="flex: 1 1 auto">
+              {{product.description}}
+            </p>
+            <p class="price">
+              {{product.price}} ₴
+            </p>
+          </mat-card-content>
+          <mat-card-actions class="actions" (click)="$event.stopPropagation()">
+
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+    </section>
+
+    <section class="total">
+
+    </section>
+
+  </div>
+</main>
+
+
+<ng-template #cartEmpty><span style="text-align: center; width: 100%">Ваш кошик порожній</span></ng-template>

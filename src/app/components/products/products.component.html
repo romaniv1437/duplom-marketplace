@@ -5,8 +5,9 @@
   </ng-container>
 
   <app-products-display
-    *ngrxLet="products$ | ngrxPush as products"
-    [products]="$any(products)"></app-products-display>
+    [products]="$any(products$ | ngrxPush)"
+    [cartProducts]="$any(cartProducts$ | ngrxPush)"
+  ></app-products-display>
 </main>
 
 <ng-template #homePage>

@@ -1,5 +1,7 @@
 
 .container {
+  overflow: hidden;
+  width: 100%;
   height: 100vh;
 
   .drawer-content {
@@ -24,5 +26,5 @@
 
 .nav-link {
   text-decoration: none;
-  color: #fff;
+  color: #000;
 }
