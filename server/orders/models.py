@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import Profile
+from category.models import Category
 
 
 
@@ -11,21 +12,22 @@ class Photo(models.Model):
 
     def __str__(self):
         return str(self.number_photo)
-
-
-class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True, db_index=True, verbose_name='Категорія')
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
-    # is_active = models.BooleanField(default=True)
-
+    
 
     class Meta:
-        verbose_name = 'Категорія'
-        verbose_name_plural = 'Категорії'
-
+        verbose_name = 'Фотографію'
+        verbose_name_plural = 'Фотографії'
     
+
+class Currency(models.Model):
+    title = models.CharField(max_length=100, unique=True, db_index=True, verbose_name='Валюти')
+
     def __str__(self):
-        return self.name
+        return self.title
+    
+    class Meta:
+        verbose_name = 'Валюту'
+        verbose_name_plural = 'Валюти'
 
 
 class Orders(models.Model):
@@ -33,12 +35,13 @@ class Orders(models.Model):
     description = models.TextField()
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE, verbose_name='Валюти')
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
     number_photo = models.IntegerField(null=True, db_index=True, verbose_name='Фотографії')
     # number_photo = models.ForeignKey(Photo, on_delete=models.CASCADE, blank=True, null=True, db_index=True, verbose_name='Фотографії')
     is_active = models.BooleanField(default=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, db_index=True, verbose_name='Категорія')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, db_index=True, verbose_name='Категорія')
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
 
 

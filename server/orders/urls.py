@@ -15,10 +15,10 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     # '', include(router.urls),
     path('orders/', OrdersListView.as_view(), name='home'),
-    path('myorders/', MyOrdersView.as_view()),
-    path('add-orders/', AddOrdersView.as_view(), name='add-orders'),
+    path('myorders/', MyOrdersView.as_view(), name='myorders'),
+    path('add-orders/', AddOrdersView.as_view(), name='addorders'),
     path('orders/<slug:slug>/', OrdersUpdateView.as_view()),
-    path('delete/<int:pk>/', OrdersDestroyView.as_view()),
+    # path('delete/<int:pk>/', OrdersDestroyView.as_view()),
     
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

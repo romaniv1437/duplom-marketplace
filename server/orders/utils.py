@@ -1,18 +1,18 @@
 from django.http import Http404
 from django.forms.models import model_to_dict
+from django.shortcuts import redirect
 
 from .models import Orders, Photo
-from .permissions import IsOwnerOrReadOnly
 
 
-class DataMixinOrders:
-    """
-        ОГОЛОШЕННЯ АБСТРАКТНОГО КЛАСУ, ЯКИЙ ОПРАЦЬОВУЄ ОГОЛОШЕННЯ КОРИСТУВАЧА
-        ТА ВИВОДИТЬ РЕЗУЛЬТАТ.
-        ЯКЩО ОГОЛОШЕННЯ ВІДСУТНЄ, ТО ГЕНЕРАЦІЯ СТОРІНКИ 404.
-    """
-    permission_classes = (IsOwnerOrReadOnly,)
+class OrdersMixinUpdate:
+
     def get_context_data(self, *args, **kwargs):
+        """
+            ОГОЛОШЕННЯ АБСТРАКТНОГО КЛАСУ, ЯКИЙ ОПРАЦЬОВУЄ ОГОЛОШЕННЯ КОРИСТУВАЧА
+            ТА ВИВОДИТЬ РЕЗУЛЬТАТ.
+            ЯКЩО ОГОЛОШЕННЯ ВІДСУТНЄ, ТО ГЕНЕРАЦІЯ СТОРІНКИ 404.
+        """
         slug = kwargs['slug']
 
         data = Orders.objects.filter(slug=slug)
@@ -27,3 +27,17 @@ class DataMixinOrders:
         response['images'] = photo
 
         return response
+    
+    
+    def delete_my_orders(self, *args, **kwargs):
+        """
+        ОГОЛОШЕННЯ АБСТРАКТНОГО КЛАСУ ВИДАЛЕННЯ ОГОЛОШЕННЯ ТА АВТОМАТИЧНЕ ОЧИЩЕННЯ
+        ВІД ПОВ'ЯЗАНИХ ФОТОГРАФІЙ.
+        """
+        slug = kwargs['slug']
+        
+        data = Orders.objects.filter(slug=slug)[0]
+        data.delete()
+        Photo.objects.filter(number_photo=data.number_photo).delete()
+
+        return redirect('myorders')

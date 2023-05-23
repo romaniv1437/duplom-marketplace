@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.shortcuts import redirect
 
 from rest_framework.response import Response
 from rest_framework import generics, views
@@ -8,10 +9,7 @@ from rest_framework_simplejwt.views import TokenViewBase
 from .serializer import OrdersSerializer, AddOrdersSerializer, TokenObtainLifetimeSerializer, TokenRefreshLifetimeSerializer
 from .models import Orders, Photo
 from .permissions import IsOwnerOrReadOnly
-from .utils import DataMixinOrders
-
-from users.models import Profile
-from django.forms.models import model_to_dict
+from .utils import OrdersMixinUpdate
 
 
 class OrdersListView(generics.ListAPIView):
@@ -38,7 +36,7 @@ class OrdersListView(generics.ListAPIView):
     #     return Response(response)
     
     
-class OrdersUpdateView(DataMixinOrders, generics.RetrieveUpdateDestroyAPIView):
+class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView):
     """
         ЗГОДОМ ДОБАВИТИ UPDATE SERIALIZER ДЛЯ АПДЕЙТІВ
     """
@@ -47,13 +45,17 @@ class OrdersUpdateView(DataMixinOrders, generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsOwnerOrReadOnly,)
     lookup_field = 'slug'
 
-    # def get(self, request, *args, **kwargs):
-    #     return super().get(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         context = super().get_context_data(**kwargs)    # звертання до супер-функції super та батьківського методу get_context_data
 
         return Response(context)
+    
+
+    def delete(self, request, *args, **kwargs):
+        context = super().delete_my_orders(**kwargs)    # видалення оголошення та очищення пов'язаних фотографій
+        
+        return context
 
 
 class AddOrdersView(generics.CreateAPIView):
@@ -62,18 +64,20 @@ class AddOrdersView(generics.CreateAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
-class OrdersDestroyView(generics.RetrieveDestroyAPIView):
-    queryset = Orders.objects.all()
-    serializer_class = OrdersSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
+# class OrdersDestroyView(generics.RetrieveDestroyAPIView):
+#     queryset = Orders.objects.all()
+#     serializer_class = OrdersSerializer
+#     permission_classes = (IsOwnerOrReadOnly,)
 
 
 class MyOrdersView(generics.ListAPIView):
     serializer_class = OrdersSerializer
     permission_classes = (IsOwnerOrReadOnly,)
 
+
     def get_queryset(self):
         username = self.request.user.username
+        
         return Orders.objects.filter(user__profile__username=username)
 
 

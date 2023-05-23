@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from django import forms
 from rest_framework.fields import empty
 from .models import Orders, Photo
 from users.models import Profile
@@ -7,7 +6,9 @@ from django.contrib.auth.models import User
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
 from pytils.translit import slugify
 
 
@@ -70,7 +71,7 @@ class TokenRefreshLifetimeSerializer(TokenRefreshSerializer):
     
 
 
-class ProductsImageSerializers(serializers.ModelSerializer):
+class OrdersPhotoSerializers(serializers.ModelSerializer):
     class Meta:
         model = Photo
         fields = "__all__"
@@ -78,7 +79,12 @@ class ProductsImageSerializers(serializers.ModelSerializer):
 
 class AddOrdersSerializer(serializers.ModelSerializer):
 
-    images = ProductsImageSerializers(many=True, read_only=True)
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     print(self.fields['category'])
+    #     self.fields['category'].initial = 'Категорія не вибрана'
+
+    images = OrdersPhotoSerializers(many=True, read_only=True)
     photo = serializers.ListField(
         child=serializers.ImageField(allow_empty_file=False, use_url=False),
         write_only=True
@@ -86,10 +92,12 @@ class AddOrdersSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Orders
-        fields = ["title", "description", "price", "images",
+        fields = ["title", "description", "price", "currency", "images",
                   "photo", "category", "user"]
-    
+        
+
     def create(self, validated_data):
+        self.is_valid()
         photos = validated_data.pop("photo")
         image_part_id = 1 if Photo.objects.last() is None else Photo.objects.last().number_photo + 1
         username = self.context['request'].user.pk
