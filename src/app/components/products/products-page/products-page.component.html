@@ -1,18 +1,44 @@
-<div class="product" *ngrxLet="product$ | ngrxPush as product">
-  <mat-card *ngIf="!!product?.id;else noProduct" class="products--card">
-    <mat-card-header>
-      <mat-card-title class="title">{{product?.title}}</mat-card-title>
-    </mat-card-header>
-    <img mat-card-image [src]="product?.image" alt="{{product?.title}} image" width="150" height="150">
-    <mat-card-content class="content">
-      <p style="flex: 1 1 auto">
-        {{product?.description}}
-      </p>
-      <p class="price">
-        {{product?.price}} ₴
-      </p>
-    </mat-card-content>
-  </mat-card>
+<div class="products-container">
+  <div class="product" *ngIf="product$ | ngrxPush as product">
+    <mat-card *ngIf="product?.id;else noProduct" class="products--card">
+      <mat-card-header>
+        <mat-card-title class="title">{{product?.title}}</mat-card-title>
+      </mat-card-header>
+      <img mat-card-image [src]="product?.image || mockImage" alt="{{product?.title}} image" width="150" height="150">
+      <mat-card-content class="content">
+        <p style="flex: 1 1 auto">
+          {{product?.description}}
+        </p>
+        <p class="price">
+          {{product?.price}} ₴
+        </p>
+      </mat-card-content>
+      <mat-card-actions class="actions" (click)="$event.stopPropagation()">
+        <button mat-icon-button>
+          <mat-icon>favorite</mat-icon>
+        </button>
+        <ng-container *ngrxLet="($any(cartProducts$ |ngrxPush) | isProductInCart: product.id) as isProductInCart">
+          <button *ngIf="!isProductInCart"
+                  (click)="addProductToCart(product)"
+                  mat-icon-button>
+            <mat-icon>add_shopping_cart</mat-icon>
+          </button>
+          <button *ngIf="isProductInCart"
+                  [routerLink]="'/cart'"
+                  mat-icon-button>
+            <mat-icon>done</mat-icon>
+          </button>
+        </ng-container>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <div class="product-page-content">
+    <mat-card>
+      <mat-card-title>Контент сторінки</mat-card-title>
+      <mat-card-content>
+        <p>Тут може бути опис продукта, його характеристики, схожі продукти, деталі про продавця, тощо</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>
-
 <ng-template #noProduct>Отакої, щось пішло не так</ng-template>

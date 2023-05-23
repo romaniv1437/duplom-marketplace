@@ -1,6 +1,7 @@
 .cart-container {
   padding: 20px;
   margin-top: 30px;
+  height: calc(100vh - 64px - 40px - 30px);
   overflow: hidden;
   .total {
     display: flex;

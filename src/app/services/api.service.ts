@@ -16,7 +16,7 @@ export class ApiService {
 
   private productsAdapter(product: ProductModel): Product {
     return {
-      url: product.slug,
+      url: product.id,
       id: product.id,
       title: product.title,
       price: product.price,
@@ -34,8 +34,9 @@ export class ApiService {
   }
 
   loadProductById(productId: string): Observable<Product> {
-    return this.http.get<ProductModel>(this.BASE_URL + 'orders/' + productId).pipe(map(res => (
+    /*return this.http.get<ProductModel>(this.BASE_URL + 'orders/' + productId).pipe(map(res => (
       this.productsAdapter(res)
-    )))
+    )))*/
+    return of({...this.mockProducts.filter(product => Number(product.id) === Number(productId))[0]} as Product)
   }
 }

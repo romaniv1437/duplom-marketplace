@@ -60,7 +60,7 @@ export const baseReducer = createReducer(
       isLoading: false,
       error: '',
 
-      product: action.product
+      currentProduct: action.product
     }
   }),
   on(actions.addProductToCart, (state, action) => {
