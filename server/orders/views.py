@@ -15,7 +15,6 @@ from .utils import OrdersMixinUpdate
 class OrdersListView(generics.ListAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
-    # permission_classes = (IsAuthenticatedOrReadOnly,)
     
 
     # def get(self, request, *args, **kwargs):
@@ -46,10 +45,10 @@ class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView)
     lookup_field = 'slug'
 
 
-    def get(self, request, *args, **kwargs):
-        context = super().get_context_data(**kwargs)    # звертання до супер-функції super та батьківського методу get_context_data
+    # def get(self, request, *args, **kwargs):
+    #     context = super().get_context_data(**kwargs)    # звертання до супер-функції super та батьківського методу get_context_data
 
-        return Response(context)
+    #     return Response(context)
     
 
     def delete(self, request, *args, **kwargs):

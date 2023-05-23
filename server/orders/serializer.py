@@ -12,43 +12,83 @@ from rest_framework.exceptions import PermissionDenied
 from pytils.translit import slugify
 
 
+class OrdersPhotoSerializers(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = Photo
+        fields = "__all__"
+
+
 class OrdersSerializer(serializers.ModelSerializer):
+    PHOTO_ID = 1
+    CURRENCY_ID = 1
+    CATEGORY_ID = 1
+    USER_ID = 1
+
+    photo = serializers.SerializerMethodField('get_photo')
+    currency = serializers.SerializerMethodField('get_currency')
+    category = serializers.SerializerMethodField('get_category')
+    user = serializers.SerializerMethodField('get_user')
+
     class Meta:
         model = Orders
-        fields = '__all__'
+        # fields = ('pk', 'title', 'slug', 'description', 'price', 'currency', 'category', 'user', 'photo')
+        fields = ('pk', 'title', 'slug', 'description', 'price', 'currency', 'category', 'user', 'photo')
 
-# class AddOrdersSerializer(serializers.ModelSerializer):
 
-#     photo = serializers.ListField(child=serializers.ImageField())
+    def get_photo(self, *args, **kwargs):
+        try:
+            Orders.objects.filter(pk=self.PHOTO_ID)[0]
+            self.PHOTO_ID += 1
+        except Exception as exc:
+            while True:
+                self.PHOTO_ID += 1
+                break
+
+        return ['http://127.0.0.1:8000' + i.photo.url for i in Photo.objects.filter(number_photo=Orders.objects.filter(pk=self.PHOTO_ID)[0].number_photo)]
+
     
-#     class Meta:
-#         model = Orders
-#         fields = ('title', 'description', 'price', 'slug', 'photo', 'cat')
+    def get_currency(self, *args, **kwargs):
+        try:
+            Orders.objects.filter(pk=self.CURRENCY_ID)[0]
+            self.CURRENCY_ID += 1
+        except Exception:
 
-#     def create(self, validated_data):
-#         image_part_id = 1 if Photo.objects.last() is None else Photo.objects.last().custom + 1
-#         del validated_data['photo']
-#         validated_data['custom'] = image_part_id
-#         print(validated_data)
-#         return super().create(validated_data)
+            while True:
+                self.CURRENCY_ID += 1
+                break
 
-    # def save(self, **kwargs):
-    #     photos = self.context['request'].FILES.getlist('photo')
-    #     username = self.context['request'].user.pk
-    #     user = Profile.objects.filter(profile=username)[0]
+        return Orders.objects.filter(pk=self.CURRENCY_ID)[0].currency.title
 
-    #     image_part_id = 1 if Photo.objects.last() is None else Photo.objects.last().custom + 1
-    #     for photo in photos:
-    #         Photo.objects.create(
-    #             photo=photo,
-    #             custom=image_part_id
-    #         )
 
-    #     # kwargs['photo'] = image_part_id
-    #     kwargs['user'] = user
-    #     kwargs['slug'] = slugify(self.validated_data['title'] + '-' + str(Orders.objects.last().pk + 1))
-    #     print(kwargs)
-    #     return super().save(**kwargs)
+    def get_category(self, *args, **kwargs):
+        try:
+            Orders.objects.filter(pk=self.CATEGORY_ID)[0]
+            self.CATEGORY_ID += 1
+        except IndexError:
+            self.CATEGORY_ID += 1
+
+            while True:
+                break
+
+        return Orders.objects.filter(pk=self.CATEGORY_ID)[0].category.title
+    
+
+    def get_user(self, *args, **kwargs):
+        try:
+            Orders.objects.filter(pk=self.USER_ID)[0]
+            self.USER_ID += 1
+        except IndexError:
+            self.USER_ID += 1
+
+            while True:
+                break
+
+        return Orders.objects.filter(pk=self.USER_ID)[0].user.profile.username
+        
+
+    
 
 
 class TokenObtainLifetimeSerializer(TokenObtainPairSerializer):
@@ -70,11 +110,6 @@ class TokenRefreshLifetimeSerializer(TokenRefreshSerializer):
         return data
     
 
-
-class OrdersPhotoSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Photo
-        fields = "__all__"
 
 
 class AddOrdersSerializer(serializers.ModelSerializer):
