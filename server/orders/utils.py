@@ -40,4 +40,4 @@ class OrdersMixinUpdate:
         data.delete()
         Photo.objects.filter(number_photo=data.number_photo).delete()
 
-        return redirect('myorders')
+        return redirect('home')

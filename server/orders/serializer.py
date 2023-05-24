@@ -12,43 +12,45 @@ from rest_framework.exceptions import PermissionDenied
 from pytils.translit import slugify
 
 
+class OrdersPhotoSerializers(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = Photo
+        fields = "__all__"
+
+
 class OrdersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orders
-        fields = '__all__'
+        exclude = ('number_photo', 'is_active')
+        
 
-# class AddOrdersSerializer(serializers.ModelSerializer):
-
-#     photo = serializers.ListField(child=serializers.ImageField())
     
-#     class Meta:
-#         model = Orders
-#         fields = ('title', 'description', 'price', 'slug', 'photo', 'cat')
+    def to_representation(self, instance):
 
-#     def create(self, validated_data):
-#         image_part_id = 1 if Photo.objects.last() is None else Photo.objects.last().custom + 1
-#         del validated_data['photo']
-#         validated_data['custom'] = image_part_id
-#         print(validated_data)
-#         return super().create(validated_data)
+        data = Orders.objects.filter(pk=instance.id)[0].number_photo
+        photo = ['http://127.0.0.1:8000' + i.photo.url for i in Photo.objects.filter(number_photo=data)]
 
-    # def save(self, **kwargs):
-    #     photos = self.context['request'].FILES.getlist('photo')
-    #     username = self.context['request'].user.pk
-    #     user = Profile.objects.filter(profile=username)[0]
+        representation = super().to_representation(instance)
+        # representation["id"] = instance.id
+        # representation["title"] = instance.title
+        # representation["description"] = instance.description
+        # representation["slug"] = instance.slug
+        # representation["price"] = instance.price
+        representation['currency'] = instance.currency.title
+        representation["category"] = [{'title': instance.category.title, 'slug': instance.category.slug}]
+        representation["user"] = [{
+            'title': instance.user.profile.username,
+            'email': instance.user.profile.email,
+            'first_name': instance.user.profile.first_name,
+        }]
+        representation["photo"] = photo
 
-    #     image_part_id = 1 if Photo.objects.last() is None else Photo.objects.last().custom + 1
-    #     for photo in photos:
-    #         Photo.objects.create(
-    #             photo=photo,
-    #             custom=image_part_id
-    #         )
+        return representation
 
-    #     # kwargs['photo'] = image_part_id
-    #     kwargs['user'] = user
-    #     kwargs['slug'] = slugify(self.validated_data['title'] + '-' + str(Orders.objects.last().pk + 1))
-    #     print(kwargs)
-    #     return super().save(**kwargs)
+        
+    
 
 
 class TokenObtainLifetimeSerializer(TokenObtainPairSerializer):
@@ -70,11 +72,6 @@ class TokenRefreshLifetimeSerializer(TokenRefreshSerializer):
         return data
     
 
-
-class OrdersPhotoSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Photo
-        fields = "__all__"
 
 
 class AddOrdersSerializer(serializers.ModelSerializer):
