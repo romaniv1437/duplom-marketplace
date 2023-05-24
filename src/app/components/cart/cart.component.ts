@@ -18,4 +18,10 @@ export class CartComponent implements OnInit {
     this.cart$ = this.cartFacade.cart$;
   }
 
+  public removeFromCart(product:CartProduct): void {
+    this.cartFacade.removeProductFromCart(product)
+  }
+  public changeProductQty(productId: number, isIncrease: boolean): void {
+    this.cartFacade.changeProductQty(productId, isIncrease)
+  }
 }

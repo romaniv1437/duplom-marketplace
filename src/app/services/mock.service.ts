@@ -26,7 +26,10 @@ export class MockService {
 
     for (let i = 0; i <= count; i++) {
       const category = categories[Math.floor(Math.random() * categories.length)]
+      const id = Math.floor(Math.random() * 9999)
       const product = {
+        url: String(id),
+        id: id,
         title: category.displayName + ' ' + (i+1),
         description: this.productDescriptions[Math.floor(Math.random() * this.productDescriptions.length)],
         image: this.productImages[Math.floor(Math.random() * this.productImages.length)],

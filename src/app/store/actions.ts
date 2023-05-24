@@ -33,6 +33,10 @@ export const removeProductFromCart = createAction(
   props<{product: CartProduct}>()
 )
 
+export const changeProductQty = createAction(
+  "[CART] change product quantity",
+  props<{productId: number, isIncrease: boolean}>()
+)
 
 export const setError = createAction(
   "[ERROR] set error",

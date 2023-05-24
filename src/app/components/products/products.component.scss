@@ -9,6 +9,10 @@
 }
 
 :host::ng-deep {
+  .products-container {
+    height: calc(100vh - 64px - 20px);
+  }
+
   .products--card {
     display: flex;
     flex-direction: column;
