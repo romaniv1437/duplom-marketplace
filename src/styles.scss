@@ -2,3 +2,12 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+::-webkit-scrollbar-thumb {
+  background: #C3C7D4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
