@@ -2,7 +2,15 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {EMPTY, switchMap} from 'rxjs';
 import {map, exhaustMap, catchError} from 'rxjs/operators';
-import {loadProductById, loadProductByIdSuccess, loadProducts, loadProductsSuccess, setError} from "./actions";
+import {
+  loadProductById,
+  loadProductByIdSuccess,
+  loadProducts,
+  loadProductsSuccess,
+  login,
+  loginSuccess, register, registerSuccess,
+  setError
+} from "./actions";
 import {ApiService} from "../services/api.service";
 
 @Injectable()
@@ -33,6 +41,27 @@ export class BaseEffects {
     switchMap((action) => this.apiService.loadProductById(action.productId)
       .pipe(
         map(product => loadProductByIdSuccess({product})),
+        catchError(error => EMPTY)
+      )
+    )
+  ))
+
+  loginUser$ = createEffect(() => this.actions$.pipe(
+    ofType(login),
+    switchMap((action) => this.apiService.login(action.email, action.password)
+      .pipe(
+        map(user => loginSuccess({user})),
+        catchError(error => EMPTY)
+      )
+    )
+  ))
+
+
+  registerUser$ = createEffect(() => this.actions$.pipe(
+    ofType(register),
+    switchMap((action) => this.apiService.register(action.user, action.password)
+      .pipe(
+        map(user => registerSuccess({user})),
         catchError(error => EMPTY)
       )
     )

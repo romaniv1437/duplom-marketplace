@@ -2,6 +2,7 @@ import {createReducer, on} from '@ngrx/store';
 import {Category, Product} from '../models/products.interface';
 import * as actions from './actions'
 import {Cart, CartProduct} from "../models/cart.interface";
+import {User} from "../models/user.interface";
 
 export const baseFeatureKey = "store";
 
@@ -15,6 +16,8 @@ export interface State {
 
   products: Product[];
   currentProduct: Product;
+
+  user: User;
 }
 
 export const initialState: State = {
@@ -26,7 +29,9 @@ export const initialState: State = {
   cart: {} as Cart,
 
   products: [],
-  currentProduct: {} as Product
+  currentProduct: {} as Product,
+
+  user: {} as User
 };
 
 export const baseReducer = createReducer(
@@ -102,6 +107,36 @@ export const baseReducer = createReducer(
         products: cartProducts,
         totalPrice: getTotalPrice(cartProducts)
       }
+    }
+  }),
+  on(actions.login, (state) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.loginSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: '',
+      user: action.user
+    }
+  }),
+  on(actions.register, (state) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.registerSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: '',
+      user: action.user
     }
   }),
 );

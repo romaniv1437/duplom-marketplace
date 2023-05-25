@@ -1,0 +1,14 @@
+.authorization {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+  height: calc(100vh - 64px - 40px - 30px);
+  overflow: hidden;
+  .form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+  }
+}

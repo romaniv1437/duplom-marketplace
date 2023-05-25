@@ -28,6 +28,9 @@ import {MatBadgeModule} from "@angular/material/badge";
 import {IsProductInCartPipe} from './pipes/is-product-in-cart.pipe';
 import {CartComponent} from './components/cart/cart.component';
 import {GetCartProductPipe} from "./pipes/get-cart-product.pipe";
+import { AuthorizationComponent } from './components/authorization/authorization.component';
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
   declarations: [
@@ -38,7 +41,8 @@ import {GetCartProductPipe} from "./pipes/get-cart-product.pipe";
     ProductsPageComponent,
     IsProductInCartPipe,
     CartComponent,
-    GetCartProductPipe
+    GetCartProductPipe,
+    AuthorizationComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +63,8 @@ import {GetCartProductPipe} from "./pipes/get-cart-product.pipe";
     MatPaginatorModule,
     LetModule,
     MatBadgeModule,
+    ReactiveFormsModule,
+    MatInputModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
