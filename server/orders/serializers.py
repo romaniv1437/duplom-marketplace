@@ -21,17 +21,29 @@ class OrdersPhotoSerializers(serializers.ModelSerializer):
 
 
 class OrdersSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Orders
-        exclude = ('number_photo', 'is_active')
+        fields = (
+            'id',
+            'title',
+            'description',
+            'slug',
+            'price',
+            'currency',
+            'category',
+            'user',
+        )
+        depth = 1
+        # exclude = ('number_photo', 'is_active')
         
     def to_representation(self, instance):
         data = Orders.objects.filter(pk=instance.id)[0].number_photo
         photo = ['http://127.0.0.1:8000' + i.photo.url for i in Photo.objects.filter(number_photo=data)]
 
         representation = super().to_representation(instance)
-        representation['currency'] = instance.currency.title
-        representation["category"] = [{'title': instance.category.title, 'slug': instance.category.slug}]
+
         representation["user"] = [{
             'title': instance.user.profile.username,
             'email': instance.user.profile.email,
@@ -40,6 +52,15 @@ class OrdersSerializer(serializers.ModelSerializer):
         representation["photo"] = photo
 
         return representation
+    
+
+    # def update(self, instance, validated_data):
+    #     validated_data['currency'] = instance.currency
+    #     validated_data['category'] = instance.category
+    
+    #     return super().update(instance, validated_data)
+
+
 
         
     
@@ -78,11 +99,12 @@ class AddOrdersSerializer(serializers.ModelSerializer):
         child=serializers.ImageField(allow_empty_file=False, use_url=False),
         write_only=True
     )
+    user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Orders
         fields = ["title", "description", "price", "currency", "images",
-                  "photo", "category", "user"]
+                 "category", "photo", "user"]
         
 
     def create(self, validated_data):

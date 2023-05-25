@@ -41,7 +41,7 @@ class Orders(models.Model):
     number_photo = models.IntegerField(null=True, db_index=True, verbose_name='Фотографії')
     # number_photo = models.ForeignKey(Photo, on_delete=models.CASCADE, blank=True, null=True, db_index=True, verbose_name='Фотографії')
     is_active = models.BooleanField(default=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, db_index=True, verbose_name='Категорія')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, db_index=True, verbose_name='Категорія')
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
 
 

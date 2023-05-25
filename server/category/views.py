@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework import generics
 
 from orders.models import Category, Orders
-from orders.serializer import OrdersSerializer
-from .serializer import CategorySerializer
+from orders.serializers import OrdersSerializer
+from .serializers import CategorySerializer
 
 
 

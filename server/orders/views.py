@@ -6,7 +6,7 @@ from rest_framework import generics, views
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework_simplejwt.views import TokenViewBase
 
-from .serializer import OrdersSerializer, AddOrdersSerializer, TokenObtainLifetimeSerializer, TokenRefreshLifetimeSerializer
+from .serializers import OrdersSerializer, AddOrdersSerializer, TokenObtainLifetimeSerializer, TokenRefreshLifetimeSerializer
 from .models import Orders, Photo
 from .permissions import IsOwnerOrReadOnly
 from .utils import OrdersMixinUpdate
@@ -55,7 +55,7 @@ class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView)
         context = super().delete_my_orders(**kwargs)    # видалення оголошення та очищення пов'язаних фотографій
         
         return context
-
+    
 
 class AddOrdersView(generics.CreateAPIView):
     queryset = Orders.objects.all()
