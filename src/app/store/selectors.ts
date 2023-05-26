@@ -29,3 +29,8 @@ export const selectCart = createSelector(
   selectFeature,
   (state) => state.cart
 );
+
+export const selectUser = createSelector(
+  selectFeature,
+  (state) => state.user
+);
