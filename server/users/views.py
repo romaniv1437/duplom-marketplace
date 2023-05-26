@@ -1,50 +1,51 @@
-from django.contrib.auth.models import User
-from django.contrib.auth import login, logout
-from django.shortcuts import redirect
-from django.core.exceptions import ValidationError
-
-from rest_framework import generics, views
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .permissions import IsNotRegistered
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 
 
 class RegisterUserAPIView(generics.CreateAPIView):
-    serializer_class = RegisterSerializer
     permission_classes = (IsNotRegistered,)
+    serializer_class = RegisterSerializer
+    
 
-
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
-        login(request, user)
+        token = RefreshToken.for_user(user)
 
-        return Response(serializer.data)
+        data = serializer.data
+        data["tokens"] = {
+            "refresh": str(token),
+            "access": str(token.access_token)
+        }
+
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
 class LoginUserAPIView(generics.CreateAPIView):
-    serializer_class = LoginSerializer
     permission_classes = (IsNotRegistered,)
+    serializer_class = LoginSerializer
 
 
-    def post(self, request, format=None):
-        serializer = LoginSerializer(data=self.request.data, context={'request': self.request})
+    def post(self, request, *args, **kwargs):
+        serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
 
-        login(request, user)
+        user = serializer.validated_data
+        serializer = UserSerializer(user)
+        token = RefreshToken.for_user(user)
 
-        return redirect('myorders')
+        data = serializer.data
+        data["tokens"] = {
+            "refresh": str(token),
+            "access": str(token.access_token)
+        }
 
-
-
-
-def logout_user(request):
-    logout(request)
-
-    return redirect('home')
-
+        return Response(data, status=status.HTTP_200_OK)
