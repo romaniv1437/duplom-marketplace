@@ -67,10 +67,11 @@ class MyProfile(generics.RetrieveAPIView):
         return Response(serializer.data)
 
 
-class LogoutUserAPIView(generics.RetrieveAPIView):
+class LogoutUserAPIView(generics.CreateAPIView):
     parser_classes = (IsAuthenticated,)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         logout(request)
 
-        return redirect('home')
+        return Response({'message': 'Ви вийшли з акаунту!'}, status=200)
+    
