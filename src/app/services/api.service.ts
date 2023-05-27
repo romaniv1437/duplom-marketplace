@@ -13,7 +13,7 @@ import {AuthService} from "./auth.service";
 })
 export class ApiService {
   public mockProducts = this.mockService.products;
-  BASE_URL = 'http://127.0.0.1:8000/\n'
+  BASE_URL = 'http://127.0.0.1:8000/'
   constructor(private http: HttpClient, private mockService: MockService, private authService: AuthService) { }
 
   private productsAdapter(product: ProductModel): Product {
@@ -38,7 +38,7 @@ export class ApiService {
   }
 
   loadProductById(productId: string): Observable<Product> {
-    return this.http.get<ProductModel>(this.BASE_URL + 'orders/' + productId)
+    return this.http.get<ProductModel>(this.BASE_URL + 'orders/' + productId + '/')
       .pipe(
         map(res => (this.productsAdapter(res))),
         catchError(this.errorHandler))
