@@ -35,12 +35,11 @@ class OrdersListView(generics.ListAPIView):
     #     return Response(response)
     
     
-# class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView):
-class OrdersUpdateView(generics.ListAPIView):
+class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView):
     """
         ЗГОДОМ ДОБАВИТИ UPDATE SERIALIZER ДЛЯ АПДЕЙТІВ
     """
-    queryset = Orders.objects.all()
+    # queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
     permission_classes = (IsOwnerOrReadOnly,)
     lookup_field = 'slug'
@@ -56,6 +55,11 @@ class OrdersUpdateView(generics.ListAPIView):
         context = super().delete_my_orders(**kwargs)    # видалення оголошення та очищення пов'язаних фотографій
         
         return context
+    
+    def get_queryset(self):
+        slug = self.kwargs['slug']
+
+        return Orders.objects.filter(slug=slug)
     
 
 class AddOrdersView(generics.CreateAPIView):
