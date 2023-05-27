@@ -23,7 +23,8 @@ export class ApiService {
       price: parseFloat(product.price),
       description: product.description,
       categoryId: product.category,
-      images: product.images
+      image: product.photo[0],
+      images: product.photo
     } as unknown as Product
   }
 
