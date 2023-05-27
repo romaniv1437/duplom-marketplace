@@ -15,7 +15,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {ProductsComponent} from './components/products/products.component';
 import {baseFeatureKey, baseReducer} from "./store/reducer";
 import {BaseEffects} from "./store/effects";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {LetModule, PushModule} from "@ngrx/component";
 import {MatCardModule} from "@angular/material/card";
 import {NgOptimizedImage} from "@angular/common";
@@ -31,6 +31,8 @@ import {GetCartProductPipe} from "./pipes/get-cart-product.pipe";
 import { AuthorizationComponent } from './components/authorization/authorization.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
+import {ControlSubscribtionComponent} from "./control-subscriptions/controlSubscribtion.component";
+import {AuthInterceptor} from "./interceptors/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -42,7 +44,7 @@ import {MatInputModule} from "@angular/material/input";
     IsProductInCartPipe,
     CartComponent,
     GetCartProductPipe,
-    AuthorizationComponent
+    AuthorizationComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,7 +68,13 @@ import {MatInputModule} from "@angular/material/input";
     ReactiveFormsModule,
     MatInputModule,
   ],
-  providers: [],
+  providers: [
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true,
+  },
+],
   bootstrap: [AppComponent]
 })
 export class CoreModule {

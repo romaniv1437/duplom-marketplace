@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import { MockService } from './mock.service';
 import { PaginationData } from '../models/core.interface';
-import {Observable, of} from "rxjs";
+import {Observable, of, tap} from "rxjs";
 import {Product, ProductModel, ProductsResponse} from '../models/products.interface';
 import {map} from "rxjs/operators";
-import {User} from "../models/user.interface";
+import {User, UserModel} from "../models/user.interface";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ import {User} from "../models/user.interface";
 export class ApiService {
   public mockProducts = this.mockService.products;
   BASE_URL = 'http://127.0.0.1:8000/\n'
-  constructor(private http: HttpClient, private mockService: MockService) { }
+  constructor(private http: HttpClient, private mockService: MockService, private authService: AuthService) { }
 
   private productsAdapter(product: ProductModel): Product {
     return {
@@ -42,16 +43,25 @@ export class ApiService {
     /*return of({...this.mockProducts.filter(product => Number(product.id) === Number(productId))[0]} as Product)*/
   }
 
-  login(email: string, password: string): Observable<User> {
-    /*return this.http.get<ProductModel>(this.BASE_URL + 'orders/' + productId).pipe(map(res => (
-      this.productsAdapter(res)
-    )))*/
-    return of({id: 1} as User)
+  login(email: string, password: string): Observable<UserModel> {
+    return this.http.post<UserModel>(this.BASE_URL + 'login/', {username: email, password})
+      .pipe(
+        tap(res => this.authService.setToken(res.tokens)),
+        map(res => (res)))
+    /*return of({id: 1} as UserModel)*/
   }
-  register(user: User, password: string): Observable<User> {
-    /*return this.http.get<ProductModel>(this.BASE_URL + 'orders/' + productId).pipe(map(res => (
-      this.productsAdapter(res)
-    )))*/
-    return of({id: 1} as User)
+  register(user: User, password: string): Observable<UserModel> {
+    const userBody = {
+      password: password,
+      confirm_password: password,
+      username: user.email,
+      first_name: user.firstName,
+      last_name: user.lastName
+    }
+    return this.http.post<UserModel>(this.BASE_URL + 'register/', userBody)
+      .pipe(
+        tap(res => this.authService.setToken(res.tokens)),
+        map(res => (res)))
+    /*return of({id: 1} as UserModel)*/
   }
 }
