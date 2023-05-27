@@ -139,6 +139,13 @@ export const baseReducer = createReducer(
       user: action.user
     }
   }),
+  on(actions.setError, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: action.error
+    }
+  })
 );
 
 const getTotalPrice = (products: CartProduct[]): number => {

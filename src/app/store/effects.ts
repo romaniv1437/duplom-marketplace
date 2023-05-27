@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {EMPTY, switchMap} from 'rxjs';
+import {EMPTY, of, switchMap} from 'rxjs';
 import {map, exhaustMap, catchError} from 'rxjs/operators';
 import {
   loadProductById,
@@ -31,7 +31,7 @@ export class BaseEffects {
     switchMap((action) => this.apiService.loadProducts({...action})
       .pipe(
         map(products => loadProductsSuccess({productsResponse: products})),
-        catchError(error => EMPTY)
+        catchError((error) => of(setError({ error })))
       )
     )
   ))
@@ -41,7 +41,7 @@ export class BaseEffects {
     switchMap((action) => this.apiService.loadProductById(action.productId)
       .pipe(
         map(product => loadProductByIdSuccess({product})),
-        catchError(error => EMPTY)
+        catchError((error) => of(setError({ error })))
       )
     )
   ))
@@ -51,7 +51,7 @@ export class BaseEffects {
     switchMap((action) => this.apiService.login(action.email, action.password)
       .pipe(
         map(user => loginSuccess({user})),
-        catchError(error => EMPTY)
+        catchError((error) => of(setError({ error })))
       )
     )
   ))
@@ -62,7 +62,7 @@ export class BaseEffects {
     switchMap((action) => this.apiService.register(action.user, action.password)
       .pipe(
         map(user => registerSuccess({user})),
-        catchError(error => EMPTY)
+        catchError((error) => of(setError({ error })))
       )
     )
   ))

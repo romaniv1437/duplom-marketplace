@@ -1,10 +1,16 @@
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, OnInit } from '@angular/core';
+import {FlatTreeControl} from '@angular/cdk/tree';
+import {Component, OnInit} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener} from "@angular/material/tree";
 import {categories} from "../../mock/mock.data";
 import {ProductsFacade} from "../../facades/products.facade";
 import {CartFacade} from "../../facades/cart.facade";
-import {Observable} from "rxjs";
+import {filter, Observable, takeUntil} from "rxjs";
+import {AuthFacade} from 'src/app/facades/auth.facade';
+import {User} from "../../models/user.interface";
+import {AuthService} from 'src/app/services/auth.service';
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {BaseFacade} from "../../facades/base.facade";
+import {ControlSubscribtionComponent} from "../../control-subscriptions/controlSubscribtion.component";
 
 
 interface NavNode {
@@ -41,8 +47,9 @@ interface ExampleFlatNode {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent extends ControlSubscribtionComponent implements OnInit {
 
+  public user$: Observable<User> = new Observable<User>();
   public countProductsInCart$: Observable<number> = new Observable<number>();
 
   private _transformer = (node: NavNode, level: number) => {
@@ -68,12 +75,33 @@ export class HomeComponent implements OnInit {
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-  constructor(private cartFacade: CartFacade) {
+  constructor(
+    private cartFacade: CartFacade,
+    private authFacade: AuthFacade,
+    public authService: AuthService,
+    private baseFacade: BaseFacade,
+    private _snackBar: MatSnackBar
+  ) {
+    super();
     this.dataSource.data = TREE_DATA;
   }
 
   ngOnInit(): void {
+
+    this.baseFacade.error$
+      .pipe(takeUntil(this.destroyed$), filter(error => error.length !== 0))
+      .subscribe(error => this._snackBar
+        .open(error, 'ok', {
+          horizontalPosition: "center", verticalPosition: "top", duration: 2000
+        }))
+
+    this.user$ = this.authFacade.user$;
     this.countProductsInCart$ = this.cartFacade.countCartProducts$;
+  }
+
+  logout(): void {
+    this.authFacade.logout();
+    this.authService.clearToken();
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;

@@ -15,22 +15,18 @@ const routes: Routes = [
       {
         path: '',
         component: ProductsComponent,
-        canActivate: [AuthGuard]
       },
       {
         path: 'products/:category',
         component: ProductsComponent,
-        canActivate: [AuthGuard]
       },
       {
         path: 'products/item/:id',
         component: ProductsPageComponent,
-        canActivate: [AuthGuard]
       },
       {
         path: 'cart',
         component: CartComponent,
-        canActivate: [AuthGuard]
       },
       {
         path: 'authorization',

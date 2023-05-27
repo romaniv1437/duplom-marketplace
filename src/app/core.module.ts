@@ -33,6 +33,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {ControlSubscribtionComponent} from "./control-subscriptions/controlSubscribtion.component";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
     MatBadgeModule,
     ReactiveFormsModule,
     MatInputModule,
+    MatSnackBarModule
   ],
   providers: [
   {

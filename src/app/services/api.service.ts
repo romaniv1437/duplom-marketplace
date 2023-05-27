@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import { MockService } from './mock.service';
 import { PaginationData } from '../models/core.interface';
-import {Observable, of, tap} from "rxjs";
+import {Observable, of, tap, throwError} from "rxjs";
 import {Product, ProductModel, ProductsResponse} from '../models/products.interface';
-import {map} from "rxjs/operators";
+import {catchError, map} from "rxjs/operators";
 import {User, UserModel} from "../models/user.interface";
 import {AuthService} from "./auth.service";
 
@@ -30,16 +30,18 @@ export class ApiService {
   }
 
   loadProducts(loadData: {paginationData: PaginationData, category: string}): Observable<ProductsResponse> {
-    return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/').pipe(map(res => (
-      {items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse
-    )))
+    return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/')
+      .pipe(
+      map(res => ({items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse)),
+      catchError(this.errorHandler))
    /* return of({items: this.mockProducts} as ProductsResponse)*/
   }
 
   loadProductById(productId: string): Observable<Product> {
-    return this.http.get<ProductModel>(this.BASE_URL + 'orders/' + productId).pipe(map(res => (
-      this.productsAdapter(res)
-    )))
+    return this.http.get<ProductModel>(this.BASE_URL + 'orders/' + productId)
+      .pipe(
+        map(res => (this.productsAdapter(res))),
+        catchError(this.errorHandler))
     /*return of({...this.mockProducts.filter(product => Number(product.id) === Number(productId))[0]} as Product)*/
   }
 
@@ -47,7 +49,8 @@ export class ApiService {
     return this.http.post<UserModel>(this.BASE_URL + 'login/', {username: email, password})
       .pipe(
         tap(res => this.authService.setToken(res.tokens)),
-        map(res => (res)))
+        map(res => (res)),
+        catchError(this.errorHandler))
     /*return of({id: 1} as UserModel)*/
   }
   register(user: User, password: string): Observable<UserModel> {
@@ -61,7 +64,21 @@ export class ApiService {
     return this.http.post<UserModel>(this.BASE_URL + 'register/', userBody)
       .pipe(
         tap(res => this.authService.setToken(res.tokens)),
-        map(res => (res)))
+        map(res => (res)),
+        catchError(this.errorHandler))
     /*return of({id: 1} as UserModel)*/
+  }
+
+  private errorHandler(error: any) {
+    let errorMessage = "";
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = error.error.message;
+    } else {
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.error(errorMessage);
+    return throwError(() => {
+      return errorMessage;
+    });
   }
 }
