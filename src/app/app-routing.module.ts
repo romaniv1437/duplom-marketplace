@@ -6,6 +6,8 @@ import {ProductsPageComponent} from "./components/products/products-page/product
 import {CartComponent} from "./components/cart/cart.component";
 import {AuthorizationComponent} from "./components/authorization/authorization.component";
 import {AuthGuard} from "./guards/auth.guard";
+import {ProfileComponent} from "./components/profile/profile.component";
+import {ProductsAddFormComponent} from "./components/products/products-add-form/products-add-form.component";
 
 const routes: Routes = [
   {
@@ -21,12 +23,26 @@ const routes: Routes = [
         component: ProductsComponent,
       },
       {
+        path: 'profile/add-item',
+        component: ProductsAddFormComponent,
+        canActivate: [AuthGuard]
+      },
+      {
         path: 'products/item/:id',
         component: ProductsPageComponent,
       },
       {
         path: 'cart',
         component: CartComponent,
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'profile/:userId',
+        component: ProfileComponent,
       },
       {
         path: 'authorization',

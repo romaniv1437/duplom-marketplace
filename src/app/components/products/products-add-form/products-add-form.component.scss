@@ -1,0 +1,14 @@
+@import url('.././products.component.scss');
+
+.products-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .products-form {
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+    gap: 10px;
+  }
+}
+

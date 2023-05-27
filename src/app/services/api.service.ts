@@ -7,6 +7,7 @@ import {Product, ProductModel, ProductsResponse} from '../models/products.interf
 import {catchError, map} from "rxjs/operators";
 import {User, UserModel} from "../models/user.interface";
 import {AuthService} from "./auth.service";
+import {Category, CategoryModel} from "../models/category.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -29,12 +30,55 @@ export class ApiService {
     } as unknown as Product
   }
 
+  private createProductBody(product: Product): ProductModel {
+    console.log(product.images.map(imageFile => {
+      let formData = new FormData()
+      formData.append(imageFile.name, imageFile, imageFile.name)
+      return formData;
+    }))
+    return {
+      title: product.title,
+      price: product.price,
+      photo: product.images.map(imageFile => {
+        let formData = new FormData()
+        formData.append(imageFile.name, imageFile, imageFile.name)
+        return formData;
+      }),
+      description: product.description,
+      currency: 1,
+      category: product.category
+    } as unknown as ProductModel
+  }
+
+  private userAdapter(user: UserModel): User {
+    return {
+      ...user,
+      firstName: user.first_name,
+      lastName: user.last_name
+    }
+  }
+
+  private categoryAdapter(category: CategoryModel): Category {
+    return {
+      ...category,
+      url: '/products/' + category.slug,
+    }
+  }
+
   loadProducts(loadData: {paginationData: PaginationData, category: string}): Observable<ProductsResponse> {
     return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/')
       .pipe(
       map(res => ({items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse)),
       catchError(this.errorHandler))
    /* return of({items: this.mockProducts} as ProductsResponse)*/
+  }
+
+  loadUserProducts(): Observable<ProductsResponse> {
+    return this.http.get<ProductModel[]>(this.BASE_URL + 'myorders/')
+      .pipe(
+        map(res => ({items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse)),
+        catchError(this.errorHandler))
+    /* return of({items: this.mockProducts} as ProductsResponse)*/
   }
 
   loadProductById(productId: string): Observable<Product> {
@@ -45,15 +89,15 @@ export class ApiService {
     /*return of({...this.mockProducts.filter(product => Number(product.id) === Number(productId))[0]} as Product)*/
   }
 
-  login(email: string, password: string): Observable<UserModel> {
+  login(email: string, password: string): Observable<User> {
     return this.http.post<UserModel>(this.BASE_URL + 'login/', {username: email, password})
       .pipe(
         tap(res => this.authService.setToken(res.tokens)),
-        map(res => (res)),
+        map(res => this.userAdapter(res)),
         catchError(this.errorHandler))
     /*return of({id: 1} as UserModel)*/
   }
-  register(user: User, password: string): Observable<UserModel> {
+  register(user: User, password: string): Observable<User> {
     const userBody = {
       password: password,
       confirm_password: password,
@@ -64,9 +108,30 @@ export class ApiService {
     return this.http.post<UserModel>(this.BASE_URL + 'register/', userBody)
       .pipe(
         tap(res => this.authService.setToken(res.tokens)),
-        map(res => (res)),
+        map(res => this.userAdapter(res)),
         catchError(this.errorHandler))
     /*return of({id: 1} as UserModel)*/
+  }
+  getUser(): Observable<User> {
+
+    return this.http.get<UserModel>(this.BASE_URL + 'me/')
+      .pipe(
+        map(res => this.userAdapter(res)),
+        catchError(this.errorHandler))
+  }
+
+  loadCategories(): Observable<Category[]> {
+    return this.http.get<CategoryModel[]>(this.BASE_URL + 'category/')
+      .pipe(
+        map(res => res.map(category => this.categoryAdapter(category))),
+        catchError(this.errorHandler))
+  }
+
+  createProduct(product: Product): Observable<Product> {
+    return this.http.post<ProductModel>(this.BASE_URL + 'add-orders/', this.createProductBody(product))
+      .pipe(
+        map(res => this.productsAdapter(res)),
+        catchError(this.errorHandler))
   }
 
   private errorHandler(error: any) {

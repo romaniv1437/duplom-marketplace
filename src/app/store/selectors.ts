@@ -40,3 +40,14 @@ export const selectError = createSelector(
   (state) => state.error
 );
 
+export const selectCategories = createSelector(
+  selectFeature,
+  (state) => state.categories
+);
+
+export const selectUserProducts = createSelector(
+  selectFeature,
+  (state) => state.userProducts
+);
+
+

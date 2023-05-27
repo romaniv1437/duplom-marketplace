@@ -1,0 +1,31 @@
+.selected-photos {
+  max-width: 400px;
+  overflow-x: scroll;
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  padding-bottom: 5px;
+  img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+.upload-button {
+  position: relative;
+}
+
+input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}

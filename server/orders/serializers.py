@@ -37,7 +37,7 @@ class OrdersSerializer(serializers.ModelSerializer):
         )
         depth = 1
         # exclude = ('number_photo', 'is_active')
-        
+
     def to_representation(self, instance):
         data = Orders.objects.filter(pk=instance.id)[0].number_photo
         photo = ['http://127.0.0.1:8000' + i.photo.url for i in Photo.objects.filter(number_photo=data)]
@@ -52,18 +52,18 @@ class OrdersSerializer(serializers.ModelSerializer):
         representation["photo"] = photo
 
         return representation
-    
+
 
     # def update(self, instance, validated_data):
     #     validated_data['currency'] = instance.currency
     #     validated_data['category'] = instance.category
-    
+
     #     return super().update(instance, validated_data)
 
 
 
-        
-    
+
+
 
 
 class TokenObtainLifetimeSerializer(TokenObtainPairSerializer):
@@ -83,7 +83,7 @@ class TokenRefreshLifetimeSerializer(TokenRefreshSerializer):
         refresh = RefreshToken(attrs['refresh'])
         data['lifetime'] = int(refresh.access_token.lifetime.total_seconds())
         return data
-    
+
 
 
 

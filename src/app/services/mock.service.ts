@@ -34,7 +34,6 @@ export class MockService {
         description: this.productDescriptions[Math.floor(Math.random() * this.productDescriptions.length)],
         image: this.productImages[Math.floor(Math.random() * this.productImages.length)],
         price: Math.floor(Math.random() * 100) + 1,
-        categoryId: category.key,
       } as Product
 
       products.push(product)

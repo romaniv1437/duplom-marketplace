@@ -1,18 +1,15 @@
+import {Category} from "./category.interface";
 import {PaginationData} from "./core.interface";
-
-export interface Category {
-
-}
 
 export interface Product {
   url: string;
   id: number;
   title: string;
   image: string;
-  images: string[];
+  images: File[];
   price: number;
   description: string;
-  categoryId: string;
+  category: Category;
 }
 
 export interface ProductsResponse extends PaginationData {

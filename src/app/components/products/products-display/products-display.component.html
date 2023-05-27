@@ -4,7 +4,7 @@
   </p>
 </div>
 
-<div class="products">
+<div class="products" [ngStyle]="{'justify-content': productsAlign}" *ngIf="productsDataSource.length !== 0; else noProducts">
   <mat-card class="products--card" *ngFor="let product of productsDataSource"
             [routerLink]="'/products/item/' + product.url">
     <mat-card-header>
@@ -39,10 +39,15 @@
   </mat-card>
 </div>
 <br>
-<mat-paginator [length]="length"
+<mat-paginator
+  *ngIf="productsItems.length > pageSize"
+  [length]="length"
                [pageSize]="pageSize"
                [pageIndex]="pageIndex"
                [pageSizeOptions]="pageSizeOptions"
                (page)="pageEvent = getData($event)"
                aria-label="Select page" #paginator>
 </mat-paginator>
+
+
+<ng-template #noProducts>Немає оголошень</ng-template>

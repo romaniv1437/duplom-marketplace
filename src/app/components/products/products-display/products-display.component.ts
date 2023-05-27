@@ -13,7 +13,7 @@ import {CartFacade} from "../../../facades/cart.facade";
 export class ProductsDisplayComponent implements OnInit {
 
   @ViewChild('paginator') paginator!: MatPaginator;
-
+  @Input() productsAlign: string = 'start';
   @Input() set products(products: Product[]) {
     this.productsItems = products;
     this.paginator?.firstPage();

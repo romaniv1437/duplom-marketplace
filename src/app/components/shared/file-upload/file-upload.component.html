@@ -1,0 +1,9 @@
+<button mat-raised-button class="upload-button">
+  Вибрати зображення<input #fileInput class="file-input" type="file" multiple>
+</button>
+<div *ngIf="files.length !== 0">
+  <mat-card-subtitle>Вибрані зображення</mat-card-subtitle>
+  <div class="selected-photos">
+    <img (click)="removeFile(image)" *ngFor="let image of files" [src]="image | fileToUrl" [alt]="image.name">
+  </div>
+</div>

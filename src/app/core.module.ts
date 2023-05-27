@@ -29,11 +29,16 @@ import {IsProductInCartPipe} from './pipes/is-product-in-cart.pipe';
 import {CartComponent} from './components/cart/cart.component';
 import {GetCartProductPipe} from "./pipes/get-cart-product.pipe";
 import { AuthorizationComponent } from './components/authorization/authorization.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {ControlSubscribtionComponent} from "./control-subscriptions/controlSubscribtion.component";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { ProfileComponent } from './components/profile/profile.component';
+import { ProductsAddFormComponent } from './components/products/products-add-form/products-add-form.component';
+import { FileUploadComponent } from './components/shared/file-upload/file-upload.component';
+import { FileToUrlPipe } from './pipes/file-to-url.pipe';
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -46,6 +51,10 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     CartComponent,
     GetCartProductPipe,
     AuthorizationComponent,
+    ProfileComponent,
+    ProductsAddFormComponent,
+    FileUploadComponent,
+    FileToUrlPipe,
   ],
   imports: [
     BrowserModule,
@@ -68,7 +77,9 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     MatBadgeModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    FormsModule,
+    MatSelectModule
   ],
   providers: [
   {

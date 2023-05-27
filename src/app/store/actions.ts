@@ -59,6 +59,38 @@ export const registerSuccess = createAction(
   "[AUTHORIZATION] register success",
   props<{user: User}>()
 )
+export const getUserInfo = createAction(
+  "[AUTHORIZATION] get user info",
+)
+export const getUserInfoSuccess = createAction(
+  "[AUTHORIZATION]  get user info success",
+  props<{user: User}>()
+)
+
+export const loadUserProducts = createAction(
+  "[PRODUCTS] load user products",
+)
+export const loadUserProductsSuccess = createAction(
+  "[PRODUCTS] load user products success",
+  props<{productsResponse: ProductsResponse}>()
+)
+
+export const loadCategories = createAction(
+  "[CATEGORIES] load categories",
+)
+export const loadCategoriesSuccess = createAction(
+  "[PRODUCTS] load categories success",
+  props<{categories: any}>()
+)
+
+export const createProduct = createAction(
+  "[PRODUCTS] create product",
+  props<{product: Product}>()
+)
+export const createProductSuccess = createAction(
+  "[PRODUCTS] create product success",
+  props<{product: Product}>()
+)
 
 export const setError = createAction(
   "[ERROR] set error",

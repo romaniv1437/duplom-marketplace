@@ -27,7 +27,7 @@ const TREE_DATA: NavNode[] = [
   },
   {
     name: 'Профіль',
-    url: 'account'
+    url: 'profile'
   },
   {
     name: 'Cart',
@@ -96,6 +96,9 @@ export class HomeComponent extends ControlSubscribtionComponent implements OnIni
         }))
 
     this.user$ = this.authFacade.user$;
+
+    this.authFacade.getUser();
+    this.baseFacade.loadCategories();
     this.countProductsInCart$ = this.cartFacade.countCartProducts$;
   }
 

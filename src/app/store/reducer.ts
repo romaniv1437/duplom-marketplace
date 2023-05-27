@@ -1,8 +1,9 @@
 import {createReducer, on} from '@ngrx/store';
-import {Category, Product} from '../models/products.interface';
+import {Product} from '../models/products.interface';
 import * as actions from './actions'
 import {Cart, CartProduct} from "../models/cart.interface";
 import {User} from "../models/user.interface";
+import {Category} from "../models/category.interface";
 
 export const baseFeatureKey = "store";
 
@@ -10,11 +11,12 @@ export interface State {
   isLoading: boolean;
   error: string;
 
-  category: Category[];
+  categories: Category[];
 
   cart: Cart;
 
   products: Product[];
+  userProducts: Product[];
   currentProduct: Product;
 
   user: User;
@@ -24,11 +26,12 @@ export const initialState: State = {
   isLoading: false,
   error: '',
 
-  category: [],
+  categories: [],
 
   cart: {} as Cart,
 
   products: [],
+  userProducts: [],
   currentProduct: {} as Product,
 
   user: {} as User
@@ -50,6 +53,22 @@ export const baseReducer = createReducer(
       error: '',
 
       products: action.productsResponse.items
+    }
+  }),
+  on(actions.loadUserProducts, (state) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.loadUserProductsSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: '',
+
+      userProducts: action.productsResponse.items
     }
   }),
   on(actions.loadProductById, (state) => {
@@ -144,6 +163,34 @@ export const baseReducer = createReducer(
       ...state,
       isLoading: false,
       error: action.error
+    }
+  }),
+  on(actions.getUserInfo, (state, action) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.getUserInfoSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      user: action.user
+    }
+  }),
+  on(actions.loadCategories, (state, action) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.loadCategoriesSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      categories: action.categories
     }
   })
 );

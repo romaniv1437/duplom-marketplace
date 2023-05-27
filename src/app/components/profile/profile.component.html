@@ -1,0 +1,56 @@
+<div class="profile-container">
+  <div class="profile-content">
+    <mat-card class="user-card" *ngrxLet="user$ | ngrxPush as user">
+      <mat-card-header>
+        <mat-card-title-group style="width: 100%">
+          <mat-card-title>{{user?.firstName}} {{user?.lastName}}</mat-card-title>
+          <mat-card-subtitle>{{user?.username}}</mat-card-subtitle>
+          <img mat-card-md-image src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" >
+        </mat-card-title-group>
+      </mat-card-header>
+      <mat-card-content>
+
+      </mat-card-content>
+    </mat-card>
+
+    <div class="profile-actions">
+      <mat-card class="card">
+        <mat-card-header>
+          <mat-card-title>Редагувати профіль</mat-card-title>
+          <mat-card-subtitle>Налаштувати</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-button>LIKE</button>
+          <button mat-button>SHARE</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card class="card">
+        <mat-card-header>
+          <mat-card-title>Мої замовлення</mat-card-title>
+          <mat-card-subtitle>Переглянути</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          в розробці
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button>LIKE</button>
+          <button mat-button>SHARE</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card class="card">
+        <mat-card-header>
+          <mat-card-title>Мої оголошення</mat-card-title>
+          <mat-card-subtitle>Налаштувати</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <app-products-display [productsAlign]="'start'" [products]="$any(products$ | ngrxPush)"></app-products-display>
+        </mat-card-content>
+        <mat-card-actions>
+          <button [routerLink]="'/profile/add-item'" mat-raised-button color="primary">Добавити оголошення</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

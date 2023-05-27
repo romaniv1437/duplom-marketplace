@@ -1,0 +1,47 @@
+<div class="products-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Форма створення нового оголошення</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="productForm" class="products-form">
+        <mat-form-field>
+          <mat-label>Назва</mat-label>
+          <input matInput placeholder="Назва оголошення" formControlName="title">
+          <mat-error *ngIf="productForm.controls['title'].hasError('required')">
+            Це поле обов'язкове
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Опис</mat-label>
+          <input matInput placeholder="Опис оголошення" formControlName="description">
+          <mat-error *ngIf="productForm.controls['description'].hasError('required')">
+            Це поле обов'язкове
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Категорія</mat-label>
+          <mat-select formControlName="category">
+            <mat-option *ngFor="let category of categories$ | ngrxPush" [value]="category">
+              {{category.title}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="productForm.controls['category'].hasError('required')">
+            Це поле обов'язкове
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Ціна</mat-label>
+          <input matInput placeholder="Ціна оголошення" formControlName="price">
+          <mat-error *ngIf="productForm.controls['price'].hasError('required')">
+            Це поле обов'язкове
+          </mat-error>
+        </mat-form-field>
+        <app-file-upload formControlName="photo"></app-file-upload>
+      </form>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button (click)="createProduct()" [disabled]="!productForm.valid" mat-raised-button color="primary">Створити оголошення</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
