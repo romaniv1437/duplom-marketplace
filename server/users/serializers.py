@@ -10,6 +10,13 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'date_joined')
 
+    
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('id', 'profile')
+        depth = 1
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(label="Ім'я: ", required=True, write_only=True)
@@ -61,4 +68,4 @@ class LoginSerializer(serializers.ModelSerializer):
         if user and user.is_active:
             return user
         
-        raise serializers.ValidationError("Incorrect Credentials")
+        raise serializers.ValidationError({'error_message': 'Incorrect Credentials'})

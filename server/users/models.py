@@ -1,10 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 
 from django.conf import settings
 from rest_framework.authtoken.models import Token
+
 
 class Profile(models.Model):
     """
@@ -40,8 +42,13 @@ def save_user_profile(sender, instance, **kwargs):
     print(instance.profile.save())
 
 
-
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+
+@receiver(user_logged_in)
+def on_login(sender, user, request, **kwargs):
+    print('q')
+    print(sender)

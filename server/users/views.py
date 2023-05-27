@@ -1,11 +1,18 @@
+from django.shortcuts import redirect
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.models import TokenUser
+from rest_framework.permissions import IsAuthenticated
 
 from .permissions import IsNotRegistered
-from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
+from .models import Profile
+from .serializers import RegisterSerializer, LoginSerializer, UserSerializer, ProfileSerializer
+from orders.permissions import IsOwnerOrReadOnly
+from django.contrib.auth import authenticate
+from django.contrib.auth import logout
 
 
 class RegisterUserAPIView(generics.CreateAPIView):
@@ -49,3 +56,21 @@ class LoginUserAPIView(generics.CreateAPIView):
         }
 
         return Response(data, status=status.HTTP_200_OK)
+
+
+class MyProfile(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        serializer = UserSerializer(request.user)
+
+        return Response(serializer.data)
+
+
+class LogoutUserAPIView(generics.RetrieveAPIView):
+    parser_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+
+        return redirect('home')
