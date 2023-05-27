@@ -35,7 +35,8 @@ class OrdersListView(generics.ListAPIView):
     #     return Response(response)
     
     
-class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView):
+# class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView):
+class OrdersUpdateView(generics.ListAPIView):
     """
         ЗГОДОМ ДОБАВИТИ UPDATE SERIALIZER ДЛЯ АПДЕЙТІВ
     """
