@@ -29,8 +29,18 @@
         </button>
         <span [routerLink]="'/'" style="cursor: pointer;">AK-19-03 marketplace</span>
         <span class="example-spacer"></span>
-        <button mat-icon-button aria-label="favorite icon">
-          <mat-icon>favorite</mat-icon>
+        <span>
+          <button [routerLink]="'/account'" mat-icon-button aria-label="favorite icon"
+                  *ngIf="authService.isAuth">
+            <mat-icon>person</mat-icon>
+          </button>
+          <span *ngrxLet="user$ | ngrxPush as user">{{user?.username}}</span>
+        </span>
+        <button [routerLink]="'/authorization'" mat-icon-button aria-label="favorite icon" *ngIf="!authService.isAuth">
+          <mat-icon>login</mat-icon>
+        </button>
+        <button (click)="logout()" mat-icon-button aria-label="favorite icon" *ngIf="authService.isAuth">
+          <mat-icon>logout</mat-icon>
         </button>
         <button mat-icon-button aria-label="cart icon" [routerLink]="'/cart'">
           <mat-icon [matBadge]="(countProductsInCart$ | ngrxPush) || ''" matBadgeColor="warn">shopping_cart</mat-icon>

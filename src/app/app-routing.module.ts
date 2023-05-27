@@ -5,6 +5,7 @@ import {ProductsComponent} from "./components/products/products.component";
 import {ProductsPageComponent} from "./components/products/products-page/products-page.component";
 import {CartComponent} from "./components/cart/cart.component";
 import {AuthorizationComponent} from "./components/authorization/authorization.component";
+import {AuthGuard} from "./guards/auth.guard";
 
 const routes: Routes = [
   {
@@ -13,19 +14,19 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: ProductsComponent
+        component: ProductsComponent,
       },
       {
         path: 'products/:category',
-        component: ProductsComponent
+        component: ProductsComponent,
       },
       {
         path: 'products/item/:id',
-        component: ProductsPageComponent
+        component: ProductsPageComponent,
       },
       {
         path: 'cart',
-        component: CartComponent
+        component: CartComponent,
       },
       {
         path: 'authorization',

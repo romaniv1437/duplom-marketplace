@@ -31,5 +31,5 @@ export interface ProductModel {
   is_active: boolean,
   category: number,
   user: number,
-  images: string[]
+  photo: string[]
 }
