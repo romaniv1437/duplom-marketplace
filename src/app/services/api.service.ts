@@ -17,10 +17,10 @@ export class ApiService {
 
   private productsAdapter(product: ProductModel): Product {
     return {
-      url: product.id,
+      url: product.slug,
       id: product.id,
       title: product.title,
-      price: product.price,
+      price: parseFloat(product.price),
       description: product.description,
       categoryId: product.category,
       images: product.images
@@ -28,17 +28,17 @@ export class ApiService {
   }
 
   loadProducts(loadData: {paginationData: PaginationData, category: string}): Observable<ProductsResponse> {
-    /*return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/').pipe(map(res => (
+    return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/').pipe(map(res => (
       {items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse
-    )))*/
-    return of({items: this.mockProducts} as ProductsResponse)
+    )))
+   /* return of({items: this.mockProducts} as ProductsResponse)*/
   }
 
   loadProductById(productId: string): Observable<Product> {
-    /*return this.http.get<ProductModel>(this.BASE_URL + 'orders/' + productId).pipe(map(res => (
+    return this.http.get<ProductModel>(this.BASE_URL + 'orders/' + productId).pipe(map(res => (
       this.productsAdapter(res)
-    )))*/
-    return of({...this.mockProducts.filter(product => Number(product.id) === Number(productId))[0]} as Product)
+    )))
+    /*return of({...this.mockProducts.filter(product => Number(product.id) === Number(productId))[0]} as Product)*/
   }
 
   login(email: string, password: string): Observable<User> {
