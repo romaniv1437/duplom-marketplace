@@ -13,8 +13,6 @@ from pytils.translit import slugify
 
 
 class OrdersPhotoSerializers(serializers.ModelSerializer):
-
-
     class Meta:
         model = Photo
         fields = "__all__"
@@ -94,32 +92,35 @@ class AddOrdersSerializer(serializers.ModelSerializer):
     #     print(self.fields['category'])
     #     self.fields['category'].initial = 'Категорія не вибрана'
 
-    images = OrdersPhotoSerializers(many=True, read_only=True)
-    photo = serializers.ListField(
-        child=serializers.ImageField(allow_empty_file=False, use_url=False),
-        write_only=True
-    )
+    # images = OrdersPhotoSerializers(many=True, read_only=True)
+    # photo = serializers.ListField(
+    #     child=serializers.ImageField(allow_empty_file=False, use_url=False),
+    #     write_only=True
+    # )
     user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Orders
-        fields = ["title", "description", "price", "currency", "images",
-                 "category", "photo", "user"]
+        # fields = ["title", "description", "price", "currency", "images",
+        #          "category", "photo", "user"]
+        fields = ["title", "description", "price", "currency",
+                "category", "user"]
+        
         
 
     def create(self, validated_data):
         self.is_valid()
-        photos = validated_data.pop("photo")
-        image_part_id = 1 if Photo.objects.last() is None else Photo.objects.last().number_photo + 1
+        # photos = validated_data.pop("photo")
+        # image_part_id = 1 if Photo.objects.last() is None else Photo.objects.last().number_photo + 1
         username = self.context['request'].user.pk
         user = Profile.objects.filter(profile=username)[0]
         post_id =  1 if Orders.objects.last() is None else Orders.objects.last().pk + 1
         validated_data['slug'] = slugify(self.validated_data['title'] + '-' + str(post_id))
         validated_data['user'] = user
-        validated_data['number_photo'] = image_part_id
+        # validated_data['number_photo'] = image_part_id
 
-        for photo in photos:
-            Photo.objects.create(photo=photo, number_photo=image_part_id)
+        # for photo in photos:
+        #     Photo.objects.create(photo=photo, number_photo=image_part_id)
 
         product = Orders.objects.create(**validated_data)
 

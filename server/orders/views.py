@@ -5,12 +5,15 @@ from rest_framework.response import Response
 from rest_framework import generics, views
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework_simplejwt.views import TokenViewBase
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 
-from .serializers import OrdersSerializer, AddOrdersSerializer, TokenObtainLifetimeSerializer, TokenRefreshLifetimeSerializer
+from .serializers import OrdersSerializer, AddOrdersSerializer, TokenObtainLifetimeSerializer, TokenRefreshLifetimeSerializer, OrdersPhotoSerializers
 from .models import Orders, Photo
 from .permissions import IsOwnerOrReadOnly
 from .utils import OrdersMixinUpdate
 
+
+from rest_framework.parsers import FileUploadParser, JSONParser
 
 class OrdersListView(generics.ListAPIView):
     queryset = Orders.objects.all()
@@ -62,10 +65,27 @@ class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView)
         return Orders.objects.filter(slug=slug)
     
 
-class AddOrdersView(generics.CreateAPIView):
+class AddOrdersView(generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = AddOrdersSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
+    # parser_classes = (FileUploadParser,)
+    
+    
+class AddPhotoOrdersView(generics.ListCreateAPIView):
+    queryset = Orders.objects.all()
+    serializer_class = OrdersPhotoSerializers
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def post(self, request, *args, **kwargs):
+        order = Orders.objects.filter(pk=request.data['id'])
+        order[0].number_photo = request.data['id']
+
+        Photo.objects.create(photo=request.data['photo'], number_photo=request.data['id'])
+        serializer = OrdersSerializer(order)
+
+
+        return Response(serializer.data)
 
 
 # class OrdersDestroyView(generics.RetrieveDestroyAPIView):
