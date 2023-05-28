@@ -18,7 +18,7 @@ from rest_framework.parsers import FileUploadParser, JSONParser
 class OrdersListView(generics.ListAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
-    
+
 
     # def get(self, request, *args, **kwargs):
     #     data = Orders.objects.all()
@@ -27,7 +27,7 @@ class OrdersListView(generics.ListAPIView):
 
     #     if not data:
     #         raise Http404()
-        
+
     #     for i in data:
     #         response[i.pk] = model_to_dict(i)
     #         photos = Photo.objects.filter(number_photo=i.number_photo)
@@ -36,8 +36,8 @@ class OrdersListView(generics.ListAPIView):
 
 
     #     return Response(response)
-    
-    
+
+
 class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView):
     """
         ЗГОДОМ ДОБАВИТИ UPDATE SERIALIZER ДЛЯ АПДЕЙТІВ
@@ -52,26 +52,26 @@ class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView)
     #     context = super().get_context_data(**kwargs)    # звертання до супер-функції super та батьківського методу get_context_data
 
     #     return Response(context)
-    
+
 
     def delete(self, request, *args, **kwargs):
         context = super().delete_my_orders(**kwargs)    # видалення оголошення та очищення пов'язаних фотографій
-        
+
         return context
-    
+
     def get_queryset(self):
         slug = self.kwargs['slug']
 
         return Orders.objects.filter(slug=slug)
-    
+
 
 class AddOrdersView(generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = AddOrdersSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     # parser_classes = (FileUploadParser,)
-    
-    
+
+
 class AddPhotoOrdersView(generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersPhotoSerializers
@@ -80,6 +80,7 @@ class AddPhotoOrdersView(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         slug = self.kwargs['slug']
+        print(request.FILES)
         order = Orders.objects.filter(slug=slug)
         order[0].number_photo = order[0].pk
         Photo.objects.create(photo=request.data['photo'], number_photo=order[0].pk)
@@ -102,7 +103,7 @@ class MyOrdersView(generics.ListAPIView):
 
     def get_queryset(self):
         username = self.request.user.username
-        
+
         return Orders.objects.filter(user__profile__username=username)
 
 

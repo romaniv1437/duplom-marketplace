@@ -106,8 +106,8 @@ class AddOrdersSerializer(serializers.ModelSerializer):
         #          "category", "photo", "user"]
         fields = ["id", "slug", "title", "description", "price", "currency",
                 "category", "user"]
-        
-        
+
+
 
     def create(self, validated_data):
         self.is_valid()

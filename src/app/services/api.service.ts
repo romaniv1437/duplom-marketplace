@@ -132,7 +132,7 @@ export class ApiService {
         map((productResponse) => of(productResponse)
           .pipe(
             combineLatestWith(product.images.length
-              ? zip(product.images.map(imageFile => this.addProductImage(imageFile, productResponse.id)))
+              ? zip(product.images.map(imageFile => this.addProductImage(imageFile, productResponse.slug)))
               : of([])
             ),
             map(([productResponse, productWithImage] )=> (productResponse)),
@@ -143,13 +143,16 @@ export class ApiService {
         catchError(this.errorHandler))
   }
 
-  addProductImage(imageFile: File, productId: number): Observable<Product> {
+  addProductImage(imageFile: File, productId: string): Observable<Product> {
     let formData = new FormData()
     formData.append(imageFile.name, imageFile, imageFile.name)
-    return this.http.post<ProductModel>(this.BASE_URL + 'add-photo/' + productId, formData)
+    return this.http.post<ProductModel>(this.BASE_URL + 'add-photo/' + productId + '/', formData,
+      {
+        headers: {'Content-Type': 'multipart/form-data'}
+      })
       .pipe(
         map(res => this.productsAdapter(res)),
-        catchError(this.errorHandler))
+        catchError(this.errorHandler), )
   }
 
 
