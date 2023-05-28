@@ -146,10 +146,7 @@ export class ApiService {
   addProductImage(imageFile: File, productId: string): Observable<Product> {
     let formData = new FormData()
     formData.append(imageFile.name, imageFile, imageFile.name)
-    return this.http.post<ProductModel>(this.BASE_URL + 'add-photo/' + productId + '/', formData,
-      {
-        headers: {'Content-Type': 'multipart/form-data'}
-      })
+    return this.http.post<ProductModel>(this.BASE_URL + 'add-photo/' + productId + '/', formData)
       .pipe(
         map(res => this.productsAdapter(res)),
         catchError(this.errorHandler), )
