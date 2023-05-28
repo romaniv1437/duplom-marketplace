@@ -98,7 +98,7 @@ class AddOrdersSerializer(serializers.ModelSerializer):
     #     write_only=True
     # )
     user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
-    slug = serializers.SlugField(read_only=True)
+    slug = serializers.CharField(read_only=True)
 
     class Meta:
         model = Orders
@@ -118,6 +118,7 @@ class AddOrdersSerializer(serializers.ModelSerializer):
         post_id =  1 if Orders.objects.last() is None else Orders.objects.last().pk + 1
         validated_data['slug'] = slugify(self.validated_data['title'] + '-' + str(post_id))
         validated_data['user'] = user
+        # print(validated_data['slug'])
         # validated_data['number_photo'] = image_part_id
 
         # for photo in photos:
@@ -126,3 +127,4 @@ class AddOrdersSerializer(serializers.ModelSerializer):
         product = Orders.objects.create(**validated_data)
 
         return product
+

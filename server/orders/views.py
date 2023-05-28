@@ -76,18 +76,23 @@ class AddPhotoOrdersView(generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersPhotoSerializers
     permission_classes = (IsAuthenticatedOrReadOnly,)
+    # parser_classes = ()
     lookup_field = 'slug'
 
     def post(self, request, *args, **kwargs):
         slug = self.kwargs['slug']
-        print(request.FILES)
         order = Orders.objects.filter(slug=slug)
-        order[0].number_photo = order[0].pk
-        Photo.objects.create(photo=request.data['photo'], number_photo=order[0].pk)
-        serializer = OrdersSerializer(order)
+        order.update(number_photo=order[0].pk)
+        
+        for i in request.FILES:
+            data = i
 
+        photo = request.FILES[data]
+        Photo.objects.create(photo=photo, number_photo=order[0].pk)
+        
+        return Response({'message': 'Оголошення відправлено!'})
 
-        return Response(serializer.data)
+        # return Response(serializer.data)
 
 
 # class OrdersDestroyView(generics.RetrieveDestroyAPIView):

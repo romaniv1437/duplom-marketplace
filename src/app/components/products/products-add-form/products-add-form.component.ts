@@ -19,7 +19,7 @@ export class ProductsAddFormComponent implements OnInit {
     price: new FormControl(null, [Validators.required]),
     description: new FormControl(null, [Validators.required]),
     category: new FormControl(null, [Validators.required]),
-    photo: new FormControl<File[] | null>(null, [Validators.required, requiredFileType('png')])
+    photo: new FormControl<File[] | null>(null, [Validators.required])
   })
   constructor(private baseFacade: BaseFacade, private productsFacade: ProductsFacade) { }
 
