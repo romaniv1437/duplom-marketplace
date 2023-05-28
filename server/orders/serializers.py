@@ -98,6 +98,7 @@ class AddOrdersSerializer(serializers.ModelSerializer):
     #     write_only=True
     # )
     user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
+    slug = serializers.SlugField(read_only=True)
 
     class Meta:
         model = Orders
