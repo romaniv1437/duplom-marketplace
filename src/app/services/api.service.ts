@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import { MockService } from './mock.service';
-import { PaginationData } from '../models/core.interface';
-import {Observable, of, tap, throwError} from "rxjs";
+import {MockService} from './mock.service';
+import {PaginationData} from '../models/core.interface';
+import {combineLatestWith, Observable, of, switchMap, tap, throwError, zip} from "rxjs";
 import {Product, ProductModel, ProductsResponse} from '../models/products.interface';
 import {catchError, map} from "rxjs/operators";
 import {User, UserModel} from "../models/user.interface";
@@ -15,7 +15,9 @@ import {Category, CategoryModel} from "../models/category.interface";
 export class ApiService {
   public mockProducts = this.mockService.products;
   BASE_URL = 'http://127.0.0.1:8000/'
-  constructor(private http: HttpClient, private mockService: MockService, private authService: AuthService) { }
+
+  constructor(private http: HttpClient, private mockService: MockService, private authService: AuthService) {
+  }
 
   private productsAdapter(product: ProductModel): Product {
     return {
@@ -39,11 +41,6 @@ export class ApiService {
     return {
       title: product.title,
       price: product.price,
-      photo: product.images.map(imageFile => {
-        let formData = new FormData()
-        formData.append(imageFile.name, imageFile, imageFile.name)
-        return formData;
-      }),
       description: product.description,
       currency: 1,
       category: product.category
@@ -65,12 +62,12 @@ export class ApiService {
     }
   }
 
-  loadProducts(loadData: {paginationData: PaginationData, category: string}): Observable<ProductsResponse> {
+  loadProducts(loadData: { paginationData: PaginationData, category: string }): Observable<ProductsResponse> {
     return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/')
       .pipe(
-      map(res => ({items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse)),
-      catchError(this.errorHandler))
-   /* return of({items: this.mockProducts} as ProductsResponse)*/
+        map(res => ({items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse)),
+        catchError(this.errorHandler))
+    /* return of({items: this.mockProducts} as ProductsResponse)*/
   }
 
   loadUserProducts(): Observable<ProductsResponse> {
@@ -97,6 +94,7 @@ export class ApiService {
         catchError(this.errorHandler))
     /*return of({id: 1} as UserModel)*/
   }
+
   register(user: User, password: string): Observable<User> {
     const userBody = {
       password: password,
@@ -112,6 +110,7 @@ export class ApiService {
         catchError(this.errorHandler))
     /*return of({id: 1} as UserModel)*/
   }
+
   getUser(): Observable<User> {
 
     return this.http.get<UserModel>(this.BASE_URL + 'me/')
@@ -130,9 +129,29 @@ export class ApiService {
   createProduct(product: Product): Observable<Product> {
     return this.http.post<ProductModel>(this.BASE_URL + 'add-orders/', this.createProductBody(product))
       .pipe(
+        map((productResponse) => of(productResponse)
+          .pipe(
+            combineLatestWith(product.images.length
+              ? zip(product.images.map(imageFile => this.addProductImage(imageFile, productResponse.id)))
+              : of([])
+            ),
+            map(([productResponse, productWithImage] )=> (productResponse)),
+            map(products => products)
+          ),
+        ),
+        switchMap((productWithImageResponse: Observable<ProductModel>) => productWithImageResponse.pipe(map(prWI => this.productsAdapter(prWI)))),
+        catchError(this.errorHandler))
+  }
+
+  addProductImage(imageFile: File, productId: number): Observable<Product> {
+    let formData = new FormData()
+    formData.append(imageFile.name, imageFile, imageFile.name)
+    return this.http.post<ProductModel>(this.BASE_URL + 'add-photo/' + productId, formData)
+      .pipe(
         map(res => this.productsAdapter(res)),
         catchError(this.errorHandler))
   }
+
 
   private errorHandler(error: any) {
     let errorMessage = "";
