@@ -76,12 +76,13 @@ class AddPhotoOrdersView(generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersPhotoSerializers
     permission_classes = (IsAuthenticatedOrReadOnly,)
+    lookup_field = 'slug'
 
     def post(self, request, *args, **kwargs):
-        order = Orders.objects.filter(pk=request.data['id'])
-        order[0].number_photo = request.data['id']
-
-        Photo.objects.create(photo=request.data['photo'], number_photo=request.data['id'])
+        slug = self.kwargs['slug']
+        order = Orders.objects.filter(pk=slug)
+        order[0].number_photo = order[0].pk
+        Photo.objects.create(photo=request.data['photo'], number_photo=order[0].pk)
         serializer = OrdersSerializer(order)
 
 

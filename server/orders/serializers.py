@@ -103,7 +103,7 @@ class AddOrdersSerializer(serializers.ModelSerializer):
         model = Orders
         # fields = ["title", "description", "price", "currency", "images",
         #          "category", "photo", "user"]
-        fields = ["title", "description", "price", "currency",
+        fields = ["id", "slug", "title", "description", "price", "currency",
                 "category", "user"]
         
         
