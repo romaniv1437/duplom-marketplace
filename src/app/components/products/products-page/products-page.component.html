@@ -1,14 +1,12 @@
-<div class="products-container">
-  <div class="product" *ngIf="product$ | ngrxPush as product">
+<div class="products-container" *ngIf="product$ | ngrxPush as product">
+  <div class="product">
     <mat-card *ngIf="product?.id;else noProduct" class="products--card">
-      <mat-card-header>
-        <mat-card-title class="title">{{product?.title}}</mat-card-title>
-      </mat-card-header>
-      <img mat-card-image [src]="product?.image || mockImage" alt="{{product?.title}} image" width="150" height="150">
+      <ng-image-slider
+        [animationSpeed]="0.5"
+        [images]="product.images | imageForSlider:product.title"
+        [imageSize]="{width: 300, height: 300}"
+      ></ng-image-slider>
       <mat-card-content class="content">
-        <p style="flex: 1 1 auto">
-          {{product?.description}}
-        </p>
         <p class="price">
           {{product?.price}} ₴
         </p>
@@ -34,9 +32,14 @@
   </div>
   <div class="product-page-content">
     <mat-card>
-      <mat-card-title>Контент сторінки</mat-card-title>
+      <mat-card-title>{{product?.title}}</mat-card-title>
       <mat-card-content>
-        <p>Тут може бути опис продукта, його характеристики, схожі продукти, деталі про продавця, тощо</p>
+        <p class="description" style="flex: 1 1 auto">
+         <strong>Oпис:</strong> {{product?.description}}
+        </p>
+        <div class="owner">
+          <strong>Продавець:</strong> <a [routerLink]="'/profile' + product.user.id">{{product.user.firstName}} {{product.user.lastName}}</a>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>

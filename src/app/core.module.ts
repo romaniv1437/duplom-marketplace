@@ -39,6 +39,8 @@ import { ProductsAddFormComponent } from './components/products/products-add-for
 import { FileUploadComponent } from './components/shared/file-upload/file-upload.component';
 import { FileToUrlPipe } from './pipes/file-to-url.pipe';
 import {MatSelectModule} from "@angular/material/select";
+import {NgImageSliderModule} from "ng-image-slider";
+import { ImageForSliderPipe } from './pipes/image-for-slider.pipe';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,7 @@ import {MatSelectModule} from "@angular/material/select";
     ProductsAddFormComponent,
     FileUploadComponent,
     FileToUrlPipe,
+    ImageForSliderPipe,
   ],
   imports: [
     BrowserModule,
@@ -79,7 +82,8 @@ import {MatSelectModule} from "@angular/material/select";
     MatInputModule,
     MatSnackBarModule,
     FormsModule,
-    MatSelectModule
+    MatSelectModule,
+    NgImageSliderModule
   ],
   providers: [
   {

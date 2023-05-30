@@ -35,7 +35,7 @@ export class ProductsAddFormComponent implements OnInit {
       price:  this.productForm.controls['price'].value,
       description:  this.productForm.controls['description'].value,
       category:  this.productForm.controls['category'].value.id,
-      images: this.productForm.controls['photo'].value.map((file: File) => file),
+      imageFiles: this.productForm.controls['photo'].value.map((file: File) => file),
     } as Product;
     console.log(product)
     this.productsFacade.createProduct(product);

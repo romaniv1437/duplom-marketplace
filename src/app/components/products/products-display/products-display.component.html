@@ -7,12 +7,12 @@
 <div class="products" [ngStyle]="{'justify-content': productsAlign}" *ngIf="productsDataSource.length !== 0; else noProducts">
   <mat-card class="products--card" *ngFor="let product of productsDataSource"
             [routerLink]="'/products/item/' + product.url">
+    <img mat-card-image [src]="product?.image || mockImage" alt="{{product.title}} image" width="150" height="150">
     <mat-card-header>
       <mat-card-title class="title">{{product.title}}</mat-card-title>
     </mat-card-header>
-    <img mat-card-image [src]="product?.image || mockImage" alt="{{product.title}} image" width="150" height="150">
     <mat-card-content class="content">
-      <p style="flex: 1 1 auto">
+      <p class="description" style="flex: 1 1 auto">
         {{product.description}}
       </p>
       <p class="price">

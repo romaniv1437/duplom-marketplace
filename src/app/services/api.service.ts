@@ -28,16 +28,12 @@ export class ApiService {
       description: product.description,
       categoryId: product.category,
       image: product.photo[0],
-      images: product.photo
+      images: product.photo,
+      user: product.user
     } as unknown as Product
   }
 
   private createProductBody(product: Product): ProductModel {
-    console.log(product.images.map(imageFile => {
-      let formData = new FormData()
-      formData.append(imageFile.name, imageFile, imageFile.name)
-      return formData;
-    }))
     return {
       title: product.title,
       price: product.price,
@@ -131,8 +127,8 @@ export class ApiService {
       .pipe(
         map((productResponse) => of(productResponse)
           .pipe(
-            combineLatestWith(product.images.length
-              ? zip(product.images.map(imageFile => this.addProductImage(imageFile, productResponse.slug)))
+            combineLatestWith(product.imageFiles.length
+              ? zip(product.imageFiles.map(imageFile => this.addProductImage(imageFile, productResponse.slug)))
               : of([])
             ),
             map(([productResponse, productWithImage] )=> (productResponse)),

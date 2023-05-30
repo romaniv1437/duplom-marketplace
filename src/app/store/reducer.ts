@@ -114,7 +114,9 @@ export const baseReducer = createReducer(
     const cartProducts = state.cart.products.map(product => product.id === cartProduct.id ? ({
       ...cartProduct,
       qty: action.isIncrease ? cartProduct.qty + 1 : cartProduct.qty - 1,
-      totalPrice: action.isIncrease ? cartProduct.totalPrice + cartProduct.price : cartProduct.totalPrice - cartProduct.price
+      totalPrice: action.isIncrease
+        ? parseFloat((cartProduct.totalPrice + cartProduct.price).toFixed(2))
+        : parseFloat((cartProduct.totalPrice - cartProduct.price).toFixed(2))
     }) : product)
     if (cartProduct.qty === 1 && !action.isIncrease) {
       return {...state}
@@ -196,5 +198,5 @@ export const baseReducer = createReducer(
 );
 
 const getTotalPrice = (products: CartProduct[]): number => {
-  return products.reduce((totalPrice, product) => totalPrice + (product.totalPrice), 0);
+  return parseFloat(products.reduce((totalPrice, product) => totalPrice + (product.totalPrice), 0).toFixed(2));
 }

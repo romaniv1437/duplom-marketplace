@@ -6,3 +6,11 @@
   gap: 10px 10px;
   flex-wrap: wrap;
 }
+
+.description {
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
