@@ -11,7 +11,7 @@ from .permissions import IsNotRegistered
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer, ProfileSerializer
 from orders.permissions import IsOwnerOrReadOnly
 from django.contrib.auth import logout
-from datetime import datetime, timedelta
+# from datetime import datetime, timedelta
 
 
 class RegisterUserAPIView(generics.CreateAPIView):
