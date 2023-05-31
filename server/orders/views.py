@@ -1,23 +1,19 @@
-from django.http import Http404
-from django.shortcuts import redirect
-
 from rest_framework.response import Response
-from rest_framework import generics, views
+from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework_simplejwt.views import TokenViewBase
-from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 
-from .serializers import OrdersSerializer, AddOrdersSerializer, TokenObtainLifetimeSerializer, TokenRefreshLifetimeSerializer, OrdersPhotoSerializers
+from .serializers import OrdersSerializer, AddOrdersSerializer, OrdersPhotoSerializers
 from .models import Orders, Photo
 from .permissions import IsOwnerOrReadOnly
 from .utils import OrdersMixinUpdate
 
 
-from rest_framework.parsers import FileUploadParser, JSONParser
-
 class OrdersListView(generics.ListAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
+    
+    def get_queryset(self):
+        return Orders.objects.all().order_by('-id')
 
 
     # def get(self, request, *args, **kwargs):
@@ -76,7 +72,6 @@ class AddPhotoOrdersView(generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersPhotoSerializers
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    # parser_classes = ()
     lookup_field = 'slug'
 
     def post(self, request, *args, **kwargs):
@@ -109,19 +104,4 @@ class MyOrdersView(generics.ListAPIView):
     def get_queryset(self):
         username = self.request.user.username
 
-        return Orders.objects.filter(user__profile__username=username)
-
-
-
-class TokenObtainPairView(TokenViewBase):
-    """
-        Return JWT tokens (access and refresh) for specific user based on username and password.
-    """
-    serializer_class = TokenObtainLifetimeSerializer
-
-
-class TokenRefreshView(TokenViewBase):
-    """
-        Renew tokens (access and refresh) with new expire time based on specific user's access token.
-    """
-    serializer_class = TokenRefreshLifetimeSerializer
+        return Orders.objects.filter(user__profile__username=username).order_by('-id')

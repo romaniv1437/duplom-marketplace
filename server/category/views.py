@@ -19,4 +19,4 @@ class OrdersToCategoryListView(generics.ListAPIView):
     serializer_class = OrdersSerializer
 
     def get_queryset(self, *args, **kwargs):
-        return Orders.objects.filter(category__slug=self.kwargs['slug'])
+        return Orders.objects.filter(category__slug=self.kwargs['slug']).order_by('-id')

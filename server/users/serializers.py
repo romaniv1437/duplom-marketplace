@@ -64,8 +64,19 @@ class LoginSerializer(serializers.ModelSerializer):
 
 
     def validate(self, data):
+        username = data['username']
+
+        registered = User.objects.filter(username=username)
+        
+        if not registered:
+            raise serializers.ValidationError({'error_message': 'Обліковий запис відсутній!'})
+        
         user = authenticate(**data)
+        
+        if not user:
+            raise serializers.ValidationError({'error_message': 'Не правильний пароль!'})
+
         if user and user.is_active:
             return user
         
-        raise serializers.ValidationError({'error_message': 'Incorrect Credentials'})
+        raise serializers.ValidationError({'error_message': 'Виникла помилка...'})

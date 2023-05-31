@@ -5,7 +5,7 @@ from category.models import Category
 
 
 class Photo(models.Model):
-    photo = models.ImageField()
+    photo = models.ImageField(upload_to='media/%Y/%m/%d/', verbose_name='Фотографії')
     time_create = models.DateTimeField(auto_now_add=True)
     number_photo = models.IntegerField(null=False, default=True, blank=True)
 

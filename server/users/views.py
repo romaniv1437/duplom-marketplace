@@ -8,11 +8,10 @@ from rest_framework_simplejwt.models import TokenUser
 from rest_framework.permissions import IsAuthenticated
 
 from .permissions import IsNotRegistered
-from .models import Profile
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer, ProfileSerializer
 from orders.permissions import IsOwnerOrReadOnly
-from django.contrib.auth import authenticate
 from django.contrib.auth import logout
+from datetime import datetime, timedelta
 
 
 class RegisterUserAPIView(generics.CreateAPIView):
@@ -28,9 +27,10 @@ class RegisterUserAPIView(generics.CreateAPIView):
         token = RefreshToken.for_user(user)
 
         data = serializer.data
-        data["tokens"] = {
-            "refresh": str(token),
-            "access": str(token.access_token)
+        data['tokens'] = {
+            'refresh': str(token),
+            'access': str(token.access_token),
+            # 'access_time': datetime.da
         }
 
         return Response(data, status=status.HTTP_201_CREATED)
@@ -42,6 +42,8 @@ class LoginUserAPIView(generics.CreateAPIView):
 
 
     def post(self, request, *args, **kwargs):
+        # print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -50,9 +52,9 @@ class LoginUserAPIView(generics.CreateAPIView):
         token = RefreshToken.for_user(user)
 
         data = serializer.data
-        data["tokens"] = {
-            "refresh": str(token),
-            "access": str(token.access_token)
+        data['tokens'] = {
+            'refresh': str(token),
+            'access': str(token.access_token)
         }
 
         return Response(data, status=status.HTTP_200_OK)

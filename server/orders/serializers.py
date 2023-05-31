@@ -1,15 +1,9 @@
 from rest_framework import serializers
-from rest_framework.fields import empty
 from .models import Orders, Photo
 from users.models import Profile
-from django.contrib.auth.models import User
 
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.exceptions import PermissionDenied
 from pytils.translit import slugify
+from server.settings import DATETIME_FORMAT
 
 
 class OrdersPhotoSerializers(serializers.ModelSerializer):
@@ -20,6 +14,8 @@ class OrdersPhotoSerializers(serializers.ModelSerializer):
 
 class OrdersSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
+    time_create = serializers.DateTimeField(read_only=True, format=DATETIME_FORMAT)
+    time_update = serializers.DateTimeField(read_only=True, format=DATETIME_FORMAT)
 
     class Meta:
         model = Orders
@@ -30,11 +26,13 @@ class OrdersSerializer(serializers.ModelSerializer):
             'slug',
             'price',
             'currency',
+            'time_create',
+            'time_update',
             'category',
             'user',
         )
         depth = 1
-        # exclude = ('number_photo', 'is_active')
+
 
     def to_representation(self, instance):
         data = Orders.objects.filter(pk=instance.id)[0].number_photo
@@ -42,11 +40,13 @@ class OrdersSerializer(serializers.ModelSerializer):
 
         representation = super().to_representation(instance)
 
-        representation["user"] = [{
+        representation["user"] = {
+            'id': instance.user.profile.id,
             'title': instance.user.profile.username,
             'email': instance.user.profile.email,
             'first_name': instance.user.profile.first_name,
-        }]
+            'date_joined': instance.user.profile.date_joined.strftime(DATETIME_FORMAT)
+        }
         representation["photo"] = photo
 
         return representation
@@ -62,25 +62,6 @@ class OrdersSerializer(serializers.ModelSerializer):
 
 
 
-
-
-class TokenObtainLifetimeSerializer(TokenObtainPairSerializer):
-
-    def validate(self, attrs):
-        print('qwerty')
-        data = super().validate(attrs)
-        refresh = self.get_token(self.user)
-        data['lifetime'] = int(refresh.access_token.lifetime.total_seconds())
-        return data
-
-
-class TokenRefreshLifetimeSerializer(TokenRefreshSerializer):
-
-    def validate(self, attrs):
-        data = super().validate(attrs)
-        refresh = RefreshToken(attrs['refresh'])
-        data['lifetime'] = int(refresh.access_token.lifetime.total_seconds())
-        return data
 
 
 
@@ -104,8 +85,16 @@ class AddOrdersSerializer(serializers.ModelSerializer):
         model = Orders
         # fields = ["title", "description", "price", "currency", "images",
         #          "category", "photo", "user"]
-        fields = ["id", "slug", "title", "description", "price", "currency",
-                "category", "user"]
+        fields = [
+            'id',
+            'slug',
+            'title',
+            'description',
+            'price',
+            'currency',
+            'category',
+            'user',
+        ]
 
 
 
