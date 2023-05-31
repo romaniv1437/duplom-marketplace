@@ -13,7 +13,6 @@ import {Category, CategoryModel} from "../models/category.interface";
   providedIn: 'root'
 })
 export class ApiService {
-  public mockProducts = this.mockService.products;
   BASE_URL = 'http://127.0.0.1:8000/'
 
   constructor(private http: HttpClient, private mockService: MockService, private authService: AuthService) {
@@ -24,7 +23,6 @@ export class ApiService {
       .pipe(
         map(res => ({items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse)),
         catchError(this.errorHandler))
-    /* return of({items: this.mockProducts} as ProductsResponse)*/
   }
 
   loadUserProducts(): Observable<ProductsResponse> {
@@ -32,7 +30,6 @@ export class ApiService {
       .pipe(
         map(res => ({items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse)),
         catchError(this.errorHandler))
-    /* return of({items: this.mockProducts} as ProductsResponse)*/
   }
 
   loadProductById(productId: string): Observable<Product> {
@@ -40,7 +37,6 @@ export class ApiService {
       .pipe(
         map(res => (this.productsAdapter(res))),
         catchError(this.errorHandler))
-    /*return of({...this.mockProducts.filter(product => Number(product.id) === Number(productId))[0]} as Product)*/
   }
 
   login(email: string, password: string): Observable<User> {
@@ -49,7 +45,6 @@ export class ApiService {
         tap(res => this.authService.setToken(res.tokens)),
         map(res => this.userAdapter(res)),
         catchError(this.errorHandler))
-    /*return of({id: 1} as UserModel)*/
   }
 
   register(user: User, password: string): Observable<User> {
@@ -65,7 +60,6 @@ export class ApiService {
         tap(res => this.authService.setToken(res.tokens)),
         map(res => this.userAdapter(res)),
         catchError(this.errorHandler))
-    /*return of({id: 1} as UserModel)*/
   }
 
   getUser(): Observable<User> {

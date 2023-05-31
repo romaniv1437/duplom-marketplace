@@ -7,7 +7,7 @@ import {categories} from "../mock/mock.data";
 })
 export class MockService {
 
-  public products = this.generateProducts(150);
+  //public products = this.generateProducts(150);
   private productNames: string[] = ['Айфон 11', "Самсунг 23", "Айфон 14", "Макбук"]
   private productDescriptions: string[] = ['Підходить дизайнерам', "Використовується у бізнесі", "Для закоханих"]
   private productImages: string[] = [
@@ -30,8 +30,8 @@ export class MockService {
         url: String(id),
         id: id,
         title: category.displayName + ' ' + (i + 1),
-        description: this.productDescriptions[Math.floor(Math.random() * this.productDescriptions.length)],
-        image: this.productImages[Math.floor(Math.random() * this.productImages.length)],
+        description: this.productDescriptions[Math.floor(Math.random() * this.productDescriptions?.length)],
+        image: this.productImages[Math.floor(Math.random() * this.productImages?.length)],
         price: Math.floor(Math.random() * 100) + 1,
       } as Product
 
