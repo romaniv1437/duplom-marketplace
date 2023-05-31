@@ -1,6 +1,5 @@
-import {Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
-import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators} from "@angular/forms";
-import {requiredFileType} from "./file-validation";
+import {Component, ElementRef, HostListener, ViewChild} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 
 @Component({
   selector: 'app-file-upload',
@@ -19,15 +18,15 @@ export class FileUploadComponent implements ControlValueAccessor {
   onChange!: Function;
   public files: File[] = [];
 
+  constructor(private host: ElementRef<HTMLInputElement>) {
+  }
+
   @HostListener('change', ['$event.target.files']) emitFiles(event: FileList) {
     for (let i = 0; i < event.length; i++) {
       this.files!.push(event.item(i)!);
     }
 
     this.onChange(this.files);
-  }
-
-  constructor(private host: ElementRef<HTMLInputElement>) {
   }
 
   writeValue(value: null) {

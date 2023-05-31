@@ -27,6 +27,7 @@ export class CartFacade {
   public removeProductFromCart(product: CartProduct): void {
     this.store$.dispatch(removeProductFromCart({product}))
   }
+
   public changeProductQty(productId: number, isIncrease: boolean): void {
     this.store$.dispatch(changeProductQty({productId, isIncrease}))
   }

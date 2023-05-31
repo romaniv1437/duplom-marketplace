@@ -1,4 +1,4 @@
-<main class="cart-container" *ngIf="cart$ | ngrxPush as cart">
+<main *ngIf="cart$ | ngrxPush as cart" class="cart-container">
 
   <div *ngIf="cart.products?.length; else cartEmpty">
 
@@ -15,13 +15,13 @@
     <section class="selected-products">
       <h4>Вибрані товари</h4>
       <div class="products">
-        <mat-card class="products--card" *ngFor="let product of cart.products"
-                  [routerLink]="'/products/item/' + product.url">
+        <mat-card *ngFor="let product of cart.products" [routerLink]="'/products/item/' + product.url"
+                  class="products--card">
           <mat-card-header>
             <mat-card-title class="title">{{product.title}}</mat-card-title>
           </mat-card-header>
-          <img mat-card-image [src]="product.image || mockImage" alt="{{product.title}} image" width="150"
-               height="150">
+          <img [src]="product.image || mockImage" alt="{{product.title}} image" height="150" mat-card-image
+               width="150">
           <mat-card-content class="content">
             <p style="flex: 1 1 auto">
               {{product.description}}
@@ -30,17 +30,17 @@
               {{product.price}} ₴
             </p>
           </mat-card-content>
-          <mat-card-actions class="actions" (click)="$event.stopPropagation()">
+          <mat-card-actions (click)="$event.stopPropagation()" class="actions">
             <div class="actions-qty">
-              <button mat-icon-button (click)="changeProductQty(product.id, true)">
+              <button (click)="changeProductQty(product.id, true)" mat-icon-button>
                 <mat-icon>add</mat-icon>
               </button>
-              <button mat-icon-button (click)="changeProductQty(product.id, false)">
+              <button (click)="changeProductQty(product.id, false)" mat-icon-button>
                 <mat-icon>remove</mat-icon>
               </button>
             </div>
             <span *ngIf="(cart.products | getCartProduct: product.id) as cartProduct">К-сть: {{cartProduct.qty}}, Загалом: {{cartProduct.totalPrice}}</span>
-            <button mat-icon-button (click)="removeFromCart(product)">
+            <button (click)="removeFromCart(product)" mat-icon-button>
               <mat-icon>delete</mat-icon>
             </button>
           </mat-card-actions>

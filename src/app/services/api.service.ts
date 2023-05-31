@@ -19,45 +19,6 @@ export class ApiService {
   constructor(private http: HttpClient, private mockService: MockService, private authService: AuthService) {
   }
 
-  private productsAdapter(product: ProductModel): Product {
-    return {
-      url: product.slug,
-      id: product.id,
-      title: product.title,
-      price: parseFloat(product.price),
-      description: product.description,
-      categoryId: product.category,
-      image: product.photo[0],
-      images: product.photo,
-      user: product.user
-    } as unknown as Product
-  }
-
-  private createProductBody(product: Product): ProductModel {
-    return {
-      title: product.title,
-      price: product.price,
-      description: product.description,
-      currency: 1,
-      category: product.category
-    } as unknown as ProductModel
-  }
-
-  private userAdapter(user: UserModel): User {
-    return {
-      ...user,
-      firstName: user.first_name,
-      lastName: user.last_name
-    }
-  }
-
-  private categoryAdapter(category: CategoryModel): Category {
-    return {
-      ...category,
-      url: '/products/' + category.slug,
-    }
-  }
-
   loadProducts(loadData: { paginationData: PaginationData, category: string }): Observable<ProductsResponse> {
     return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/')
       .pipe(
@@ -131,7 +92,7 @@ export class ApiService {
               ? zip(product.imageFiles.map(imageFile => this.addProductImage(imageFile, productResponse.slug)))
               : of([])
             ),
-            map(([productResponse, productWithImage] )=> (productResponse)),
+            map(([productResponse, productWithImage]) => (productResponse)),
             map(products => products)
           ),
         ),
@@ -145,9 +106,47 @@ export class ApiService {
     return this.http.post<ProductModel>(this.BASE_URL + 'add-photo/' + productId + '/', formData)
       .pipe(
         map(res => this.productsAdapter(res)),
-        catchError(this.errorHandler), )
+        catchError(this.errorHandler),)
   }
 
+  private productsAdapter(product: ProductModel): Product {
+    return {
+      url: 'products/item/' + product.slug,
+      id: product.id,
+      title: product.title,
+      price: parseFloat(product.price),
+      description: product.description,
+      categoryId: product.category,
+      image: product.photo ? product.photo[0] : '',
+      images: product.photo,
+      user: product.user
+    } as unknown as Product
+  }
+
+  private createProductBody(product: Product): ProductModel {
+    return {
+      title: product.title,
+      price: product.price,
+      description: product.description,
+      currency: 1,
+      category: product.category
+    } as unknown as ProductModel
+  }
+
+  private userAdapter(user: UserModel): User {
+    return {
+      ...user,
+      firstName: user.first_name,
+      lastName: user.last_name
+    }
+  }
+
+  private categoryAdapter(category: CategoryModel): Category {
+    return {
+      ...category,
+      url: '/products/' + category.slug,
+    }
+  }
 
   private errorHandler(error: any) {
     let errorMessage = "";

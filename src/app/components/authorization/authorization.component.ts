@@ -5,7 +5,7 @@ import {User} from "../../models/user.interface";
 import {Observable, takeUntil} from "rxjs";
 import {ControlSubscribtionComponent} from "../../control-subscriptions/controlSubscribtion.component";
 import {AuthService} from "../../services/auth.service";
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-authorization',

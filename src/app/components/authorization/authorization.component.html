@@ -8,9 +8,10 @@
       <form [formGroup]="authorizationForm" class="form">
         <mat-form-field>
           <mat-label>Ел. пошта</mat-label>
-          <input type="email" matInput formControlName="email"
-                 placeholder="Ex. pat@example.com">
-          <mat-error *ngIf="authorizationForm.controls['email'].hasError('email') && !authorizationForm.controls['email'].hasError('required')">
+          <input formControlName="email" matInput placeholder="Ex. pat@example.com"
+                 type="email">
+          <mat-error
+            *ngIf="authorizationForm.controls['email'].hasError('email') && !authorizationForm.controls['email'].hasError('required')">
             Будь ласка введіть справжню адресу пошти
           </mat-error>
           <mat-error *ngIf="authorizationForm.controls['email'].hasError('required')">
@@ -19,20 +20,20 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Пароль</mat-label>
-          <input type="password" matInput formControlName="password">
+          <input formControlName="password" matInput type="password">
           <mat-error *ngIf="authorizationForm.controls['email'].hasError('required')">
             Поле "Пароль" <strong>обов'язкове</strong>
           </mat-error>
         </mat-form-field>
       </form>
-  </mat-card-content>
+    </mat-card-content>
     <mat-card-actions>
-      <button (click)="setAuthSelected('register')"  mat-button>У вас ще немає акаунту? Зараєструватись</button>
+      <button (click)="setAuthSelected('register')" mat-button>У вас ще немає акаунту? Зараєструватись</button>
       <button (click)="login()" [disabled]="!authorizationForm.valid" mat-button>Логін</button>
     </mat-card-actions>
   </mat-card>
 
-  <mat-card  *ngSwitchCase="'register'"  class="authorization">
+  <mat-card *ngSwitchCase="'register'" class="authorization">
     <mat-card-header>
       <mat-card-title>Реєстрація</mat-card-title>
       <mat-card-subtitle></mat-card-subtitle>
@@ -41,9 +42,10 @@
       <form [formGroup]="authorizationForm" class="form">
         <mat-form-field>
           <mat-label>Ел. пошта</mat-label>
-          <input type="email" matInput formControlName="email"
-                 placeholder="Ex. pat@example.com">
-          <mat-error *ngIf="authorizationForm.controls['email'].hasError('email') && !authorizationForm.controls['email'].hasError('required')">
+          <input formControlName="email" matInput placeholder="Ex. pat@example.com"
+                 type="email">
+          <mat-error
+            *ngIf="authorizationForm.controls['email'].hasError('email') && !authorizationForm.controls['email'].hasError('required')">
             Будь ласка введіть справжню адресу пошти
           </mat-error>
           <mat-error *ngIf="authorizationForm.controls['email'].hasError('required')">
@@ -52,21 +54,21 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Пароль</mat-label>
-          <input type="password" matInput formControlName="password">
+          <input formControlName="password" matInput type="password">
           <mat-error *ngIf="authorizationForm.controls['email'].hasError('required')">
             Поле "Пароль" <strong>обов'язкове</strong>
           </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Ім'я</mat-label>
-          <input type="text" matInput formControlName="firstName">
+          <input formControlName="firstName" matInput type="text">
           <mat-error *ngIf="authorizationForm.controls['firstName'].hasError('required')">
             Поле "Ім'я" <strong>обов'язкове</strong>
           </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Фамілія</mat-label>
-          <input type="text" matInput formControlName="lastName">
+          <input formControlName="lastName" matInput type="text">
           <mat-error *ngIf="authorizationForm.controls['lastName'].hasError('required')">
             Поле "Фамілія" <strong>обов'язкове</strong>
           </mat-error>

@@ -4,9 +4,10 @@ import {ProductsFacade} from "../../facades/products.facade";
 import {Product} from "../../models/products.interface";
 import {Observable} from "rxjs";
 import {PaginationData} from "../../models/core.interface";
-import {PageEvent} from "@angular/material/paginator";
 import {CartProduct} from "../../models/cart.interface";
-import { CartFacade } from 'src/app/facades/cart.facade';
+import {CartFacade} from 'src/app/facades/cart.facade';
+import {AuthFacade} from 'src/app/facades/auth.facade';
+import {User} from "../../models/user.interface";
 
 @Component({
   selector: 'app-products',
@@ -19,11 +20,13 @@ export class ProductsComponent implements OnInit {
   public category: string = 'no-category'
   public products$: Observable<Product[]> = new Observable<Product[]>();
   public cartProducts$: Observable<CartProduct[]> = new Observable<CartProduct[]>();
+  public user$: Observable<User> = new Observable<User>();
 
   constructor(
     private route: ActivatedRoute,
     private productsFacade: ProductsFacade,
-    private cartFacade: CartFacade
+    private cartFacade: CartFacade,
+    private authFacade: AuthFacade
   ) {
   }
 
@@ -42,7 +45,7 @@ export class ProductsComponent implements OnInit {
     }
 
     this.cartProducts$ = this.cartFacade.cartProducts$;
-
+    this.user$ = this.authFacade.user$;
   }
 
   private loadProducts(category: string, params: PaginationData): void {

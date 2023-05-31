@@ -1,4 +1,4 @@
-export interface CategoryModel extends Category{
+export interface CategoryModel extends Category {
   slug: string
 }
 

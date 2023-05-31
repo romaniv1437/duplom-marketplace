@@ -1,7 +1,7 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {State} from "./reducer";
 
-export const selectFeature =  createFeatureSelector<State>('store');
+export const selectFeature = createFeatureSelector<State>('store');
 
 export const selectProducts = createSelector(
   selectFeature,
@@ -39,6 +39,12 @@ export const selectError = createSelector(
   selectFeature,
   (state) => state.error
 );
+
+export const selectIsLoading = createSelector(
+  selectFeature,
+  (state) => state.isLoading
+);
+
 
 export const selectCategories = createSelector(
   selectFeature,

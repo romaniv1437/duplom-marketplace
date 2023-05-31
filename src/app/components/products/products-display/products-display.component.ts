@@ -1,7 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Product} from 'src/app/models/products.interface';
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {ProductsFacade} from "../../../facades/products.facade";
 import {CartProduct} from "../../../models/cart.interface";
 import {CartFacade} from "../../../facades/cart.facade";
 
@@ -14,20 +13,14 @@ export class ProductsDisplayComponent implements OnInit {
 
   @ViewChild('paginator') paginator!: MatPaginator;
   @Input() productsAlign: string = 'start';
-  @Input() set products(products: Product[]) {
-    this.productsItems = products;
-    this.paginator?.firstPage();
-    this.length = products?.length;
-    this.getData(this.pageEvent);
-  };
-
+  @Input() userId: number | undefined;
   @Input() cartProducts: CartProduct[] = [];
+  @Input() maxPageSize: number | undefined;
   public productsDataSource: Product[] = [];
-
   productsItems: Product[] = [];
   length = 0;
   pageIndex = 0;
-  pageSize = 7;
+  pageSize = 4;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   pageEvent!: PageEvent;
   mockImage: string = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
@@ -35,7 +28,15 @@ export class ProductsDisplayComponent implements OnInit {
   constructor(private cartFacade: CartFacade) {
   }
 
+  @Input() set products(products: Product[]) {
+    this.productsItems = products;
+    this.paginator?.firstPage();
+    this.length = products?.length;
+    this.getData(this.pageEvent);
+  };
+
   ngOnInit(): void {
+    this.pageSize = this.maxPageSize || this.pageSize;
   }
 
   getData(event?: PageEvent) {

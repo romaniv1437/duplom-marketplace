@@ -28,19 +28,19 @@ import {MatBadgeModule} from "@angular/material/badge";
 import {IsProductInCartPipe} from './pipes/is-product-in-cart.pipe';
 import {CartComponent} from './components/cart/cart.component';
 import {GetCartProductPipe} from "./pipes/get-cart-product.pipe";
-import { AuthorizationComponent } from './components/authorization/authorization.component';
+import {AuthorizationComponent} from './components/authorization/authorization.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
-import {ControlSubscribtionComponent} from "./control-subscriptions/controlSubscribtion.component";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
-import { ProfileComponent } from './components/profile/profile.component';
-import { ProductsAddFormComponent } from './components/products/products-add-form/products-add-form.component';
-import { FileUploadComponent } from './components/shared/file-upload/file-upload.component';
-import { FileToUrlPipe } from './pipes/file-to-url.pipe';
+import {ProfileComponent} from './components/profile/profile.component';
+import {ProductsAddFormComponent} from './components/products/products-add-form/products-add-form.component';
+import {FileUploadComponent} from './components/shared/file-upload/file-upload.component';
+import {FileToUrlPipe} from './pipes/file-to-url.pipe';
 import {MatSelectModule} from "@angular/material/select";
 import {NgImageSliderModule} from "ng-image-slider";
-import { ImageForSliderPipe } from './pipes/image-for-slider.pipe';
+import {ImageForSliderPipe} from './pipes/image-for-slider.pipe';
+import {NgxSpinnerModule} from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -83,15 +83,16 @@ import { ImageForSliderPipe } from './pipes/image-for-slider.pipe';
     MatSnackBarModule,
     FormsModule,
     MatSelectModule,
-    NgImageSliderModule
+    NgImageSliderModule,
+    NgxSpinnerModule.forRoot({type: 'ball-scale-multiple'})
   ],
   providers: [
-  {
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptor,
-    multi: true,
-  },
-],
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class CoreModule {

@@ -8,9 +8,11 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private injector: Injector) {
   }
+
   protected get authService(): AuthService {
     return this.injector.get(AuthService);
   }
+
   intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     return of(this.authService.token)

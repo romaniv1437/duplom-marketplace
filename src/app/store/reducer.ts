@@ -88,7 +88,9 @@ export const baseReducer = createReducer(
     }
   }),
   on(actions.addProductToCart, (state, action) => {
-    const cartProducts = state.cart.products ? [...state.cart.products, action.product] : [action.product]
+    const cartProducts = state.cart.products
+      ? [...state.cart.products.filter(product => product.id !== action.product.id), action.product]
+      : [action.product]
     return {
       ...state,
       cart: {
@@ -194,7 +196,21 @@ export const baseReducer = createReducer(
       isLoading: false,
       categories: action.categories
     }
-  })
+  }),
+  on(actions.createProduct, (state, action) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.createProductSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      userProducts: [...state.userProducts, action.product]
+    }
+  }),
 );
 
 const getTotalPrice = (products: CartProduct[]): number => {

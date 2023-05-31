@@ -7,14 +7,14 @@
       <form [formGroup]="productForm" class="products-form">
         <mat-form-field>
           <mat-label>Назва</mat-label>
-          <input matInput placeholder="Назва оголошення" formControlName="title">
+          <input formControlName="title" matInput placeholder="Назва оголошення">
           <mat-error *ngIf="productForm.controls['title'].hasError('required')">
             Це поле обов'язкове
           </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Опис</mat-label>
-          <input matInput placeholder="Опис оголошення" formControlName="description">
+          <input formControlName="description" matInput placeholder="Опис оголошення">
           <mat-error *ngIf="productForm.controls['description'].hasError('required')">
             Це поле обов'язкове
           </mat-error>
@@ -32,7 +32,7 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Ціна</mat-label>
-          <input matInput placeholder="Ціна оголошення" formControlName="price">
+          <input formControlName="price" matInput placeholder="Ціна оголошення">
           <mat-error *ngIf="productForm.controls['price'].hasError('required')">
             Це поле обов'язкове
           </mat-error>
@@ -41,7 +41,9 @@
       </form>
     </mat-card-content>
     <mat-card-actions align="end">
-      <button (click)="createProduct()" [disabled]="!productForm.valid" mat-raised-button color="primary">Створити оголошення</button>
+      <button (click)="createProduct()" [disabled]="!productForm.valid" color="primary" mat-raised-button>Створити
+        оголошення
+      </button>
     </mat-card-actions>
   </mat-card>
 </div>
