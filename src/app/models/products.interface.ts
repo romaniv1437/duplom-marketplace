@@ -1,15 +1,18 @@
 import {Category} from "./category.interface";
 import {PaginationData} from "./core.interface";
+import {User} from "./user.interface";
 
 export interface Product {
   url: string;
   id: number;
   title: string;
   image: string;
-  images: File[];
+  images: string[];
   price: number;
   description: string;
   category: Category;
+  user: User;
+  imageFiles: File[];
 }
 
 export interface ProductsResponse extends PaginationData {
@@ -27,6 +30,6 @@ export interface ProductModel {
   number_photo: number,
   is_active: boolean,
   category: number,
-  user: number,
+  user: User,
   photo: string[]
 }

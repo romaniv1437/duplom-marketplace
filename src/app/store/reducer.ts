@@ -88,7 +88,9 @@ export const baseReducer = createReducer(
     }
   }),
   on(actions.addProductToCart, (state, action) => {
-    const cartProducts = state.cart.products ? [...state.cart.products, action.product] : [action.product]
+    const cartProducts = state.cart.products
+      ? [...state.cart.products.filter(product => product.id !== action.product.id), action.product]
+      : [action.product]
     return {
       ...state,
       cart: {
@@ -114,7 +116,9 @@ export const baseReducer = createReducer(
     const cartProducts = state.cart.products.map(product => product.id === cartProduct.id ? ({
       ...cartProduct,
       qty: action.isIncrease ? cartProduct.qty + 1 : cartProduct.qty - 1,
-      totalPrice: action.isIncrease ? cartProduct.totalPrice + cartProduct.price : cartProduct.totalPrice - cartProduct.price
+      totalPrice: action.isIncrease
+        ? parseFloat((cartProduct.totalPrice + cartProduct.price).toFixed(2))
+        : parseFloat((cartProduct.totalPrice - cartProduct.price).toFixed(2))
     }) : product)
     if (cartProduct.qty === 1 && !action.isIncrease) {
       return {...state}
@@ -192,9 +196,23 @@ export const baseReducer = createReducer(
       isLoading: false,
       categories: action.categories
     }
-  })
+  }),
+  on(actions.createProduct, (state, action) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.createProductSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      userProducts: [...state.userProducts, action.product]
+    }
+  }),
 );
 
 const getTotalPrice = (products: CartProduct[]): number => {
-  return products.reduce((totalPrice, product) => totalPrice + (product.totalPrice), 0);
+  return parseFloat(products.reduce((totalPrice, product) => totalPrice + (product.totalPrice), 0).toFixed(2));
 }

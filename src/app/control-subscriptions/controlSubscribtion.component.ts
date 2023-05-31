@@ -1,5 +1,5 @@
-import { Component, Injectable, OnDestroy } from "@angular/core";
-import { ReplaySubject } from "rxjs";
+import {Component, Injectable, OnDestroy} from "@angular/core";
+import {ReplaySubject} from "rxjs";
 
 @Component({
   template: ``

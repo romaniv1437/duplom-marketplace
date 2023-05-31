@@ -1,19 +1,28 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {EMPTY, of, switchMap} from 'rxjs';
-import {map, exhaustMap, catchError} from 'rxjs/operators';
+import {of, switchMap, tap} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {
-  createProduct, createProductSuccess,
-  getUserInfo, getUserInfoSuccess, loadCategories, loadCategoriesSuccess,
+  createProduct,
+  createProductSuccess,
+  getUserInfo,
+  getUserInfoSuccess,
+  loadCategories,
+  loadCategoriesSuccess,
   loadProductById,
   loadProductByIdSuccess,
   loadProducts,
-  loadProductsSuccess, loadUserProducts, loadUserProductsSuccess,
+  loadProductsSuccess,
+  loadUserProducts,
+  loadUserProductsSuccess,
   login,
-  loginSuccess, register, registerSuccess,
+  loginSuccess,
+  register,
+  registerSuccess,
   setError
 } from "./actions";
 import {ApiService} from "../services/api.service";
+import {Router} from "@angular/router";
 
 @Injectable()
 export class BaseEffects {
@@ -28,12 +37,13 @@ export class BaseEffects {
      )
    );*/
 
+
   loadProducts$ = createEffect(() => this.actions$.pipe(
     ofType(loadProducts),
     switchMap((action) => this.apiService.loadProducts({...action})
       .pipe(
         map(products => loadProductsSuccess({productsResponse: products})),
-        catchError((error) => of(setError({ error })))
+        catchError((error) => of(setError({error})))
       )
     )
   ))
@@ -43,17 +53,22 @@ export class BaseEffects {
     switchMap((action) => this.apiService.createProduct(action.product)
       .pipe(
         map(product => createProductSuccess({product})),
-        catchError((error) => of(setError({ error })))
+        catchError((error) => of(setError({error})))
       )
     )
   ))
+
+  createProductSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(createProductSuccess),
+    tap(action => this.router.navigate([action.product.url]))
+  ), {dispatch: false})
 
   loadCategories$ = createEffect(() => this.actions$.pipe(
     ofType(loadCategories),
     switchMap((action) => this.apiService.loadCategories()
       .pipe(
         map(categories => loadCategoriesSuccess({categories})),
-        catchError((error) => of(setError({ error })))
+        catchError((error) => of(setError({error})))
       )
     )
   ))
@@ -63,7 +78,7 @@ export class BaseEffects {
     switchMap((action) => this.apiService.loadUserProducts()
       .pipe(
         map(products => loadUserProductsSuccess({productsResponse: products})),
-        catchError((error) => of(setError({ error })))
+        catchError((error) => of(setError({error})))
       )
     )
   ))
@@ -73,7 +88,7 @@ export class BaseEffects {
     switchMap((action) => this.apiService.loadProductById(action.productId)
       .pipe(
         map(product => loadProductByIdSuccess({product})),
-        catchError((error) => of(setError({ error })))
+        catchError((error) => of(setError({error})))
       )
     )
   ))
@@ -83,7 +98,7 @@ export class BaseEffects {
     switchMap((action) => this.apiService.login(action.email, action.password)
       .pipe(
         map(user => loginSuccess({user})),
-        catchError((error) => of(setError({ error })))
+        catchError((error) => of(setError({error})))
       )
     )
   ))
@@ -94,7 +109,7 @@ export class BaseEffects {
     switchMap((action) => this.apiService.getUser()
       .pipe(
         map(user => getUserInfoSuccess({user})),
-        catchError((error) => of(setError({ error })))
+        catchError((error) => of(setError({error})))
       )
     )
   ))
@@ -104,14 +119,15 @@ export class BaseEffects {
     switchMap((action) => this.apiService.register(action.user, action.password)
       .pipe(
         map(user => registerSuccess({user})),
-        catchError((error) => of(setError({ error })))
+        catchError((error) => of(setError({error})))
       )
     )
   ))
 
   constructor(
     private actions$: Actions,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private router: Router,
   ) {
   }
 }

@@ -4,35 +4,41 @@
   </p>
 </div>
 
-<div class="products" [ngStyle]="{'justify-content': productsAlign}" *ngIf="productsDataSource.length !== 0; else noProducts">
-  <mat-card class="products--card" *ngFor="let product of productsDataSource"
-            [routerLink]="'/products/item/' + product.url">
+<div *ngIf="productsDataSource.length !== 0; else noProducts" [ngStyle]="{'justify-content': productsAlign}"
+     class="products">
+  <mat-card *ngFor="let product of productsDataSource" [routerLink]="'/' + product.url"
+            class="products--card">
+    <img [src]="product?.image || mockImage" alt="{{product.title}} image" height="150" mat-card-image width="150">
     <mat-card-header>
       <mat-card-title class="title">{{product.title}}</mat-card-title>
     </mat-card-header>
-    <img mat-card-image [src]="product?.image || mockImage" alt="{{product.title}} image" width="150" height="150">
     <mat-card-content class="content">
-      <p style="flex: 1 1 auto">
+      <p class="description" style="flex: 1 1 auto">
         {{product.description}}
       </p>
       <p class="price">
         {{product.price}} ₴
       </p>
     </mat-card-content>
-    <mat-card-actions class="actions" (click)="$event.stopPropagation()">
+    <mat-card-actions (click)="$event.stopPropagation()" class="actions">
       <button mat-icon-button>
         <mat-icon>favorite</mat-icon>
       </button>
       <ng-container *ngrxLet="(cartProducts | isProductInCart: product.id) as isProductInCart">
-        <button *ngIf="!isProductInCart"
-                (click)="addProductToCart(product)"
+        <button (click)="addProductToCart(product)"
+                *ngIf="!isProductInCart && product.user?.id !== userId"
                 mat-icon-button>
           <mat-icon>add_shopping_cart</mat-icon>
         </button>
-        <button *ngIf="isProductInCart"
+        <button *ngIf="isProductInCart && product.user?.id !== userId"
                 [routerLink]="'/cart'"
                 mat-icon-button>
           <mat-icon>done</mat-icon>
+        </button>
+        <button *ngIf="product.user.id === userId"
+                [routerLink]="'/profile/edit-item'"
+                mat-icon-button>
+          <mat-icon>edit</mat-icon>
         </button>
       </ng-container>
     </mat-card-actions>
@@ -40,13 +46,13 @@
 </div>
 <br>
 <mat-paginator
+  #paginator
+  (page)="pageEvent = getData($event)"
   *ngIf="productsItems.length > pageSize"
   [length]="length"
-               [pageSize]="pageSize"
-               [pageIndex]="pageIndex"
-               [pageSizeOptions]="pageSizeOptions"
-               (page)="pageEvent = getData($event)"
-               aria-label="Select page" #paginator>
+  [pageIndex]="pageIndex"
+  [pageSizeOptions]="pageSizeOptions"
+  [pageSize]="pageSize" aria-label="Select page">
 </mat-paginator>
 
 

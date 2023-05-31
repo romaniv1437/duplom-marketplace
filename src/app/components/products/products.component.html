@@ -5,9 +5,12 @@
   </ng-container>
 
   <app-products-display
+    *ngrxLet="user$ | ngrxPush as user"
+    [cartProducts]="$any(cartProducts$ | ngrxPush)"
+    [maxPageSize]="4"
     [productsAlign]="'center'"
     [products]="$any(products$ | ngrxPush)"
-    [cartProducts]="$any(cartProducts$ | ngrxPush)"
+    [userId]="user?.id"
   ></app-products-display>
 </main>
 

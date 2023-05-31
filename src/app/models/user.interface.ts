@@ -1,4 +1,4 @@
-export interface UserModel extends User{
+export interface UserModel extends User {
   first_name: string;
   last_name: string;
   tokens: { access: string, refresh: string }

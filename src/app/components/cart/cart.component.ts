@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CartFacade } from 'src/app/facades/cart.facade';
+import {Component, OnInit} from '@angular/core';
+import {CartFacade} from 'src/app/facades/cart.facade';
 import {Cart, CartProduct} from "../../models/cart.interface";
 import {Observable} from "rxjs";
 
@@ -12,15 +12,18 @@ export class CartComponent implements OnInit {
 
   cart$: Observable<Cart> = new Observable<Cart>()
   mockImage: string = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
-  constructor(private cartFacade: CartFacade) { }
+
+  constructor(private cartFacade: CartFacade) {
+  }
 
   ngOnInit(): void {
     this.cart$ = this.cartFacade.cart$;
   }
 
-  public removeFromCart(product:CartProduct): void {
+  public removeFromCart(product: CartProduct): void {
     this.cartFacade.removeProductFromCart(product)
   }
+
   public changeProductQty(productId: number, isIncrease: boolean): void {
     this.cartFacade.changeProductQty(productId, isIncrease)
   }

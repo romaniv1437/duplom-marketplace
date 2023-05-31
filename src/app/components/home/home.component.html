@@ -1,21 +1,22 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div class="container">
   <mat-drawer-container>
     <mat-drawer #drawer>
       <div class="drawer-content">
         <mat-card>
-          <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+          <mat-tree [dataSource]="menuData" [treeControl]="treeControl">
             <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-              <button mat-icon-button disabled></button>
-              <a class="nav-link" [routerLink]="'/' + node.url" (click)="drawer.toggle()">{{node.name}}</a>
+              <button disabled mat-icon-button></button>
+              <a (click)="drawer.toggle()" [routerLink]="'/' + node.url" class="nav-link">{{node.name}}</a>
             </mat-tree-node>
             <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-              <button mat-icon-button matTreeNodeToggle
-                      [attr.aria-label]="'Toggle ' + node.name">
+              <button [attr.aria-label]="'Toggle ' + node.name" mat-icon-button
+                      matTreeNodeToggle>
                 <mat-icon class="mat-icon-rtl-mirror">
                   {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                 </mat-icon>
               </button>
-              <a class="nav-link" (click)="drawer.toggle()" [routerLink]="'/' + node.url">{{node.name}}</a>
+              <a (click)="drawer.toggle()" [routerLink]="'/' + node.url" class="nav-link">{{node.name}}</a>
             </mat-tree-node>
           </mat-tree>
         </mat-card>
@@ -24,25 +25,25 @@
     <mat-drawer-content style="height:100%">
 
       <mat-toolbar color="primary">
-        <button (click)="drawer.toggle()" mat-icon-button aria-label="menu icon">
+        <button (click)="drawer.toggle()" aria-label="menu icon" mat-icon-button>
           <mat-icon>menu</mat-icon>
         </button>
         <span [routerLink]="'/'" style="cursor: pointer;">AK-19-03 marketplace</span>
         <span class="example-spacer"></span>
         <span>
-          <button [routerLink]="'/profile'" mat-icon-button aria-label="favorite icon"
-                  *ngIf="authService.isAuth">
+          <button *ngIf="authService.isAuth" [routerLink]="'/profile'" aria-label="favorite icon"
+                  mat-icon-button>
             <mat-icon>person</mat-icon>
           </button>
           <span *ngrxLet="user$ | ngrxPush as user">{{user?.username}}</span>
         </span>
-        <button [routerLink]="'/authorization'" mat-icon-button aria-label="favorite icon" *ngIf="!authService.isAuth">
+        <button *ngIf="!authService.isAuth" [routerLink]="'/authorization'" aria-label="favorite icon" mat-icon-button>
           <mat-icon>login</mat-icon>
         </button>
-        <button (click)="logout()" mat-icon-button aria-label="favorite icon" *ngIf="authService.isAuth">
+        <button (click)="logout()" *ngIf="authService.isAuth" aria-label="favorite icon" mat-icon-button>
           <mat-icon>logout</mat-icon>
         </button>
-        <button mat-icon-button aria-label="cart icon" [routerLink]="'/cart'">
+        <button [routerLink]="'/cart'" aria-label="cart icon" mat-icon-button>
           <mat-icon [matBadge]="(countProductsInCart$ | ngrxPush) || ''" matBadgeColor="warn">shopping_cart</mat-icon>
         </button>
       </mat-toolbar>
