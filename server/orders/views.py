@@ -1,6 +1,7 @@
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from django_filters import rest_framework as rest_filters 
 
 from .serializers import OrdersSerializer, AddOrdersSerializer, OrdersPhotoSerializers
 from .models import Orders, Photo
@@ -11,10 +12,9 @@ from .utils import OrdersMixinUpdate
 class OrdersListView(generics.ListAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
+    filter_backends = [rest_filters.DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['title', 'description']
     
-    def get_queryset(self):
-        return Orders.objects.all().order_by('-id')
-
 
     # def get(self, request, *args, **kwargs):
     #     data = Orders.objects.all()
@@ -99,6 +99,8 @@ class AddPhotoOrdersView(generics.ListCreateAPIView):
 class MyOrdersView(generics.ListAPIView):
     serializer_class = OrdersSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+    filter_backends = [rest_filters.DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['title', 'description']
 
 
     def get_queryset(self):

@@ -3,12 +3,22 @@ from .models import Profile
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.auth import login, authenticate, get_user_model
+from datetime import timedelta
+
+from server.settings import DATETIME_FORMAT
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'date_joined')
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        date_joined = instance.date_joined + timedelta(hours=3)
+        representation['date_joined'] = date_joined.strftime(DATETIME_FORMAT)
+
+        return representation
 
     
 class ProfileSerializer(serializers.ModelSerializer):

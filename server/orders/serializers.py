@@ -42,8 +42,7 @@ class OrdersSerializer(serializers.ModelSerializer):
 
         representation["user"] = {
             'id': instance.user.profile.id,
-            'title': instance.user.profile.username,
-            'email': instance.user.profile.email,
+            'username': instance.user.profile.username,
             'first_name': instance.user.profile.first_name,
             'date_joined': instance.user.profile.date_joined.strftime(DATETIME_FORMAT)
         }
@@ -83,7 +82,7 @@ class AddOrdersSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Orders
-        # fields = ["title", "description", "price", "currency", "images",
+        # fields = ["title", "description", "slug", "price", "currency", "images",
         #          "category", "photo", "user"]
         fields = [
             'id',
@@ -107,7 +106,7 @@ class AddOrdersSerializer(serializers.ModelSerializer):
         post_id =  1 if Orders.objects.last() is None else Orders.objects.last().pk + 1
         validated_data['slug'] = slugify(self.validated_data['title'] + '-' + str(post_id))
         validated_data['user'] = user
-        # print(validated_data['slug'])
+
         # validated_data['number_photo'] = image_part_id
 
         # for photo in photos:

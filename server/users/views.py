@@ -4,14 +4,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.models import TokenUser
 from rest_framework.permissions import IsAuthenticated
+
+from orders.permissions import IsOwnerOrReadOnly
+from django.contrib.auth import logout
+from datetime import datetime, timedelta
 
 from .permissions import IsNotRegistered
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer, ProfileSerializer
-from orders.permissions import IsOwnerOrReadOnly
-from django.contrib.auth import logout
-# from datetime import datetime, timedelta
+from server.settings import DATETIME_FORMAT
 
 
 class RegisterUserAPIView(generics.CreateAPIView):
@@ -42,7 +43,8 @@ class LoginUserAPIView(generics.CreateAPIView):
 
 
     def post(self, request, *args, **kwargs):
-        # print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        # life_access_token = datetime.now() + timedelta(minutes=30)
+        # life_refresh_token = datetime.now() + timedelta(days=7)
 
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -54,7 +56,9 @@ class LoginUserAPIView(generics.CreateAPIView):
         data = serializer.data
         data['tokens'] = {
             'refresh': str(token),
-            'access': str(token.access_token)
+            'access': str(token.access_token),
+            # 'life_access': life_access_token.strftime(DATETIME_FORMAT),
+            # 'life_refresh': life_refresh_token.strftime(DATETIME_FORMAT),
         }
 
         return Response(data, status=status.HTTP_200_OK)
