@@ -55,6 +55,7 @@ class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView)
 
         return context
 
+
     def get_queryset(self):
         slug = self.kwargs['slug']
 

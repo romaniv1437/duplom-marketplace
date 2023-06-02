@@ -9,7 +9,7 @@ class Profile(models.Model):
     """
         Avatar
     """
-    avatar = models.ImageField(upload_to='media/profile/%Y/%m/%d/', verbose_name='Аватар')
+    avatar = models.ImageField(upload_to='profile/%Y/%m/%d/', blank=True, verbose_name='Аватар')
 
     profile = models.OneToOneField(
         User,

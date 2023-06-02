@@ -95,7 +95,6 @@ DATABASES = {
         'USER': 'postgres',
         'HOST': 'localhost',
         'PORT': '5432',
-
     }
 }
 
@@ -124,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'Europe/Kyiv'
+TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
 
@@ -210,8 +209,3 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
 ]
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
-
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False

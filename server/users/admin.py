@@ -3,7 +3,7 @@ from .models import Profile
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'profile')
+    list_display = ('pk', 'avatar', 'profile')
     list_display_links = ('pk', 'profile')
 
 
