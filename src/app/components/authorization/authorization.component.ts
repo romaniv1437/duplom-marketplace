@@ -16,7 +16,8 @@ export class AuthorizationComponent extends ControlSubscribtionComponent impleme
   public user$: Observable<User> = new Observable<User>();
   public authSelected = 'login'
   public authorizationForm: FormGroup = new FormGroup<any>({
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', ),
+    username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
     firstName: new FormControl(),
     lastName: new FormControl(),
@@ -45,7 +46,7 @@ export class AuthorizationComponent extends ControlSubscribtionComponent impleme
   }
 
   public login(): void {
-    this.authFacade.login(this.authorizationForm.controls['email'].value, this.authorizationForm.controls['password'].value);
+    this.authFacade.login(this.authorizationForm.controls['username'].value, this.authorizationForm.controls['password'].value);
   }
 
   public register(): void {
