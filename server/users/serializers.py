@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.response import Response
 from .models import Profile
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -11,7 +12,8 @@ from server.settings import DATETIME_FORMAT
 class ProfileAvatarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('avatar',)
+        fields = ('avatar', 'profile')
+        depth = 1
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -41,8 +43,13 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['avatar'] = representation['profile']['avatar']
-        del representation['profile']
+
+        try:
+            representation['avatar'] = representation['profile']['avatar']
+            del representation['profile']
+        except:
+            representation['avatar'] = None
+            del representation['profile']
 
         date_joined = instance.date_joined + timedelta(hours=3)
 
@@ -52,14 +59,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         representation['date_joined'] = date_joined.strftime(DATETIME_FORMAT)
         
         return representation
-    
-
-# class UpdateProfileSerializer(serializers.ModelSerializer):
-#     profile = ProfileSerializer(many=True)
-
-#     class Meta:
-#         model = Profile
-#         fields = ('profile',)
 
 
 class ChangePasswordSerializer(serializers.ModelSerializer):
