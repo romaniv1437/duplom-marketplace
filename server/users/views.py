@@ -1,4 +1,4 @@
-from rest_framework import generics, serializers, status, viewsets
+from rest_framework import generics, serializers, status, filters
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -7,11 +7,12 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.contrib.auth import logout, authenticate
+from django_filters import rest_framework as rest_filters 
 
 from datetime import datetime, timedelta
 
 from .permissions import IsNotRegistered
-from .serializers import RegisterSerializer, LoginSerializer, ProfileSerializer, ChangePasswordSerializer
+from .serializers import RegisterSerializer, LoginSerializer, ProfileSerializer, ChangePasswordSerializer, ProfileAvatarSerializer
 from .models import Profile
 
 from server.settings import DATETIME_FORMAT
@@ -82,6 +83,7 @@ class LogoutUserAPIView(generics.CreateAPIView):
 
         return Response({'message': 'Ви вийшли з акаунту!'}, status=200)
     
+
 
 class MyProfile(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
@@ -172,3 +174,11 @@ class ChangePasswordAPIView(generics.CreateAPIView):
         user.save()
 
         return Response({'message': 'Ваш пароль успішно змінений!'})
+
+
+
+class UsersListAPIView(generics.ListAPIView):
+    queryset = User.objects.all().order_by('-id')
+    serializer_class = ProfileSerializer
+    filter_backends = [rest_filters.DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['username', 'first_name', 'last_name']
