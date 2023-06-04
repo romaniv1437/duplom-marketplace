@@ -92,7 +92,7 @@ class MyProfile(generics.RetrieveAPIView):
         return Response(serializer.data)
 
 
-class UpdateMyProfileAPIView(generics.RetrieveUpdateAPIView):
+class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
     
@@ -120,7 +120,6 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateAPIView):
         avatar = serializers.data['profile']['avatar']
 
         if avatar:
-            print(request.FILES['profile.avatar'])
             instance = Profile.objects.filter(profile__username=self.request.user.username)[0]
             instance.avatar = request.FILES['profile.avatar']
             instance.save()
@@ -134,6 +133,16 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateAPIView):
         )
 
         return Response({'message': 'Ваші дані успішно змінені!'})
+    
+
+    def destroy(self, request, *args, **kwargs):
+        username = self.request.user.username
+
+        instance = Profile.objects.get(profile__username=username)
+        instance.avatar = None
+        instance.save()
+
+        return Response({'message': 'Ваша аватарка успішно видалена!'})
     
 
     def get_queryset(self):

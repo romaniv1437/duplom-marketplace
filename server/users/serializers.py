@@ -15,7 +15,11 @@ class ProfileAvatarSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        # representation['avatar'] = 'http://127.0.0.1:8000' + instance.avatar.url
+
+        if instance.avatar:
+            representation['avatar'] = 'http://127.0.0.1:8000' + instance.avatar.url
+        else:
+            representation['avatar'] = None
 
         return representation
 
@@ -39,12 +43,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['avatar'] = representation['profile']['avatar']
         del representation['profile']
-        date_joined = instance.date_joined + timedelta(hours=3)
 
-        # if instance.profile.avatar:
-        #     representation['avatar'] = 'http://127.0.0.1:8000' + instance.profile.avatar.url
-        # else:
-        #     representation['avatar'] = None
+        date_joined = instance.date_joined + timedelta(hours=3)
 
         representation['username'] = instance.username
         representation['first_name'] = instance.first_name
