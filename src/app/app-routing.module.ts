@@ -7,7 +7,9 @@ import {CartComponent} from "./components/cart/cart.component";
 import {AuthorizationComponent} from "./components/authorization/authorization.component";
 import {AuthGuard} from "./guards/auth.guard";
 import {ProfileComponent} from "./components/profile/profile.component";
-import {ProductsAddFormComponent} from "./components/products/products-add-form/products-add-form.component";
+import {ProductsAddFormComponent} from "./components/profile/products-add-form/products-add-form.component";
+import {ProfileOptionsComponent} from "./components/profile/profile-options/profile-options.component";
+import {ProfileEditFormComponent} from "./components/profile/profile-edit-form/profile-edit-form.component";
 
 const routes: Routes = [
   {
@@ -23,11 +25,6 @@ const routes: Routes = [
         component: ProductsComponent,
       },
       {
-        path: 'profile/add-item',
-        component: ProductsAddFormComponent,
-        canActivate: [AuthGuard]
-      },
-      {
         path: 'products/item/:id',
         component: ProductsPageComponent,
       },
@@ -38,7 +35,21 @@ const routes: Routes = [
       {
         path: 'profile',
         component: ProfileComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
+        children: [
+          {
+            path:'',
+            component: ProfileOptionsComponent
+          },
+          {
+            path: 'add-item',
+            component: ProductsAddFormComponent,
+          },
+          {
+            path: 'edit-profile',
+            component: ProfileEditFormComponent,
+          },
+        ]
       },
       {
         path: 'profile/:userId',

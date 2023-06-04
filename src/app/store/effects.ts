@@ -4,7 +4,7 @@ import {of, switchMap, tap} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {
   createProduct,
-  createProductSuccess,
+  createProductSuccess, editProfile, editProfileSuccess,
   getUserInfo,
   getUserInfoSuccess,
   loadCategories,
@@ -63,6 +63,12 @@ export class BaseEffects {
     tap(action => this.router.navigate([action.product.url]))
   ), {dispatch: false})
 
+  editProfileSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(editProfileSuccess),
+    tap(action => this.router.navigate(['/profile']))
+  ), {dispatch: false})
+
+
   loadCategories$ = createEffect(() => this.actions$.pipe(
     ofType(loadCategories),
     switchMap((action) => this.apiService.loadCategories()
@@ -103,6 +109,15 @@ export class BaseEffects {
     )
   ))
 
+  editUser$ = createEffect(() => this.actions$.pipe(
+    ofType(editProfile),
+    switchMap((action) => this.apiService.editProfile(action.user)
+      .pipe(
+        map(user => editProfileSuccess({user})),
+        catchError((error) => of(setError({error})))
+      )
+    )
+  ))
 
   getUser$ = createEffect(() => this.actions$.pipe(
     ofType(getUserInfo),

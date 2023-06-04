@@ -10,4 +10,6 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
+  imageFile: File;
+  image: string
 }

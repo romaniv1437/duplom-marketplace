@@ -1,39 +1,45 @@
-.profile-container {
-  padding: 20px;
-  margin-top: 30px;
-  height: calc(100vh - 64px - 40px - 30px);
-  overflow-x: hidden;
+::ng-deep {
 
-  .profile-content {
-    display: flex;
-    gap: 10px;
+  .profile-container {
+    padding: 20px;
+    margin-top: 30px;
+    height: calc(100vh - 64px - 40px - 30px);
+    overflow-x: hidden;
 
-    .user-card {
-      width: 100%;
-      max-width: 400px;
-    }
+    .profile-content {
+      display: flex;
+      gap: 10px;
 
-    .card {
-      width: 100%;
+      .profile-options {
+        width: 100%;
+      }
+      .user-card {
+        width: 100%;
+        max-width: 400px;
+      }
 
-      .user-products-header {
-        padding-right: 30px;
+      .card {
+        width: 100%;
+
+        .user-profile-header {
+          padding-right: 30px;
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+
+      .profile-actions {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
       }
     }
-
-    .profile-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      width: 100%;
-    }
   }
-}
 
-.profile-products {
-  .products {
-    justify-content: start !important;
+  .profile-products {
+    .products {
+      justify-content: start !important;
+    }
   }
 }

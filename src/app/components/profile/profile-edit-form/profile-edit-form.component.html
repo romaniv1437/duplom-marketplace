@@ -1,0 +1,42 @@
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Форма редагування профілю</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="profileForm" class="profile-form">
+        <mat-form-field>
+          <mat-label>Юзернейм</mat-label>
+          <input formControlName="username" matInput placeholder="Ваш новий юзернейм">
+          <mat-error *ngIf="profileForm.controls['username'].hasError('required')">
+            Це поле обов'язкове
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Ім'я</mat-label>
+          <input formControlName="firstName" matInput placeholder="Змінити ім'я">
+          <mat-error *ngIf="profileForm.controls['firstName'].hasError('required')">
+            Це поле обов'язкове
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Фамілія</mat-label>
+          <input formControlName="lastName" matInput placeholder="Змінити фамілію">
+          <mat-error *ngIf="profileForm.controls['lastName'].hasError('required')">
+            Це поле обов'язкове
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Новий пароль</mat-label>
+          <input formControlName="password" matInput placeholder="Ваш новий пароль">
+        </mat-form-field>
+        <app-file-upload formControlName="photo"></app-file-upload>
+      </form>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button (click)="editProfile()" [disabled]="!profileForm.valid" color="primary" mat-raised-button>Зберегти
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
