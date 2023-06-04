@@ -7,9 +7,9 @@
     <mat-card-content>
       <form [formGroup]="authorizationForm" class="form">
         <mat-form-field>
-          <mat-label>Ел. пошта</mat-label>
-          <input formControlName="email" matInput placeholder="Ex. pat@example.com"
-                 type="email">
+          <mat-label>Юзернейм</mat-label>
+          <input formControlName="username" matInput placeholder="Введіть юзернейм"
+                 type="text">
           <mat-error
             *ngIf="authorizationForm.controls['email'].hasError('email') && !authorizationForm.controls['email'].hasError('required')">
             Будь ласка введіть справжню адресу пошти
