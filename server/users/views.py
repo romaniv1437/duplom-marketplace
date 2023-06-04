@@ -94,9 +94,14 @@ class MyProfile(generics.RetrieveAPIView):
 
 class UpdateMyProfileAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
+    permission_classes = (IsAuthenticated,)
     
 
     def get_object(self):
+        """
+            СИСТЕМА НАЛАШТУВАНЬ ДЛЯ ПЕВНОГО КОРИСТУВАЧА
+        """
+        
         return self.request.user
 
 
@@ -114,18 +119,23 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateAPIView):
 
         avatar = serializers.data['profile']['avatar']
 
-
         if avatar:
             print(request.FILES['profile.avatar'])
-            instance = Profile.objects.filter(profile__username=self.request.user.username)
-            instance.update(avatar=request.FILES['profile.avatar'])
-            # instance.save()
+            instance = Profile.objects.filter(profile__username=self.request.user.username)[0]
+            instance.avatar = request.FILES['profile.avatar']
+            instance.save()
 
-        # instance = Profile.objects.filter(profile__user__username=self.request.user.username)
-        # instance.update()
 
-        return Response({'message': 'Good'})
+        user = User.objects.filter(username=self.request.user.username)
+        user.update(
+            username=data['username'],
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+        )
+
+        return Response({'message': 'Ваші дані успішно змінені!'})
     
+
     def get_queryset(self):
         username = self.request.user.username
 
