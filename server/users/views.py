@@ -10,7 +10,7 @@ from django.contrib.auth import logout, authenticate
 from datetime import datetime, timedelta
 
 from .permissions import IsNotRegistered
-from .serializers import RegisterSerializer, LoginSerializer, ProfileSerializer, ChangePasswordSerializer, UserSerializer
+from .serializers import RegisterSerializer, LoginSerializer, ProfileSerializer, ChangePasswordSerializer
 from .models import Profile
 
 from server.settings import DATETIME_FORMAT
@@ -113,6 +113,9 @@ class ChangePasswordAPIView(generics.CreateAPIView):
         new_password = request.data['new_password']
 
         user = authenticate(username=username, password=password)
+
+        if user is None:
+            raise serializers.ValidationError({'error_message': 'Не правильний старий пароль!'})
         
         user.set_password(new_password)
         user.save()
