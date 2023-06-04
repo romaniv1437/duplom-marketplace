@@ -1,12 +1,13 @@
-from rest_framework import generics, serializers
+from rest_framework import generics, serializers, status, viewsets
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 
-from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
 from django.contrib.auth import logout, authenticate
+
 from datetime import datetime, timedelta
 
 from .permissions import IsNotRegistered
@@ -91,8 +92,39 @@ class MyProfile(generics.RetrieveAPIView):
         return Response(serializer.data)
 
 
-class UpdateMyProfileAPIView(generics.UpdateAPIView):
+class UpdateMyProfileAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
+    
+
+    def get_object(self):
+        return self.request.user
+
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+
+        return Response(serializer.data)
+    
+
+    def update(self, request, *args, **kwargs):
+        data = request.data
+        serializers = ProfileSerializer(data=data)
+        serializers.is_valid()
+
+        avatar = serializers.data['profile']['avatar']
+
+
+        if avatar:
+            print(request.FILES['profile.avatar'])
+            instance = Profile.objects.filter(profile__username=self.request.user.username)
+            instance.update(avatar=request.FILES['profile.avatar'])
+            # instance.save()
+
+        # instance = Profile.objects.filter(profile__user__username=self.request.user.username)
+        # instance.update()
+
+        return Response({'message': 'Good'})
     
     def get_queryset(self):
         username = self.request.user.username

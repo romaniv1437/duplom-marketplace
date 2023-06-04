@@ -8,21 +8,43 @@ from datetime import timedelta
 from server.settings import DATETIME_FORMAT
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(label='Електронна пошта: ', required=False, write_only=True)
+class ProfileAvatarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('id', 'username')
+        fields = ('avatar',)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        # representation['avatar'] = 'http://127.0.0.1:8000' + instance.avatar.url
+
+        return representation
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    # username = serializers.CharField(label='Електронна пошта: ', required=False, write_only=True)
+    # first_name = serializers.CharField(label="Ім'я", required=False, write_only=True)
+    # last_name = serializers.CharField(label="Прізвище", required=False, write_only=True)
+
+    profile = ProfileAvatarSerializer(required=False)
+    
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'profile', 'date_joined')
+        extra_kwargs = {
+            'date_joined': {'read_only': True}
+        }
 
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
+        representation['avatar'] = representation['profile']['avatar']
+        del representation['profile']
         date_joined = instance.date_joined + timedelta(hours=3)
 
-        if instance.profile.avatar:
-            representation['avatar'] = 'http://127.0.0.1:8000' + instance.profile.avatar.url
-        else:
-            representation['avatar'] = None
+        # if instance.profile.avatar:
+        #     representation['avatar'] = 'http://127.0.0.1:8000' + instance.profile.avatar.url
+        # else:
+        #     representation['avatar'] = None
 
         representation['username'] = instance.username
         representation['first_name'] = instance.first_name
