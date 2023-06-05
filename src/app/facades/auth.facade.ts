@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {User} from '../models/user.interface';
-import {getUserInfo, login, logout, register} from '../store/actions';
+import {editProfile, getUserInfo, login, logout, register} from '../store/actions';
 import {selectUser} from "../store/selectors";
 
 @Injectable({
@@ -29,5 +29,9 @@ export class AuthFacade {
 
   getUser(): void {
     this.store$.dispatch(getUserInfo())
+  }
+
+  edit(user: User): void {
+    this.store$.dispatch(editProfile({user}))
   }
 }

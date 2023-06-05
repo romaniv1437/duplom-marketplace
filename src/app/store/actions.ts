@@ -40,30 +40,30 @@ export const changeProductQty = createAction(
 )
 
 export const login = createAction(
-  "[AUTHORIZATION] login",
+  "[USER] login",
   props<{ email: string, password: string }>()
 )
 export const logout = createAction(
-  "[AUTHORIZATION] logout",
+  "[USER] logout",
 )
 export const loginSuccess = createAction(
-  "[AUTHORIZATION] login success",
+  "[USER] login success",
   props<{ user: User }>()
 )
 
 export const register = createAction(
-  "[AUTHORIZATION] register",
+  "[USER] register",
   props<{ user: User, password: string }>()
 )
 export const registerSuccess = createAction(
-  "[AUTHORIZATION] register success",
+  "[USER] register success",
   props<{ user: User }>()
 )
 export const getUserInfo = createAction(
-  "[AUTHORIZATION] get user info",
+  "[USER] get user info",
 )
 export const getUserInfoSuccess = createAction(
-  "[AUTHORIZATION]  get user info success",
+  "[USER]  get user info success",
   props<{ user: User }>()
 )
 
@@ -90,6 +90,16 @@ export const createProduct = createAction(
 export const createProductSuccess = createAction(
   "[PRODUCTS] create product success",
   props<{ product: Product }>()
+)
+
+export const editProfile = createAction(
+  "[USER] edit profile",
+  props<{ user: User }>()
+)
+
+export const editProfileSuccess = createAction(
+  "[USER] edit profile success",
+  props<{ user: User }>()
 )
 
 export const setError = createAction(

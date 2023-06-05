@@ -34,13 +34,15 @@ import {MatInputModule} from "@angular/material/input";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {ProfileComponent} from './components/profile/profile.component';
-import {ProductsAddFormComponent} from './components/products/products-add-form/products-add-form.component';
+import {ProductsAddFormComponent} from './components/profile/products-add-form/products-add-form.component';
 import {FileUploadComponent} from './components/shared/file-upload/file-upload.component';
 import {FileToUrlPipe} from './pipes/file-to-url.pipe';
 import {MatSelectModule} from "@angular/material/select";
 import {NgImageSliderModule} from "ng-image-slider";
 import {ImageForSliderPipe} from './pipes/image-for-slider.pipe';
 import {NgxSpinnerModule} from "ngx-spinner";
+import { ProfileEditFormComponent } from './components/profile/profile-edit-form/profile-edit-form.component';
+import { ProfileOptionsComponent } from './components/profile/profile-options/profile-options.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,8 @@ import {NgxSpinnerModule} from "ngx-spinner";
     FileUploadComponent,
     FileToUrlPipe,
     ImageForSliderPipe,
+    ProfileEditFormComponent,
+    ProfileOptionsComponent,
   ],
   imports: [
     BrowserModule,

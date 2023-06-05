@@ -86,11 +86,24 @@ export class ApiService {
               ? zip(product.imageFiles.map(imageFile => this.addProductImage(imageFile, productResponse.slug)))
               : of([])
             ),
-            map(([productResponse, productWithImage]) => (productResponse)),
+            map(([productResponse]) => (productResponse)),
             map(products => products)
           ),
         ),
         switchMap((productWithImageResponse: Observable<ProductModel>) => productWithImageResponse.pipe(map(prWI => this.productsAdapter(prWI)))),
+        catchError(this.errorHandler))
+  }
+
+  editProfile(user: User): Observable<User> {
+    return this.http.put<UserModel>(this.BASE_URL + 'settings/', user)
+      .pipe(
+        map((userResponse) => of(userResponse)
+          .pipe(combineLatestWith(this.addUserImage(user.imageFile, userResponse.id)),
+            map(([userResponse]) => (userResponse)),
+          ),
+        ),
+        switchMap((userWithImage: Observable<UserModel>) => userWithImage
+          .pipe(map(userWI => this.userAdapter(userWI)))),
         catchError(this.errorHandler))
   }
 
@@ -100,6 +113,15 @@ export class ApiService {
     return this.http.post<ProductModel>(this.BASE_URL + 'add-photo/' + productId + '/', formData)
       .pipe(
         map(res => this.productsAdapter(res)),
+        catchError(this.errorHandler),)
+  }
+
+  addUserImage(imageFile: File, userId: number): Observable<User> {
+    let formData = new FormData()
+    formData.append(imageFile.name, imageFile, imageFile.name)
+    return this.http.post<UserModel>(this.BASE_URL + 'add-photo/' + userId + '/', formData)
+      .pipe(
+        map(res => this.userAdapter(res)),
         catchError(this.errorHandler),)
   }
 
