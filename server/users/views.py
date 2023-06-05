@@ -153,6 +153,40 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
         return Profile.objects.filter(profile__username=username)
     
 
+class AddProfilePhotoAPIView(generics.CreateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = (IsAuthenticated,)
+    
+
+    def get_object(self):
+        return self.request.user
+
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+
+        return Response(serializer.data)
+    
+
+    def post(self, request, *args, **kwargs):
+        avatar = request.FILES.get('profile.avatar')
+
+        if avatar:
+            instance = Profile.objects.filter(profile__username=self.request.user.username)[0]
+            instance.avatar = request.FILES['profile.avatar']
+            instance.save()
+
+            return Response({'message': 'Ваші дані успішно змінені!'})
+        
+        return Response({'message': 'Фотографія профілю не була зміненою!'})
+
+    def get_queryset(self):
+        username = self.request.user.username
+
+        return Profile.objects.filter(profile__username=username)
+    
+
 class ChangePasswordAPIView(generics.CreateAPIView):
     serializer_class = ChangePasswordSerializer
     permission_classes = (IsAuthenticated,)

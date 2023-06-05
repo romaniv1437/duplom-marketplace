@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import RegisterUserAPIView, LoginUserAPIView, MyProfile, LogoutUserAPIView, UpdateMyProfileAPIView, ChangePasswordAPIView, UsersListAPIView
+from .views import RegisterUserAPIView, LoginUserAPIView, MyProfile, LogoutUserAPIView, UpdateMyProfileAPIView, ChangePasswordAPIView, UsersListAPIView, AddProfilePhotoAPIView
 # from django.contrib.auth.views import LogoutView
 
 
@@ -11,6 +11,7 @@ urlpatterns = [
 
     path('settings/', UpdateMyProfileAPIView.as_view(), name='settings'),
     path('change-password/', ChangePasswordAPIView.as_view(), name='change-password'),
+    path('add-profile-photo/', AddProfilePhotoAPIView.as_view(), name='add-profile-photo'),
 
     path('users/', UsersListAPIView.as_view(), name='users'),
 ]
