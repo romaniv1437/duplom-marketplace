@@ -39,12 +39,19 @@ class OrdersSerializer(serializers.ModelSerializer):
         photo = ['http://127.0.0.1:8000' + i.photo.url for i in Photo.objects.filter(number_photo=data)]
 
         representation = super().to_representation(instance)
+        avatar = instance.user.profile.profile.avatar
+
+        if avatar:
+            avatar = 'http://127.0.0.1:8000' + avatar.url
+        else:
+            avatar = None
 
         representation["user"] = {
             'id': instance.user.profile.id,
             'username': instance.user.profile.username,
             'first_name': instance.user.profile.first_name,
-            'date_joined': instance.user.profile.date_joined.strftime(DATETIME_FORMAT)
+            'date_joined': instance.user.profile.date_joined.strftime(DATETIME_FORMAT),
+            'avatar': avatar
         }
         representation["photo"] = photo
 

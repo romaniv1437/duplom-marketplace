@@ -1,4 +1,4 @@
-from rest_framework import generics, serializers, status, filters
+from rest_framework import generics, serializers, status, filters, pagination
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -246,8 +246,15 @@ class ChangePasswordAPIView(generics.CreateAPIView):
 
 
 
+class UserListPagination(pagination.PageNumberPagination):
+    page_size = 5
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+
 class UsersListAPIView(generics.ListAPIView):
     queryset = User.objects.all().order_by('-id')
     serializer_class = ProfileSerializer
+    pagination_class = UserListPagination
     filter_backends = [rest_filters.DjangoFilterBackend, filters.SearchFilter]
     search_fields = ['username', 'first_name', 'last_name']
