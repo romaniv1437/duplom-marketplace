@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.contrib.auth import logout, authenticate
-from django_filters import rest_framework as rest_filters 
+from django_filters import rest_framework as rest_filters
 
 from datetime import datetime, timedelta
 
@@ -21,7 +21,7 @@ from server.settings import DATETIME_FORMAT
 class RegisterUserAPIView(generics.CreateAPIView):
     permission_classes = (IsNotRegistered,)
     serializer_class = RegisterSerializer
-    
+
 
     def post(self, request, *args, **kwargs):
         serializer = RegisterSerializer(data=request.data)
@@ -38,7 +38,7 @@ class RegisterUserAPIView(generics.CreateAPIView):
         data['tokens'] = {
             'refresh': str(token),
             'access': str(token.access_token),
-            
+
             'life_access': life_access_token.strftime(DATETIME_FORMAT),
             'life_refresh': life_refresh_token.strftime(DATETIME_FORMAT),
         }
@@ -82,7 +82,7 @@ class LogoutUserAPIView(generics.CreateAPIView):
         logout(request)
 
         return Response({'message': 'Ви вийшли з акаунту!'}, status=200)
-    
+
 
 
 class MyProfile(generics.RetrieveAPIView):
@@ -97,13 +97,13 @@ class MyProfile(generics.RetrieveAPIView):
 class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
-    
+
 
     def get_object(self):
         """
             СИСТЕМА НАЛАШТУВАНЬ ДЛЯ ПЕВНОГО КОРИСТУВАЧА
         """
-        
+
         return self.request.user
 
 
@@ -112,21 +112,12 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(instance)
 
         return Response(serializer.data)
-    
+
 
     def update(self, request, *args, **kwargs):
         data = request.data
         serializers = ProfileSerializer(data=data)
         serializers.is_valid()
-
-        avatar = serializers.data['profile']['avatar']
-
-        if avatar:
-            instance = Profile.objects.filter(profile__username=self.request.user.username)[0]
-            instance.avatar = request.FILES['profile.avatar']
-            instance.save()
-
-
         user = User.objects.filter(username=self.request.user.username)
         user.update(
             username=data['username'],
@@ -134,6 +125,7 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
             last_name=data['last_name'],
         )
 
+<<<<<<< HEAD
         response = {
             'username': serializers.data['username'],
             'first_name': serializers.data['first_name'],
@@ -144,6 +136,10 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
     
         return Response(response)
     
+=======
+        return Response({'message': 'Ваші дані успішно змінені!'})
+
+>>>>>>> origin
 
     def destroy(self, request, *args, **kwargs):
         username = self.request.user.username
@@ -153,18 +149,18 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
         instance.save()
 
         return Response({'message': 'Ваша аватарка успішно видалена!'})
-    
+
 
     def get_queryset(self):
         username = self.request.user.username
 
         return Profile.objects.filter(profile__username=username)
-    
+
 
 class AddProfilePhotoAPIView(generics.CreateAPIView):
     serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
-    
+
 
     def get_object(self):
         return self.request.user
@@ -175,7 +171,7 @@ class AddProfilePhotoAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(instance)
 
         return Response(serializer.data)
-    
+
 
     def post(self, request, *args, **kwargs):
         avatar = request.FILES.get('profile.avatar')
@@ -186,6 +182,7 @@ class AddProfilePhotoAPIView(generics.CreateAPIView):
             instance.avatar = request.FILES['profile.avatar']
             instance.save()
 
+<<<<<<< HEAD
         user = User.objects.filter(username=username)[0]
         profile = Profile.objects.filter(profile__username=username)[0]
 
@@ -199,12 +196,17 @@ class AddProfilePhotoAPIView(generics.CreateAPIView):
 
         
         return Response(response)
+=======
+            return Response({'message': 'Ваші дані успішно змінені!'})
+
+        return Response({'message': 'Фотографія профілю не була зміненою!'})
+>>>>>>> origin
 
     def get_queryset(self):
         username = self.request.user.username
 
         return Profile.objects.filter(profile__username=username)
-    
+
 
 class ChangePasswordAPIView(generics.CreateAPIView):
     serializer_class = ChangePasswordSerializer
@@ -213,7 +215,7 @@ class ChangePasswordAPIView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+
         username = self.request.user.username
         password = request.data['old_password']
         new_password = request.data['new_password']
@@ -222,7 +224,7 @@ class ChangePasswordAPIView(generics.CreateAPIView):
 
         if user is None:
             raise serializers.ValidationError({'error_message': 'Не правильний старий пароль!'})
-        
+
         user.set_password(new_password)
         user.save()
 

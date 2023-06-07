@@ -11,6 +11,10 @@
 :host::ng-deep {
   .products-container {
     height: calc(100vh - 64px - 20px);
+
+    .search-form {
+      width: 100%;
+    }
   }
 
   .products--card {

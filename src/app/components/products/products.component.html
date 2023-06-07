@@ -4,6 +4,16 @@
     <div *ngTemplateOutlet="homePage"></div>
   </ng-container>
 
+  <form [formGroup]="searchForm" class="search-form">
+    <mat-form-field style="width:100%">
+      <mat-label>Пошук</mat-label>
+      <input formControlName="search" matInput placeholder="Пошук оголошень">
+      <button  matSuffix mat-icon-button aria-label="search">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+
   <app-products-display
     *ngrxLet="user$ | ngrxPush as user"
     [cartProducts]="$any(cartProducts$ | ngrxPush)"

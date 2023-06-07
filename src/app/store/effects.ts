@@ -68,7 +68,6 @@ export class BaseEffects {
     tap(action => this.router.navigate(['/profile']))
   ), {dispatch: false})
 
-
   loadCategories$ = createEffect(() => this.actions$.pipe(
     ofType(loadCategories),
     switchMap((action) => this.apiService.loadCategories()

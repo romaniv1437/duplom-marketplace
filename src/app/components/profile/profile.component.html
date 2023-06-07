@@ -5,7 +5,7 @@
         <mat-card-title-group style="width: 100%">
           <mat-card-title>{{user?.firstName}} {{user?.lastName}}</mat-card-title>
           <mat-card-subtitle>{{user?.username}}</mat-card-subtitle>
-          <img mat-card-md-image src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png">
+          <img mat-card-md-image [src]="user?.avatar || 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'">
         </mat-card-title-group>
       </mat-card-header>
       <mat-card-content>

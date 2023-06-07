@@ -18,8 +18,17 @@ export class ApiService {
   constructor(private http: HttpClient, private mockService: MockService, private authService: AuthService) {
   }
 
+  private createUserBody(user: User): UserModel {
+    return {
+      ...user,
+      first_name: user.firstName,
+      last_name: user.lastName
+    } as UserModel
+  }
+
   loadProducts(loadData: { paginationData: PaginationData, category: string }): Observable<ProductsResponse> {
-    return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/')
+    const search = !!loadData.paginationData.searchKey ? loadData.paginationData.searchKey + '/' : ''
+    return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/' + search)
       .pipe(
         map(res => ({items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse)),
         catchError(this.errorHandler))
@@ -95,10 +104,10 @@ export class ApiService {
   }
 
   editProfile(user: User): Observable<User> {
-    return this.http.put<UserModel>(this.BASE_URL + 'settings/', user)
+    return this.http.put<UserModel>(this.BASE_URL + 'settings/', this.createUserBody(user))
       .pipe(
         map((userResponse) => of(userResponse)
-          .pipe(combineLatestWith(this.addUserImage(user.imageFile, userResponse.id)),
+          .pipe(combineLatestWith(!!user.imageFile ? this.addUserImage(user.imageFile, userResponse.id) : of(userResponse)),
             map(([userResponse]) => (userResponse)),
           ),
         ),
@@ -119,7 +128,7 @@ export class ApiService {
   addUserImage(imageFile: File, userId: number): Observable<User> {
     let formData = new FormData()
     formData.append(imageFile.name, imageFile, imageFile.name)
-    return this.http.post<UserModel>(this.BASE_URL + 'add-photo/' + userId + '/', formData)
+    return this.http.post<UserModel>(this.BASE_URL + 'add-profile-photo/', formData)
       .pipe(
         map(res => this.userAdapter(res)),
         catchError(this.errorHandler),)
