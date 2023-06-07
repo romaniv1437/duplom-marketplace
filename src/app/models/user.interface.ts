@@ -11,5 +11,5 @@ export interface User {
   lastName: string;
   email: string;
   imageFile: File;
-  image: string
+  avatar: string;
 }
