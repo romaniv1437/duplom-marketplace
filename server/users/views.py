@@ -134,7 +134,15 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
             last_name=data['last_name'],
         )
 
-        return Response({'message': 'Ваші дані успішно змінені!'})
+        response = {
+            'username': serializers.data['username'],
+            'first_name': serializers.data['first_name'],
+            'last_name': serializers.data['last_name'],
+            'date_joined': User.objects.filter(username=self.request.user.username)[0].date_joined,
+            'avatar': f'http://127.0.0.1:8000{Profile.objects.filter(profile__username=self.request.user.username)[0].avatar.url}',
+        }
+    
+        return Response(response)
     
 
     def destroy(self, request, *args, **kwargs):
@@ -171,15 +179,26 @@ class AddProfilePhotoAPIView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         avatar = request.FILES.get('profile.avatar')
+        username = self.request.user.username
 
         if avatar:
             instance = Profile.objects.filter(profile__username=self.request.user.username)[0]
             instance.avatar = request.FILES['profile.avatar']
             instance.save()
 
-            return Response({'message': 'Ваші дані успішно змінені!'})
+        user = User.objects.filter(username=username)[0]
+        profile = Profile.objects.filter(profile__username=username)[0]
+
+        response = {
+            'username': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'date_joined': user.date_joined,
+            'avatar': 'http://127.0.0.1:8000' + profile.avatar.url,
+        }
+
         
-        return Response({'message': 'Фотографія профілю не була зміненою!'})
+        return Response(response)
 
     def get_queryset(self):
         username = self.request.user.username

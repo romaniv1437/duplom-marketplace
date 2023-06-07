@@ -43,6 +43,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
+        # print(representation['profile'])
 
         try:
             representation['avatar'] = representation['profile']['avatar']
