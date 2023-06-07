@@ -41,3 +41,11 @@ class OrdersMixinUpdate:
         Photo.objects.filter(number_photo=data.number_photo).delete()
 
         return redirect('home')
+
+    
+    def update_photo(self, *args, **kwargs):
+        slug = kwargs['slug']
+        number_photo = Orders.objects.filter(slug=slug)[0].number_photo
+        Photo.objects.filter(number_photo=number_photo).delete()
+
+        

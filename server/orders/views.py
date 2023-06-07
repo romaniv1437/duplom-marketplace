@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework import generics, filters
+from rest_framework import generics, filters, views
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters import rest_framework as rest_filters 
 
@@ -44,12 +44,6 @@ class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView)
     lookup_field = 'slug'
 
 
-    # def get(self, request, *args, **kwargs):
-    #     context = super().get_context_data(**kwargs)    # звертання до супер-функції super та батьківського методу get_context_data
-
-    #     return Response(context)
-
-
     def delete(self, request, *args, **kwargs):
         context = super().delete_my_orders(**kwargs)    # видалення оголошення та очищення пов'язаних фотографій
 
@@ -88,7 +82,31 @@ class AddPhotoOrdersView(generics.ListCreateAPIView):
         
         return Response({'message': 'Оголошення відправлено!'})
 
-        # return Response(serializer.data)
+
+class UpdatePhotoOrdersView(generics.ListCreateAPIView):
+    queryset = Orders.objects.all()
+    serializer_class = OrdersPhotoSerializers
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    lookup_field = 'slug'
+
+    def post(self, request, *args, **kwargs):
+
+        if not request.FILES:
+            return Response({'message': 'Оголошення змінено!'})
+        
+        slug = kwargs['slug']
+        number_photo = Orders.objects.filter(slug=slug)[0].number_photo
+        Photo.objects.filter(number_photo=number_photo).delete()
+        
+        for i in request.FILES:
+            data = i
+
+        photo = request.FILES[data]
+        Photo.objects.create(photo=photo, number_photo=number_photo)
+        
+        return Response({'message': 'Оголошення відправлено!'})
+
+    
 
 
 # class OrdersDestroyView(generics.RetrieveDestroyAPIView):
