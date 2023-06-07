@@ -118,28 +118,24 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
         data = request.data
         serializers = ProfileSerializer(data=data)
         serializers.is_valid()
+        print(serializers.data)
         user = User.objects.filter(username=self.request.user.username)
         user.update(
-            username=data['username'],
-            first_name=data['first_name'],
-            last_name=data['last_name'],
+            username=serializers.data['username'],
+            first_name=serializers.data['first_name'],
+            last_name=serializers.data['last_name'],
         )
 
-<<<<<<< HEAD
         response = {
             'username': serializers.data['username'],
             'first_name': serializers.data['first_name'],
             'last_name': serializers.data['last_name'],
             'date_joined': User.objects.filter(username=self.request.user.username)[0].date_joined,
-            'avatar': f'http://127.0.0.1:8000{Profile.objects.filter(profile__username=self.request.user.username)[0].avatar.url}',
+            # 'avatar': f'http://127.0.0.1:8000{Profile.objects.filter(profile__username=self.request.user.username)[0].avatar.url}',
         }
     
         return Response(response)
     
-=======
-        return Response({'message': 'Ваші дані успішно змінені!'})
-
->>>>>>> origin
 
     def destroy(self, request, *args, **kwargs):
         username = self.request.user.username
@@ -174,33 +170,51 @@ class AddProfilePhotoAPIView(generics.CreateAPIView):
 
 
     def post(self, request, *args, **kwargs):
-        avatar = request.FILES.get('profile.avatar')
         username = self.request.user.username
+        
+        for i in request.FILES:
+            photo = i
 
+        avatar = request.FILES[photo]
+        
         if avatar:
             instance = Profile.objects.filter(profile__username=self.request.user.username)[0]
-            instance.avatar = request.FILES['profile.avatar']
+            instance.avatar = avatar
             instance.save()
 
-<<<<<<< HEAD
         user = User.objects.filter(username=username)[0]
-        profile = Profile.objects.filter(profile__username=username)[0]
 
         response = {
             'username': user.username,
             'first_name': user.first_name,
             'last_name': user.last_name,
             'date_joined': user.date_joined,
-            'avatar': 'http://127.0.0.1:8000' + profile.avatar.url,
+            'avatar': 'http://127.0.0.1:8000' + str(avatar),
         }
 
-        
         return Response(response)
-=======
-            return Response({'message': 'Ваші дані успішно змінені!'})
 
-        return Response({'message': 'Фотографія профілю не була зміненою!'})
->>>>>>> origin
+        # avatar = request.FILES.get('profile.avatar')
+        # username = self.request.user.username
+
+        # if avatar:
+        #     instance = Profile.objects.filter(profile__username=self.request.user.username)[0]
+        #     instance.avatar = request.FILES['profile.avatar']
+        #     instance.save()
+
+        # user = User.objects.filter(username=username)[0]
+        # profile = Profile.objects.filter(profile__username=username)[0]
+
+        # response = {
+        #     'username': user.username,
+        #     'first_name': user.first_name,
+        #     'last_name': user.last_name,
+        #     'date_joined': user.date_joined,
+        #     'avatar': 'http://127.0.0.1:8000' + profile.avatar.url,
+        # }
+
+        
+        # return Response(response)
 
     def get_queryset(self):
         username = self.request.user.username
