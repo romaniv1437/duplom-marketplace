@@ -10,7 +10,7 @@ class Profile(models.Model):
         Avatar
     """
     avatar = models.ImageField(upload_to='profile/%Y/%m/%d/', blank=True, verbose_name='Аватар')
-
+    
     profile = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -26,6 +26,24 @@ class Profile(models.Model):
 
     def __str__(self):
         return str(self.profile)
+
+
+class Rating(models.Model):
+    stars = (
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+    )
+
+    stars = models.PositiveIntegerField(choices=stars)
+    from_user = models.ForeignKey(Profile, on_delete=models.PROTECT)
+    for_user = models.ForeignKey(User, on_delete=models.PROTECT)
+
+
+    def __str__(self):
+        return self.for_user.username
 
 
 @receiver(post_save, sender=User)

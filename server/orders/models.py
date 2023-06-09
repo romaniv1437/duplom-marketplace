@@ -34,7 +34,7 @@ class Orders(models.Model):
     title = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField()
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.FloatField()
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE, verbose_name='Валюти')
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)

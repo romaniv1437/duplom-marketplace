@@ -1,91 +1,24 @@
-from rest_framework import generics, serializers, status, filters, pagination
+from rest_framework import generics, serializers, filters, pagination
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 from django.contrib.auth.models import User
-from django.forms.models import model_to_dict
 from django.contrib.auth import logout, authenticate
 from django_filters import rest_framework as rest_filters
 
 from datetime import datetime, timedelta
 
 from .permissions import IsNotRegistered
-from .serializers import RegisterSerializer, LoginSerializer, ProfileSerializer, ChangePasswordSerializer, ProfileAvatarSerializer
-from .models import Profile
+from .serializers import ProfileSerializer, ChangePasswordSerializer, RatingSerializer, UpdateProfileSerializer
+from .models import Profile, Rating
 
 from server.settings import DATETIME_FORMAT
 
 
-class RegisterUserAPIView(generics.CreateAPIView):
-    permission_classes = (IsNotRegistered,)
-    serializer_class = RegisterSerializer
-
-
-    def post(self, request, *args, **kwargs):
-        serializer = RegisterSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        life_access_token = datetime.now() + timedelta(minutes=30)
-        life_refresh_token = datetime.now() + timedelta(days=7)
-
-        user = serializer.save()
-
-        token = RefreshToken.for_user(user)
-
-        data = serializer.data
-        data['tokens'] = {
-            'refresh': str(token),
-            'access': str(token.access_token),
-
-            'life_access': life_access_token.strftime(DATETIME_FORMAT),
-            'life_refresh': life_refresh_token.strftime(DATETIME_FORMAT),
-        }
-
-        return Response(data, status=status.HTTP_201_CREATED)
-
-
-class LoginUserAPIView(generics.CreateAPIView):
-    permission_classes = (IsNotRegistered,)
-    serializer_class = LoginSerializer
-
-
-    def post(self, request, *args, **kwargs):
-        serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        life_access_token = datetime.now() + timedelta(minutes=30)
-        life_refresh_token = datetime.now() + timedelta(days=7)
-
-        user = serializer.validated_data
-
-        # serializer = LoginSerializer(user)
-        serializer = ProfileSerializer(user)
-        token = RefreshToken.for_user(user)
-
-        data = serializer.data
-        data['tokens'] = {
-            'refresh': str(token),
-            'access': str(token.access_token),
-            'life_access': life_access_token.strftime(DATETIME_FORMAT),
-            'life_refresh': life_refresh_token.strftime(DATETIME_FORMAT),
-        }
-
-        return Response(data, status=status.HTTP_200_OK)
-
-
-class LogoutUserAPIView(generics.CreateAPIView):
-    parser_classes = (IsAuthenticated,)
-
-    def post(self, request, *args, **kwargs):
-        logout(request)
-
-        return Response({'message': 'Ви вийшли з акаунту!'}, status=200)
-
-
-
 class MyProfile(generics.RetrieveAPIView):
+    """
+        URL /me/
+    """
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
@@ -95,7 +28,10 @@ class MyProfile(generics.RetrieveAPIView):
 
 
 class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ProfileSerializer
+    """
+        URL /settings/
+    """
+    serializer_class = UpdateProfileSerializer
     permission_classes = (IsAuthenticated,)
 
 
@@ -110,28 +46,34 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-
+       
         return Response(serializer.data)
 
 
     def update(self, request, *args, **kwargs):
         data = request.data
-        serializers = ProfileSerializer(data=data)
-        serializers.is_valid()
-        print(serializers.data)
-        user = User.objects.filter(username=self.request.user.username)
+        serializer = UpdateProfileSerializer(data=data)
+        serializer.is_valid()
+    
+        if User.objects.filter(username=data['username'])\
+            and data['username'] != self.request.user.username:
+            raise serializers.ValidationError({'error_message': 'Обліковий запис існує!'})
+
+
+        user = User.objects.filter(username=self.request.user.username) # тут вар через необроблені дані.
+
         user.update(
-            username=serializers.data['username'],
-            first_name=serializers.data['first_name'],
-            last_name=serializers.data['last_name'],
+            username=data['username'],
+            first_name=data['first_name'],
+            last_name=data['last_name'],
         )
 
         response = {
-            'username': serializers.data['username'],
-            'first_name': serializers.data['first_name'],
-            'last_name': serializers.data['last_name'],
-            'date_joined': User.objects.filter(username=self.request.user.username)[0].date_joined,
-            # 'avatar': f'http://127.0.0.1:8000{Profile.objects.filter(profile__username=self.request.user.username)[0].avatar.url}',
+            'username': data['username'],
+            'first_name': data['first_name'],
+            'last_name': data['last_name'],
+            # 'date_joined': User.objects.filter(username=self.request.user.username)[0].date_joined,
+            'avatar': f'http://127.0.0.1:8000{Profile.objects.filter(profile__username=self.request.user.username)[0].avatar.url}',
         }
     
         return Response(response)
@@ -154,7 +96,7 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class AddProfilePhotoAPIView(generics.CreateAPIView):
-    serializer_class = ProfileSerializer
+    serializer_class = UpdateProfileSerializer
     permission_classes = (IsAuthenticated,)
 
 
@@ -194,27 +136,6 @@ class AddProfilePhotoAPIView(generics.CreateAPIView):
 
         return Response(response)
 
-        # avatar = request.FILES.get('profile.avatar')
-        # username = self.request.user.username
-
-        # if avatar:
-        #     instance = Profile.objects.filter(profile__username=self.request.user.username)[0]
-        #     instance.avatar = request.FILES['profile.avatar']
-        #     instance.save()
-
-        # user = User.objects.filter(username=username)[0]
-        # profile = Profile.objects.filter(profile__username=username)[0]
-
-        # response = {
-        #     'username': user.username,
-        #     'first_name': user.first_name,
-        #     'last_name': user.last_name,
-        #     'date_joined': user.date_joined,
-        #     'avatar': 'http://127.0.0.1:8000' + profile.avatar.url,
-        # }
-
-        
-        # return Response(response)
 
     def get_queryset(self):
         username = self.request.user.username
@@ -258,3 +179,62 @@ class UsersListAPIView(generics.ListAPIView):
     pagination_class = UserListPagination
     filter_backends = [rest_filters.DjangoFilterBackend, filters.SearchFilter]
     search_fields = ['username', 'first_name', 'last_name']
+
+
+
+class RatingUserAPIView(generics.ListCreateAPIView):
+    """
+        View для створення рейтингу зареєстрованим користувачам
+        profile/<slug:username>/
+    """
+
+
+    serializer_class = RatingSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+
+    def get_queryset(self):
+        username = self.kwargs['slug']
+       
+        return User.objects.filter(username=username)
+    
+
+    def post(self, request, *args, **kwargs):
+        stars = request.data['stars']       # отримую число від 1 до 5
+        username = self.kwargs['slug']      #  отримую користувача по слагу
+
+        pk = self.request.user.pk       #  отримую унікальний ідентифікатор
+        from_user = Profile.objects.get(pk=pk)      # підставляю айді для отримання Profile-instance
+        for_user = User.objects.get(username=username)  # отримую користувача якому ставлять рейтинг
+
+        if username == self.request.user.username:
+            raise serializers.ValidationError({"error_message": "Ставити рейтинг самому собі заборонено!"})
+        
+
+        if Rating.objects.filter(from_user=from_user, for_user=for_user):
+            raise serializers.ValidationError({'error_message': 'Ви оцінили даного користувача!'})
+
+    
+        rating = Rating.objects.create(
+            stars=stars,
+            from_user=from_user,
+            for_user=for_user
+        )
+        rating.save()
+        
+
+        return Response({'stars': stars})
+    
+
+    def delete(self, *args, **kwargs):
+        username = self.kwargs['slug']      #  отримую користувача по слагу
+        pk = self.request.user.pk       #  отримую унікальний ідентифікатор
+        from_user = Profile.objects.get(pk=pk)      # підставляю айді для отримання Profile-instance
+        for_user = User.objects.get(username=username)  # отримую користувача якому ставлять рейтинг
+
+        if username == self.request.user.username:
+            raise serializers.ValidationError({"error_message": "Неможливо видалити власний рейтинг!"})
+
+        Rating.objects.filter(from_user=from_user, for_user=for_user).delete()
+
+        return Response({'message': 'Рейтинг успішно знято!'})
