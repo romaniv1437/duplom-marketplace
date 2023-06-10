@@ -134,13 +134,11 @@ export class ApiService {
         catchError(this.errorHandler))
   }
 
-  addProductImage(imageFile: File, productId: string): Observable<Product> {
+  addProductImage(imageFile: File, productId: string): Observable<any>{
     let formData = new FormData()
     formData.append(imageFile.name, imageFile, imageFile.name)
     return this.http.post<ProductModel>(this.BASE_URL + 'add-photo/' + productId + '/', formData)
-      .pipe(
-        map(res => this.productsAdapter(res)),
-        catchError(this.errorHandler),)
+      .pipe(catchError(this.errorHandler),)
   }
 
   addUserImage(imageFile: File, userId: number): Observable<User> {
