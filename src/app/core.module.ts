@@ -46,6 +46,7 @@ import {ProfileOptionsComponent} from './components/profile/profile-options/prof
 import { ProductsEditFormComponent } from './components/profile/products-edit-form/products-edit-form.component';
 import { GetProductSlugPipe } from './pipes/get-product-slug.pipe';
 import { ProfileChangePasswordComponent } from './components/profile/profile-change-password/profile-change-password.component';
+import { StarRatingComponent } from './components/shared/star-rating/star-rating.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { ProfileChangePasswordComponent } from './components/profile/profile-cha
     ProductsEditFormComponent,
     GetProductSlugPipe,
     ProfileChangePasswordComponent,
+    StarRatingComponent,
   ],
   imports: [
     BrowserModule,

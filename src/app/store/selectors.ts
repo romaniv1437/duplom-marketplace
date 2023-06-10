@@ -34,6 +34,9 @@ export const selectCart = createSelector(
 export const selectUser = createSelector(
   selectFeature,
   (state) => state.user
+);export const selectProfile = createSelector(
+  selectFeature,
+  (state) => state.profile
 );
 
 export const selectError = createSelector(

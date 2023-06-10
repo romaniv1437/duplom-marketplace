@@ -62,6 +62,15 @@ export const registerSuccess = createAction(
 export const getUserInfo = createAction(
   "[USER] get user info",
 )
+export const getUserInfoByUserName = createAction(
+  "[USER] get user info by username",
+  props<{ username: string }>()
+)
+
+export const getUserInfoByUserNameSuccess = createAction(
+  "[USER] get user info by username success",
+  props<{ user: User }>()
+)
 export const getUserInfoSuccess = createAction(
   "[USER]  get user info success",
   props<{ user: User }>()
@@ -119,6 +128,16 @@ export const changePassword = createAction(
 
 export const changePasswordSuccess = createAction(
   "[USER] change password success",
+)
+
+export const setUserRating = createAction(
+  "[USER] set user rating",
+  props<{ username: string, rating: number }>()
+)
+
+export const setUserRatingSuccess = createAction(
+  "[USER] set user rating success",
+  props<{ user: User }>()
 )
 
 

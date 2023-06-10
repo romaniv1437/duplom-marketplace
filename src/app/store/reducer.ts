@@ -24,6 +24,7 @@ export interface State {
   currentProduct: Product;
 
   user: User;
+  profile: User;
 }
 
 export const initialState: State = {
@@ -42,7 +43,8 @@ export const initialState: State = {
 
   currentProduct: {} as Product,
 
-  user: {} as User
+  user: {} as User,
+  profile: {} as User
 };
 
 export const baseReducer = createReducer(
@@ -216,6 +218,20 @@ export const baseReducer = createReducer(
       user: action.user
     }
   }),
+  on(actions.getUserInfoByUserName, (state, action) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.getUserInfoByUserNameSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      profile: action.user
+    }
+  }),
   on(actions.loadCategories, (state, action) => {
     return {
       ...state,
@@ -270,6 +286,21 @@ export const baseReducer = createReducer(
       ...state,
       isLoading: false,
       error: '',
+    }
+  }),
+  on(actions.setUserRating, (state, action) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.setUserRatingSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: '',
+      profile: action.user
     }
   }),
 );

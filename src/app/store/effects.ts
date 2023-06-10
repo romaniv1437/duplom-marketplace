@@ -6,7 +6,7 @@ import {
   changePassword, changePasswordSuccess,
   createProduct,
   createProductSuccess, editProduct, editProductSuccess, editProfile, editProfileSuccess,
-  getUserInfo,
+  getUserInfo, getUserInfoByUserName, getUserInfoByUserNameSuccess,
   getUserInfoSuccess,
   loadCategories,
   loadCategoriesSuccess,
@@ -20,7 +20,7 @@ import {
   loginSuccess,
   register,
   registerSuccess,
-  setError
+  setError, setUserRating, setUserRatingSuccess
 } from "./actions";
 import {ApiService} from "../services/api.service";
 import {Router} from "@angular/router";
@@ -137,6 +137,26 @@ export class BaseEffects {
     switchMap((action) => this.apiService.getUser()
       .pipe(
         map(user => getUserInfoSuccess({user})),
+        catchError((error) => of(setError({error})))
+      )
+    )
+  ))
+
+
+  getUserByUsername$ = createEffect(() => this.actions$.pipe(
+    ofType(getUserInfoByUserName),
+    switchMap((action) => this.apiService.getUserByUsername(action.username)
+      .pipe(
+        map(user => getUserInfoByUserNameSuccess({user})),
+        catchError((error) => of(setError({error})))
+      )
+    )
+  ))
+  setUserRating$ = createEffect(() => this.actions$.pipe(
+    ofType(setUserRating),
+    switchMap((action) => this.apiService.setUserRating(action.username, action.rating)
+      .pipe(
+        map(user => setUserRatingSuccess({user})),
         catchError((error) => of(setError({error})))
       )
     )

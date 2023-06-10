@@ -13,4 +13,6 @@ export interface User {
   email: string;
   imageFile: File;
   profilePicture: string;
+  persons: number;
+  stars: number;
 }

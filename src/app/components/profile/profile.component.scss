@@ -6,9 +6,15 @@
     height: calc(100vh - 64px - 40px - 30px);
     overflow-x: hidden;
 
+    .rate-info {
+      display: flex;
+      flex-direction: column;
+    }
+
     .profile-content {
       display: flex;
       gap: 10px;
+
 
       .profile-options {
         width: 100%;
@@ -42,4 +48,31 @@
       justify-content: start !important;
     }
   }
+}
+
+
+.stars {
+  display: flex;
+  align-items: center;
+}
+.stars:hover .star polygon {
+  fill: #ffd055 !important;
+}
+.stars.disabled:hover {
+  cursor: not-allowed;
+}
+.stars.disabled:hover .star polygon {
+  fill: #d8d8d8 !important;
+}
+.stars .star {
+  padding: 5px;
+}
+.stars .star polygon {
+  fill: #d8d8d8;
+}
+.stars .star:hover ~ .star polygon {
+  fill: #d8d8d8 !important;
+}
+.stars .star.selected polygon {
+  fill: #ffd055 !important;
 }

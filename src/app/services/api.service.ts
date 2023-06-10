@@ -92,6 +92,23 @@ export class ApiService {
         catchError(this.errorHandler))
   }
 
+  getUserByUsername(username: string): Observable<User> {
+
+    return this.http.get<UserModel[]>(this.BASE_URL + 'profile/' + username + '/')
+      .pipe(
+        map(res => this.userAdapter(res[0])),
+        catchError(this.errorHandler))
+  }
+
+  setUserRating(username: string, rating: number): Observable<User> {
+    return this.http.delete<UserModel>(this.BASE_URL + 'profile/' + username + '/').pipe(switchMap(() => {
+      return this.http.post<UserModel>(this.BASE_URL + 'profile/' + username + '/', {stars: rating})
+        .pipe(
+          map(res => this.userAdapter(res)),
+          catchError(this.errorHandler));
+    }))
+  }
+
   loadCategories(): Observable<CategoriesModel> {
     return this.http.get<CategoriesResponse>(this.BASE_URL + 'category/')
       .pipe(
