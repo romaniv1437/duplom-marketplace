@@ -112,7 +112,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         confirm_password = attrs.get('confirm_password')
 
         if new_password != confirm_password:
-            raise ValidationError({'error_message': 'Паролі не співпадають!'})
+            raise serializers.ValidationError({'error_message': 'Паролі не співпадають!'})
 
         if len(new_password) < 8:
             raise serializers.ValidationError({'error_message': 'Пароль повинен містити мінімум 8 символів!'})

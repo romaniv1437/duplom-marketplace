@@ -3,6 +3,7 @@ from server.settings import DATETIME_FORMAT
 from django.db.models import Sum
 from .models import Rating, Profile
 from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
 
 from rest_framework import serializers
 
@@ -27,7 +28,7 @@ class ProfileMixin:
         representation['date_joined'] = date_joined.strftime(DATETIME_FORMAT)
         representation['stars'] = rating.aggregate(Sum('stars'))['stars__sum'] / n if rating else 0.00
         representation['persons'] = n
-        
+
         return representation
     
 

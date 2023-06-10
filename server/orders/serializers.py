@@ -32,6 +32,9 @@ class OrdersSerializer(serializers.ModelSerializer):
             'user',
         )
         depth = 1
+        extra_kwargs = {
+            'slug': {'read_only': True}
+        }
 
 
     def to_representation(self, instance):
@@ -50,6 +53,7 @@ class OrdersSerializer(serializers.ModelSerializer):
             'id': instance.user.profile.id,
             'username': instance.user.profile.username,
             'first_name': instance.user.profile.first_name,
+            'last_name': instance.user.profile.last_name,
             'date_joined': instance.user.profile.date_joined.strftime(DATETIME_FORMAT),
             'avatar': avatar
         }
@@ -58,11 +62,6 @@ class OrdersSerializer(serializers.ModelSerializer):
         return representation
 
 
-    # def update(self, instance, validated_data):
-    #     validated_data['currency'] = instance.currency
-    #     validated_data['category'] = instance.category
-
-    #     return super().update(instance, validated_data)
 
 
 

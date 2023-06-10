@@ -11,17 +11,20 @@ from .utils import OrdersMixinUpdate
 
 
 class OrdersListPagination(pagination.PageNumberPagination):
-    page_size = 1
+    page_size = 5
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
 
 class OrdersListView(generics.ListAPIView):
-    queryset = Orders.objects.all()
+    # queryset = Orders.objects.all().order_by('-time_create')
     serializer_class = OrdersSerializer
     pagination_class = OrdersListPagination
     filter_backends = [rest_filters.DjangoFilterBackend, filters.SearchFilter]
     search_fields = ['title', 'description']
+
+    def get_queryset(self):
+        return Orders.objects.all().order_by('-id')
     
 
     # def get(self, request, *args, **kwargs):
@@ -63,15 +66,17 @@ class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView)
 
         return Orders.objects.filter(slug=slug)
     
+
+    # def put(self, *args, **kwargs):
+    #     super().update_photo(self.kwargs['slug'])
+    #     print(self.request.user)
+
+    #     return super().put(*args, **kwargs)
+    
     def update(self, request, *args, **kwargs):
         super().update_photo(self.kwargs['slug'])
-
+        
         return super().update(request, *args, **kwargs)
-    
-    # def put(self, request, *args, **kwargs):
-    #     super().update_photo(self.kwargs['slug'])
-
-    #     return Response({'message': 'Фотографії успішно видалені!'})
 
 
 class AddOrdersView(generics.ListCreateAPIView):
@@ -84,7 +89,7 @@ class AddOrdersView(generics.ListCreateAPIView):
 class AddPhotoOrdersView(generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersPhotoSerializers
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly,)
     lookup_field = 'slug'
 
     def post(self, request, *args, **kwargs):
@@ -104,7 +109,7 @@ class AddPhotoOrdersView(generics.ListCreateAPIView):
 class UpdatePhotoOrdersView(OrdersMixinUpdate, generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersPhotoSerializers
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly,)
     lookup_field = 'slug'
 
 

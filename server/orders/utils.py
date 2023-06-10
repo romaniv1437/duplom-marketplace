@@ -1,6 +1,7 @@
 from django.http import Http404
 from django.forms.models import model_to_dict
 from django.shortcuts import redirect
+from rest_framework.response import Response
 
 from .models import Orders, Photo
 
@@ -47,8 +48,6 @@ class OrdersMixinUpdate:
         number_photo = Orders.objects.filter(slug=slug)[0].number_photo
         Photo.objects.filter(number_photo=number_photo).delete()
 
-
-    def update_orders(self, *args, **kwargs):
-        print('q')
+        return Response({'message': 'Okey'})
 
         

@@ -200,10 +200,11 @@ class RatingUserAPIView(ProfileMixin, generics.ListCreateAPIView):
     pagination_class = None
 
 
-    def get_queryset(self):
-        username = self.kwargs['slug']
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(username=self.kwargs['slug'])
+        serializer = ProfileSerializer(user)
 
-        return User.objects.filter(username=username)
+        return Response(serializer.data)
 
 
     def post(self, request, *args, **kwargs):
@@ -223,3 +224,9 @@ class RatingUserAPIView(ProfileMixin, generics.ListCreateAPIView):
         context = super().rating_delete(username, pk)
 
         return Response(context)
+    
+
+    def get_queryset(self):
+        username = self.kwargs['slug']
+
+        return User.objects.filter(username=username)
