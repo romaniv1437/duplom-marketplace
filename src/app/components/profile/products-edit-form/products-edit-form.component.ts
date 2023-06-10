@@ -21,7 +21,8 @@ export class ProductsEditFormComponent extends ControlSubscribtionComponent impl
     price: new FormControl(null, [Validators.required]),
     description: new FormControl(null, [Validators.required]),
     category: new FormControl(null, [Validators.required]),
-    photo: new FormControl<File[] | null>(null, [Validators.required])
+    photo: new FormControl<File[] | null>(null, [Validators.required]),
+    slug: new FormControl('')
   })
 
   constructor(private baseFacade: BaseFacade, private productsFacade: ProductsFacade) {
@@ -41,6 +42,7 @@ export class ProductsEditFormComponent extends ControlSubscribtionComponent impl
         price: product.price,
         description: product.description,
         category: product.category,
+        slug: product.slug,
       })
       product.images?.map(async (image, index) => {
         const response = await fetch(image);
@@ -62,6 +64,7 @@ export class ProductsEditFormComponent extends ControlSubscribtionComponent impl
       price: this.productForm.controls['price'].value,
       description: this.productForm.controls['description'].value,
       category: this.productForm.controls['category'].value.id,
+      slug: this.productForm.controls['slug'].value,
       imageFiles: this.productForm.controls['photo'].value.map((file: File) => file),
     } as Product;
 

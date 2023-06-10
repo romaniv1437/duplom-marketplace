@@ -122,7 +122,7 @@ export class ApiService {
   }
 
   editProduct(product: Product): Observable<Product> {
-    return this.http.put<ProductModel>(this.BASE_URL + 'add-orders/', this.createProductBody(product))
+    return this.http.put<ProductModel>(this.BASE_URL + 'orders/' + product.slug + '/', this.createProductBody(product))
       .pipe(
         map((productResponse) => of(productResponse)
           .pipe(
@@ -177,7 +177,8 @@ export class ApiService {
       category: product.category,
       image: product.photo ? product.photo[0] : '',
       images: product.photo,
-      user: this.userAdapter(product.user)
+      user: this.userAdapter(product.user),
+      slug: product.slug
     } as unknown as Product
   }
 

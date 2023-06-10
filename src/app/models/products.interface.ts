@@ -13,6 +13,7 @@ export interface Product {
   category: Category;
   user: User;
   imageFiles: File[];
+  slug: string;
 }
 
 export interface ProductsResponse {
