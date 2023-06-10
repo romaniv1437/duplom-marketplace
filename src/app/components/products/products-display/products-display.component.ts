@@ -5,6 +5,7 @@ import {CartProduct} from "../../../models/cart.interface";
 import {CartFacade} from "../../../facades/cart.facade";
 import {PaginationData} from "../../../models/core.interface";
 import {PlaceholderImages} from "../../../enums/placeholderImage.enum";
+import {ProductsFacade} from "../../../facades/products.facade";
 
 @Component({
   selector: 'app-products-display',
@@ -28,7 +29,7 @@ export class ProductsDisplayComponent implements OnInit {
   pageEvent!: PageEvent;
   public placeholderImages = PlaceholderImages;
 
-  constructor(private cartFacade: CartFacade) {
+  constructor(private cartFacade: CartFacade, private productsFacade: ProductsFacade) {
   }
 
   @Input() set products(products: ProductsModel) {
@@ -53,4 +54,8 @@ export class ProductsDisplayComponent implements OnInit {
   }
 
   protected readonly PlaceholderImages = PlaceholderImages;
+
+  editProduct(productId: string) {
+    this.productsFacade.loadProductById(productId)
+  }
 }

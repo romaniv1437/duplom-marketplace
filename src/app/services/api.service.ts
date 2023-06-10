@@ -121,6 +121,23 @@ export class ApiService {
         catchError(this.errorHandler))
   }
 
+  editProduct(product: Product): Observable<Product> {
+    return this.http.put<ProductModel>(this.BASE_URL + 'add-orders/', this.createProductBody(product))
+      .pipe(
+        map((productResponse) => of(productResponse)
+          .pipe(
+            combineLatestWith(product.imageFiles.length
+              ? zip(product.imageFiles.map(imageFile => this.addProductImage(imageFile, productResponse.slug)))
+              : of([])
+            ),
+            map(([productResponse]) => (productResponse)),
+            map(products => products)
+          ),
+        ),
+        switchMap((productWithImageResponse: Observable<ProductModel>) => productWithImageResponse.pipe(map(prWI => this.productsAdapter(prWI)))),
+        catchError(this.errorHandler))
+  }
+
   editProfile(user: User): Observable<User> {
     return this.http.put<UserModel>(this.BASE_URL + 'settings/', this.createUserBody(user))
       .pipe(
@@ -157,7 +174,7 @@ export class ApiService {
       title: product.title,
       price: parseFloat(product.price),
       description: product.description,
-      categoryId: product.category,
+      category: product.category,
       image: product.photo ? product.photo[0] : '',
       images: product.photo,
       user: this.userAdapter(product.user)

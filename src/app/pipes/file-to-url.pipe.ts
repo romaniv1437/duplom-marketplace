@@ -9,6 +9,7 @@ export class FileToUrlPipe implements PipeTransform {
   }
 
   transform(value: File, ...args: unknown[]): string {
+    console.log(value)
     return <string>this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(value));
   }
 

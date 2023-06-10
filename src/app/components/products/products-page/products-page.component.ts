@@ -52,4 +52,8 @@ export class ProductsPageComponent implements OnInit {
   private loadProductById(productId: string): void {
     this.productsFacade.loadProductById(productId)
   }
+
+  editProduct(productId: string) {
+    this.productsFacade.loadProductById(productId)
+  }
 }

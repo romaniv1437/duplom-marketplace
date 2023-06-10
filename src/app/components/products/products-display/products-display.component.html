@@ -39,11 +39,14 @@
                 mat-icon-button>
           <mat-icon>done</mat-icon>
         </button>
-        <button *ngIf="product.user.id === userId"
-                [routerLink]="'/profile/edit-item'"
-                mat-icon-button>
-          <mat-icon>edit</mat-icon>
-        </button>
+        <ng-container *ngrxLet="product.url | getProductSlug as slug">
+          <button *ngIf="product.user.id === userId"
+                  (click)="editProduct(slug)"
+                  [routerLink]="'/profile/edit-item'"
+                  mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+        </ng-container>
       </ng-container>
     </mat-card-actions>
   </mat-card>

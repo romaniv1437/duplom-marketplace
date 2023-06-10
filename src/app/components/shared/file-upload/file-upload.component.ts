@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 
 @Component({
@@ -16,7 +16,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 export class FileUploadComponent implements ControlValueAccessor {
   @ViewChild('fileInput') fileInput!: ElementRef;
   onChange!: Function;
-  public files: File[] = [];
+ @Input() public files: File[] = [];
 
   constructor(private host: ElementRef<HTMLInputElement>) {
   }

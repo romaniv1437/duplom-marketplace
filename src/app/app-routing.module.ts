@@ -10,6 +10,7 @@ import {ProfileComponent} from "./components/profile/profile.component";
 import {ProductsAddFormComponent} from "./components/profile/products-add-form/products-add-form.component";
 import {ProfileOptionsComponent} from "./components/profile/profile-options/profile-options.component";
 import {ProfileEditFormComponent} from "./components/profile/profile-edit-form/profile-edit-form.component";
+import {ProductsEditFormComponent} from "./components/profile/products-edit-form/products-edit-form.component";
 
 const routes: Routes = [
   {
@@ -44,6 +45,9 @@ const routes: Routes = [
           {
             path: 'add-item',
             component: ProductsAddFormComponent,
+          }, {
+            path: 'edit-item',
+            component: ProductsEditFormComponent,
           },
           {
             path: 'edit-profile',

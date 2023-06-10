@@ -93,6 +93,15 @@ export const createProductSuccess = createAction(
   props<{ product: Product }>()
 )
 
+export const editProduct = createAction(
+  "[PRODUCTS] edit product",
+  props<{ product: Product }>()
+)
+export const editProductSuccess = createAction(
+  "[PRODUCTS] edit product success",
+  props<{ product: Product }>()
+)
+
 export const editProfile = createAction(
   "[USER] edit profile",
   props<{ user: User }>()
