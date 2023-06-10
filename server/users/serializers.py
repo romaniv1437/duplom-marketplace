@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from rest_framework.response import Response
+
 from .models import Profile, Rating
+from .utils import ProfileMixin
+
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
@@ -22,72 +25,75 @@ class ProfileAvatarSerializer(serializers.ModelSerializer):
 
         if instance.avatar:
             representation['avatar'] = 'http://127.0.0.1:8000' + instance.avatar.url
+            del representation['profile']
         else:
             representation['avatar'] = None
-
+            del representation['profile']
+        
         return representation
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    profile = ProfileAvatarSerializer(required=False)
+# class ProfileSerializer(ProfileMixin, serializers.ModelSerializer):
+#     profile = ProfileAvatarSerializer(required=False)
+    
+#     class Meta:
+#         model = User
+#         fields = ('id', 'username', 'first_name', 'last_name', 'profile', 'date_joined')
+#         extra_kwargs = {
+#             'date_joined': {'read_only': True}
+#         }
+
+
+#     def to_representation(self, instance):
+#         representation = super().to_representation(instance)
+#         context = super().get_context_data(instance, representation)
+        
+#         return context    
+
+class ProfileSerializer(ProfileMixin, serializers.ModelSerializer):
+    profile = ProfileAvatarSerializer(required=False, read_only=True)
+    stars = serializers.IntegerField(write_only=True)
     
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'profile', 'date_joined')
+        fields = ('id', 'username', 'first_name', 'last_name', 'profile', 'date_joined', 'stars')
         extra_kwargs = {
-            'date_joined': {'read_only': True}
+            'date_joined': {'read_only': True},
+            'username': {'read_only': True},
+            'first_name': {'read_only': True},
+            'last_name': {'read_only': True},
         }
 
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-
-        try:
-            representation['avatar'] = representation['profile']['avatar']
-            del representation['profile']
-        except:
-            representation['avatar'] = None
-            del representation['profile']
-
-        date_joined = instance.date_joined + timedelta(hours=3)
-        rating = Rating.objects.filter(for_user=instance)
-        n = len(rating)
-
-        representation['username'] = instance.username
-        representation['first_name'] = instance.first_name
-        representation['last_name'] = instance.last_name
-        representation['date_joined'] = date_joined.strftime(DATETIME_FORMAT)
-        representation['stars'] =  rating.aggregate(Sum('stars'))['stars__sum'] / n if rating else 0.00
-        representation['persons'] = n
+        context = super().get_context_data(instance, representation)
         
-        return representation
+        return context
+
+
+# class UpdateProfileSerializer(ProfileMixin, serializers.ModelSerializer):
+#     profile = ProfileAvatarSerializer(required=False)
     
+#     class Meta:
+#         model = User
+#         fields = ('id', 'username', 'first_name', 'last_name', 'profile', 'date_joined')
+#         extra_kwargs = {
+#             'date_joined': {'read_only': True}
+#         }
 
 
-class UpdateProfileSerializer(serializers.ModelSerializer):
-    profile = ProfileAvatarSerializer(required=False)
-    
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'profile', 'date_joined')
-        extra_kwargs = {
-            'date_joined': {'read_only': True}
-        }
+#     def to_representation(self, instance):
+#         representation = super().to_representation(instance)
 
+#         date_joined = instance.date_joined + timedelta(hours=3)
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
+#         representation['username'] = instance.username
+#         representation['first_name'] = instance.first_name
+#         representation['last_name'] = instance.last_name
+#         representation['date_joined'] = date_joined.strftime(DATETIME_FORMAT)
         
-        # print(representation)
-
-        date_joined = instance.date_joined + timedelta(hours=3)
-
-        representation['username'] = instance.username
-        representation['first_name'] = instance.first_name
-        representation['last_name'] = instance.last_name
-        representation['date_joined'] = date_joined.strftime(DATETIME_FORMAT)
-        
-        return representation
+#         return representation
 
         
 
@@ -121,36 +127,23 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
 
 
-class RatingSerializer(serializers.ModelSerializer):
-    profile = ProfileAvatarSerializer(required=False, read_only=True)
-    stars = serializers.IntegerField(write_only=True)
+# class RatingSerializer(ProfileMixin, serializers.ModelSerializer):
+#     profile = ProfileAvatarSerializer(required=False, read_only=True)
+#     stars = serializers.IntegerField(write_only=True)
     
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'profile', 'date_joined', 'stars')
-        extra_kwargs = {
-            'date_joined': {'read_only': True},
-            'username': {'read_only': True},
-            'first_name': {'read_only': True},
-            'last_name': {'read_only': True},
-        }
+#     class Meta:
+#         model = User
+#         fields = ('id', 'username', 'first_name', 'last_name', 'profile', 'date_joined', 'stars')
+#         extra_kwargs = {
+#             'date_joined': {'read_only': True},
+#             'username': {'read_only': True},
+#             'first_name': {'read_only': True},
+#             'last_name': {'read_only': True},
+#         }
 
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-
-        try:
-            representation['avatar'] = representation['profile']['avatar']
-            del representation['profile']
-        except:
-            representation['avatar'] = None
-            del representation['profile']
-
-        date_joined = instance.date_joined + timedelta(hours=3)
-
-        representation['username'] = instance.username
-        representation['first_name'] = instance.first_name
-        representation['last_name'] = instance.last_name
-        representation['date_joined'] = date_joined.strftime(DATETIME_FORMAT)
+#     def to_representation(self, instance):
+#         representation = super().to_representation(instance)
+#         context = super().get_context_data(instance, representation)
         
-        return representation
+#         return context

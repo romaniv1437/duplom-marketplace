@@ -91,11 +91,18 @@ class AddPhotoOrdersView(generics.ListCreateAPIView):
         return Response()
 
 
-class UpdatePhotoOrdersView(generics.ListCreateAPIView):
+class UpdatePhotoOrdersView(OrdersMixinUpdate, generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersPhotoSerializers
     permission_classes = (IsAuthenticatedOrReadOnly,)
     lookup_field = 'slug'
+
+
+    def put(self, request, *args, **kwargs):
+        super().update_photo(self.kwargs['slug'])
+
+        return Response({'message': 'Фотографії успішно видалені!'})
+
 
     def post(self, request, *args, **kwargs):
 

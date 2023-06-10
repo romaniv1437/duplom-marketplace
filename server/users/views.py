@@ -7,12 +7,15 @@ from django.contrib.auth import logout, authenticate
 from django_filters import rest_framework as rest_filters
 
 from datetime import datetime, timedelta
+from django.db.models import Sum
 
 from .permissions import IsNotRegistered
-from .serializers import ProfileSerializer, ChangePasswordSerializer, RatingSerializer, UpdateProfileSerializer
+from .serializers import ProfileSerializer, ChangePasswordSerializer
 from .models import Profile, Rating
+from .utils import ProfileMixin
 
 from server.settings import DATETIME_FORMAT
+from orders.views import OrdersListPagination
 
 
 class MyProfile(generics.RetrieveAPIView):
@@ -31,7 +34,7 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
     """
         URL /settings/
     """
-    serializer_class = UpdateProfileSerializer
+    serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
 
 
@@ -52,7 +55,7 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     def update(self, request, *args, **kwargs):
         data = request.data
-        serializer = UpdateProfileSerializer(data=data)
+        serializer = ProfileSerializer(data=data)
         serializer.is_valid()
 
         if User.objects.filter(username=data['username'])\
@@ -80,7 +83,7 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
             'date_joined': date_joined.strftime(DATETIME_FORMAT),
             'avatar': avatar
         }
-
+        
         return Response(response)
 
 
@@ -101,7 +104,7 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class AddProfilePhotoAPIView(generics.CreateAPIView):
-    serializer_class = UpdateProfileSerializer
+    serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
 
 
@@ -187,15 +190,14 @@ class UsersListAPIView(generics.ListAPIView):
 
 
 
-class RatingUserAPIView(generics.ListCreateAPIView):
+class RatingUserAPIView(ProfileMixin, generics.ListCreateAPIView):
     """
         View для створення рейтингу зареєстрованим користувачам
         profile/<slug:username>/
     """
-
-
-    serializer_class = RatingSerializer
+    serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
+    pagination_class = None
 
 
     def get_queryset(self):
@@ -207,39 +209,17 @@ class RatingUserAPIView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         stars = request.data['stars']       # отримую число від 1 до 5
         username = self.kwargs['slug']      #  отримую користувача по слагу
-
         pk = self.request.user.pk       #  отримую унікальний ідентифікатор
-        from_user = Profile.objects.get(pk=pk)      # підставляю айді для отримання Profile-instance
-        for_user = User.objects.get(username=username)  # отримую користувача якому ставлять рейтинг
 
-        if username == self.request.user.username:
-            raise serializers.ValidationError({"error_message": "Ставити рейтинг самому собі заборонено!"})
+        context = super().rating_create(stars, username, pk)
 
-
-        if Rating.objects.filter(from_user=from_user, for_user=for_user):
-            raise serializers.ValidationError({'error_message': 'Ви оцінили даного користувача!'})
-
-
-        rating = Rating.objects.create(
-            stars=stars,
-            from_user=from_user,
-            for_user=for_user
-        )
-        rating.save()
-
-
-        return Response({'stars': stars})
+        return Response(context)
 
 
     def delete(self, *args, **kwargs):
         username = self.kwargs['slug']      #  отримую користувача по слагу
         pk = self.request.user.pk       #  отримую унікальний ідентифікатор
-        from_user = Profile.objects.get(pk=pk)      # підставляю айді для отримання Profile-instance
-        for_user = User.objects.get(username=username)  # отримую користувача якому ставлять рейтинг
+        
+        context = super().rating_delete(username, pk)
 
-        if username == self.request.user.username:
-            raise serializers.ValidationError({"error_message": "Неможливо видалити власний рейтинг!"})
-
-        Rating.objects.filter(from_user=from_user, for_user=for_user).delete()
-
-        return Response({'message': 'Рейтинг успішно знято!'})
+        return Response(context)
