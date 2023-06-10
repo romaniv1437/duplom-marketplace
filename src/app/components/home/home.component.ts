@@ -10,6 +10,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {BaseFacade} from "../../facades/base.facade";
 import {ControlSubscribtionComponent} from "../../control-subscriptions/controlSubscribtion.component";
 import {NgxSpinnerService} from "ngx-spinner";
+import {Router} from "@angular/router";
 
 
 interface NavNode {
@@ -52,7 +53,8 @@ export class HomeComponent extends ControlSubscribtionComponent implements OnIni
     public authService: AuthService,
     private baseFacade: BaseFacade,
     private _snackBar: MatSnackBar,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private router: Router
   ) {
     super();
     this.menuData.data = TREE_DATA;
@@ -91,6 +93,8 @@ export class HomeComponent extends ControlSubscribtionComponent implements OnIni
   logout(): void {
     this.authFacade.logout();
     this.authService.clearToken();
+
+    this.router.navigateByUrl('/authorization').then(r => r);
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
