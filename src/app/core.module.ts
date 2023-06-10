@@ -43,6 +43,7 @@ import {ImageForSliderPipe} from './pipes/image-for-slider.pipe';
 import {NgxSpinnerModule} from "ngx-spinner";
 import { ProfileEditFormComponent } from './components/profile/profile-edit-form/profile-edit-form.component';
 import { ProfileOptionsComponent } from './components/profile/profile-options/profile-options.component';
+import { RegisterFormComponent } from './components/shared/forms/register-form/register-form.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { ProfileOptionsComponent } from './components/profile/profile-options/pr
     ImageForSliderPipe,
     ProfileEditFormComponent,
     ProfileOptionsComponent,
+    RegisterFormComponent,
   ],
   imports: [
     BrowserModule,

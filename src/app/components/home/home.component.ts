@@ -54,7 +54,7 @@ export class HomeComponent extends ControlSubscribtionComponent implements OnIni
     private baseFacade: BaseFacade,
     private _snackBar: MatSnackBar,
     private spinner: NgxSpinnerService,
-    private router: Router
+    private router: Router,
   ) {
     super();
     this.menuData.data = TREE_DATA;
@@ -75,7 +75,9 @@ export class HomeComponent extends ControlSubscribtionComponent implements OnIni
 
     this.user$ = this.authFacade.user$;
 
-    this.authFacade.getUser();
+    if (this.authService.isAuth) {
+      this.authFacade.getUser();
+    }
     this.baseFacade.loadCategories();
     this.countProductsInCart$ = this.cartFacade.countCartProducts$;
 

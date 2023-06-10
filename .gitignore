@@ -204,3 +204,34 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+/server/category/migrations/0001_initial.py
+/server/orders/migrations/0001_initial.py
+/server/users/migrations/0001_initial.py
+/server/orders/migrations/0002_alter_orders_price.py
+/server/users/migrations/0002_rating.py
+/server/media/orders/2023/06/05/2022-09-27.png
+/server/media/orders/2023/06/10/2022-09-27.png
+/server/media/profile/2023/06/10/2022-09-27.png
+/server/media/profile/2023/06/10/2022-09-27_0DcTzeU.png
+/server/media/orders/2023/06/10/2022-09-27_5IwzzRM.png
+/server/media/profile/2023/06/10/2022-09-27_6CqXsUP.png
+/server/media/profile/2023/06/10/2022-09-27_6El38Oz.png
+/server/media/profile/2023/06/10/2022-09-27_95NZ7Tq.png
+/server/media/profile/2023/06/10/2022-09-27_aKJ6rYV.png
+/server/media/orders/2023/06/10/2022-09-27_D6eLc7J.png
+/server/media/profile/2023/06/10/2022-09-27_f9QbGiq.png
+/server/media/orders/2023/06/10/2022-09-27_GFiq4qZ.png
+/server/media/profile/2023/06/10/2022-09-27_gpEZzDL.png
+/server/media/profile/2023/06/10/2022-09-27_HUCqnSD.png
+/server/media/profile/2023/06/10/2022-09-27_q9d58rj.png
+/server/media/profile/2023/06/10/2022-09-27_QlNVC5r.png
+/server/media/profile/2023/06/10/2022-09-27_SHGCYXq.png
+/server/media/orders/2023/06/10/2022-09-27_TAdH8SE.png
+/server/media/profile/2023/06/10/2022-09-27_tkFjtM2.png
+/server/media/profile/2023/06/10/2022-09-27_xToVNGe.png
+/server/media/profile/2023/06/10/2022-09-27_zobOdOJ.png
+/server/media/orders/2023/06/10/Screenshot_22.png
+/server/media/profile/2023/06/10/Screenshot_79.png
+/server/media/orders/2023/06/10/Screenshot_2023-06-02_011925.png
+/server/media/profile/2023/06/10/Screenshot_2023-06-05_012519.png
+/server/media/profile/2023/06/10/Screenshot_2023-06-06_100313.png

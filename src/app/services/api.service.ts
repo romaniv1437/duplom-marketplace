@@ -73,7 +73,7 @@ export class ApiService {
     const userBody = {
       password: password,
       confirm_password: password,
-      username: user.email,
+      username: user.username,
       first_name: user.firstName,
       last_name: user.lastName
     }
@@ -125,8 +125,8 @@ export class ApiService {
     return this.http.put<UserModel>(this.BASE_URL + 'settings/', this.createUserBody(user))
       .pipe(
         map((userResponse) => of(userResponse)
-          .pipe(combineLatestWith(!!user.imageFile ? this.addUserImage(user.imageFile, userResponse.id) : of(userResponse)),
-            map(([userResponse, userWithImage]) => ({...userResponse, avatar: userWithImage.profilePicture})),
+          .pipe(combineLatestWith(!!user.imageFile ? this.addUserImage(user.imageFile, userResponse.id) : of(this.userAdapter(userResponse))),
+            map(([userResponse, userWithImage]) => ({...userResponse, avatar: userWithImage.profilePicture ? userWithImage.profilePicture : userResponse.avatar})),
           ),
         ),
         switchMap((userWithImage: Observable<UserModel>) => userWithImage

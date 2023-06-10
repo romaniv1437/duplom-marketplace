@@ -16,11 +16,10 @@ export class AuthorizationComponent extends ControlSubscribtionComponent impleme
   public user$: Observable<User> = new Observable<User>();
   public authSelected = 'login'
   public authorizationForm: FormGroup = new FormGroup<any>({
-    email: new FormControl('', ),
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
-    firstName: new FormControl(),
-    lastName: new FormControl(),
+    firstName: new FormControl(''),
+    lastName: new FormControl(''),
   });
 
   constructor(
