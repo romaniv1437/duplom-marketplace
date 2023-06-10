@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {User} from '../models/user.interface';
-import {editProfile, getUserInfo, login, logout, register} from '../store/actions';
+import {changePassword, editProfile, getUserInfo, login, logout, register} from '../store/actions';
 import {selectUser} from "../store/selectors";
 
 @Injectable({
@@ -23,8 +23,8 @@ export class AuthFacade {
     this.store$.dispatch(logout())
   }
 
-  register(user: User, password: string): void {
-    this.store$.dispatch(register({user, password}))
+  register(user: User, password: string, confirmPassword: string): void {
+    this.store$.dispatch(register({user, password, confirmPassword}))
   }
 
   getUser(): void {
@@ -33,5 +33,9 @@ export class AuthFacade {
 
   edit(user: User): void {
     this.store$.dispatch(editProfile({user}))
+  }
+
+  changePassword(passwords: {oldPassword: string; newPassword: string, confirmPassword: string}): void {
+    this.store$.dispatch(changePassword({...passwords}))
   }
 }

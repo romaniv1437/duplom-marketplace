@@ -69,10 +69,10 @@ export class ApiService {
         catchError(this.errorHandler))
   }
 
-  register(user: User, password: string): Observable<User> {
+  register(user: User, password: string, confirmPassword: string): Observable<User> {
     const userBody = {
       password: password,
-      confirm_password: password,
+      confirm_password: confirmPassword,
       username: user.username,
       first_name: user.firstName,
       last_name: user.lastName
@@ -151,6 +151,11 @@ export class ApiService {
         catchError(this.errorHandler))
   }
 
+  changePassword(passwords: {old_password: string; new_password: string; confirm_password: string}): Observable<any> {
+    return this.http.post(this.BASE_URL + 'change-password/', {...passwords})
+      .pipe(catchError(this.errorHandler))
+  }
+
   addProductImage(imageFile: File, productId: string): Observable<any>{
     let formData = new FormData()
     formData.append(imageFile.name, imageFile, imageFile.name)
@@ -211,9 +216,9 @@ export class ApiService {
   private errorHandler(error: any) {
     let errorMessage = "";
     if (error.error instanceof ErrorEvent) {
-      errorMessage = error.error.error_message[0];
+      errorMessage = error.error.error_message;
     } else {
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.error.error_message[0]}`;
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.error.error_message}`;
     }
     console.error(errorMessage);
     return throwError(() => {

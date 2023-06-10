@@ -53,7 +53,7 @@ export const loginSuccess = createAction(
 
 export const register = createAction(
   "[USER] register",
-  props<{ user: User, password: string }>()
+  props<{ user: User, password: string, confirmPassword: string }>()
 )
 export const registerSuccess = createAction(
   "[USER] register success",
@@ -111,6 +111,16 @@ export const editProfileSuccess = createAction(
   "[USER] edit profile success",
   props<{ user: User }>()
 )
+
+export const changePassword = createAction(
+  "[USER] change password",
+  props<{ oldPassword: string; newPassword: string, confirmPassword: string}>()
+)
+
+export const changePasswordSuccess = createAction(
+  "[USER] change password success",
+)
+
 
 export const setError = createAction(
   "[ERROR] set error",

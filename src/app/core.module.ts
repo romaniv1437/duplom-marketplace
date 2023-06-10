@@ -45,6 +45,7 @@ import {ProfileEditFormComponent} from './components/profile/profile-edit-form/p
 import {ProfileOptionsComponent} from './components/profile/profile-options/profile-options.component';
 import { ProductsEditFormComponent } from './components/profile/products-edit-form/products-edit-form.component';
 import { GetProductSlugPipe } from './pipes/get-product-slug.pipe';
+import { ProfileChangePasswordComponent } from './components/profile/profile-change-password/profile-change-password.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { GetProductSlugPipe } from './pipes/get-product-slug.pipe';
     ProfileOptionsComponent,
     ProductsEditFormComponent,
     GetProductSlugPipe,
+    ProfileChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

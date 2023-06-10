@@ -11,6 +11,9 @@ import {ProductsAddFormComponent} from "./components/profile/products-add-form/p
 import {ProfileOptionsComponent} from "./components/profile/profile-options/profile-options.component";
 import {ProfileEditFormComponent} from "./components/profile/profile-edit-form/profile-edit-form.component";
 import {ProductsEditFormComponent} from "./components/profile/products-edit-form/products-edit-form.component";
+import {
+  ProfileChangePasswordComponent
+} from "./components/profile/profile-change-password/profile-change-password.component";
 
 const routes: Routes = [
   {
@@ -52,6 +55,10 @@ const routes: Routes = [
           {
             path: 'edit-profile',
             component: ProfileEditFormComponent,
+          },
+          {
+            path: 'change-password',
+            component: ProfileChangePasswordComponent,
           },
         ]
       },

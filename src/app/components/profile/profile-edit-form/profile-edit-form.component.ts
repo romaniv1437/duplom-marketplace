@@ -15,11 +15,9 @@ export class ProfileEditFormComponent extends ControlSubscribtionComponent imple
 
 
   profileForm: FormGroup = new FormGroup({
-    email: new FormControl('',),
     username: new FormControl('', [Validators.required]),
-    password: new FormControl('',),
-    firstName: new FormControl(),
-    lastName: new FormControl(),
+    firstName: new FormControl('', [Validators.required]),
+    lastName: new FormControl('', [Validators.required]),
     photo: new FormControl(),
   })
 

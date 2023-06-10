@@ -3,6 +3,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {of, switchMap, tap} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {
+  changePassword, changePasswordSuccess,
   createProduct,
   createProductSuccess, editProduct, editProductSuccess, editProfile, editProfileSuccess,
   getUserInfo,
@@ -63,7 +64,7 @@ export class BaseEffects {
   ), {dispatch: false})
 
   editProfileSuccess$ = createEffect(() => this.actions$.pipe(
-    ofType(editProfileSuccess),
+    ofType(editProfileSuccess, changePasswordSuccess),
     tap(action => this.router.navigate(['/profile']))
   ), {dispatch: false})
 
@@ -72,6 +73,20 @@ export class BaseEffects {
     switchMap((action) => this.apiService.loadCategories()
       .pipe(
         map(categories => loadCategoriesSuccess({categories: categories.results})),
+        catchError((error) => of(setError({error})))
+      )
+    )
+  ))
+
+  changePassword$ = createEffect(() => this.actions$.pipe(
+    ofType(changePassword),
+    switchMap((action) => this.apiService.changePassword({
+        confirm_password: action.confirmPassword,
+        old_password: action.oldPassword,
+        new_password: action.newPassword
+      })
+      .pipe(
+        map(() => changePasswordSuccess()),
         catchError((error) => of(setError({error})))
       )
     )
@@ -129,7 +144,7 @@ export class BaseEffects {
 
   registerUser$ = createEffect(() => this.actions$.pipe(
     ofType(register),
-    switchMap((action) => this.apiService.register(action.user, action.password)
+    switchMap((action) => this.apiService.register(action.user, action.password, action.confirmPassword)
       .pipe(
         map(user => registerSuccess({user})),
         catchError((error) => of(setError({error})))

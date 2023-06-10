@@ -52,6 +52,13 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field>
+          <mat-label>Підтвердіть пароль</mat-label>
+          <input formControlName="confirmPassword" matInput type="password">
+          <mat-error *ngIf="registerForm.controls['confirmPassword'].hasError('required')">
+            Поле "Пароль" <strong>обов'язкове</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
           <mat-label>Ім'я</mat-label>
           <input formControlName="firstName" matInput type="text">
           <mat-error *ngIf="registerForm.controls['firstName'].hasError('required')">

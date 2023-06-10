@@ -24,6 +24,7 @@ export class AuthorizationComponent extends ControlSubscribtionComponent impleme
   public registerForm: FormGroup = new FormGroup<any>({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
+    confirmPassword: new FormControl('', [Validators.required]),
     firstName: new FormControl(''),
     lastName: new FormControl(''),
   });
@@ -55,6 +56,6 @@ export class AuthorizationComponent extends ControlSubscribtionComponent impleme
   }
 
   public register(): void {
-    this.authFacade.register(this.registerForm.value, this.registerForm.controls['password'].value);
+    this.authFacade.register(this.registerForm.value, this.registerForm.controls['password'].value, this.registerForm.controls['confirmPassword'].value);
   }
 }

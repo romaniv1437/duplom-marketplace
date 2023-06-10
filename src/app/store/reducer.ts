@@ -258,6 +258,20 @@ export const baseReducer = createReducer(
       userProducts: [...state.userProducts.filter(product => product.id !== action.product.id), action.product]
     }
   }),
+  on(actions.changePassword, (state, action) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.changePasswordSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: '',
+    }
+  }),
 );
 
 const getTotalPrice = (products: CartProduct[]): number => {

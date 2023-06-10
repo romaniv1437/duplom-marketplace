@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import { Router } from '@angular/router';
 import {AuthFacade} from "../facades/auth.facade";
 
 @Injectable({
@@ -6,7 +7,7 @@ import {AuthFacade} from "../facades/auth.facade";
 })
 export class AuthService {
 
-  constructor(private authFacade: AuthFacade) {
+  constructor(private authFacade: AuthFacade, private router: Router) {
   }
 
   public get isAuth(): boolean {
@@ -15,6 +16,7 @@ export class AuthService {
         console.error('token expired')
         this.clearToken();
         this.authFacade.logout();
+        this.router.navigate(['/authorization'])
       }
     }
 
