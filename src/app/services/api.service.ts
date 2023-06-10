@@ -7,7 +7,12 @@ import {Product, ProductModel, ProductsResponse} from '../models/products.interf
 import {catchError, map} from "rxjs/operators";
 import {User, UserModel} from "../models/user.interface";
 import {AuthService} from "./auth.service";
-import {Category, CategoryModel} from "../models/category.interface";
+import {
+  CategoriesModel,
+  CategoriesResponse,
+  Category,
+  CategoryModel,
+} from "../models/category.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -79,10 +84,15 @@ export class ApiService {
         catchError(this.errorHandler))
   }
 
-  loadCategories(): Observable<Category[]> {
-    return this.http.get<CategoryModel[]>(this.BASE_URL + 'category/')
+  loadCategories(): Observable<CategoriesModel> {
+    return this.http.get<CategoriesResponse>(this.BASE_URL + 'category/')
       .pipe(
-        map(res => res.map(category => this.categoryAdapter(category))),
+        map(res => ({
+          countAll: res.count,
+          nextPage: res.next,
+          prevPage: res.previous,
+          results: res.results.map(category => this.categoryAdapter(category))
+        })),
         catchError(this.errorHandler))
   }
 
@@ -176,9 +186,9 @@ export class ApiService {
   private errorHandler(error: any) {
     let errorMessage = "";
     if (error.error instanceof ErrorEvent) {
-      errorMessage = error.error.message;
+      errorMessage = error.error.error_message[0];
     } else {
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.error.error_message[0]}`;
     }
     console.error(errorMessage);
     return throwError(() => {
