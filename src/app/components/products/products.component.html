@@ -16,10 +16,11 @@
 
   <app-products-display
     *ngrxLet="user$ | ngrxPush as user"
+    (paginationData)="getProducts($event)"
     [cartProducts]="$any(cartProducts$ | ngrxPush)"
     [maxPageSize]="4"
     [productsAlign]="'center'"
-    [products]="$any(products$ | ngrxPush)"
+    [products]="$any(productsModel$ | ngrxPush)"
     [userId]="user?.id"
   ></app-products-display>
 </main>

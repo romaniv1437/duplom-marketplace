@@ -7,6 +7,27 @@
   flex-wrap: wrap;
 }
 
+.product-owner-container {
+  text-decoration: none;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+
+  .product-owner-title {
+    display: flex;
+    flex-direction: column;
+    .owner-title {
+      color: black;
+    }
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+}
+
 .description {
   white-space: nowrap;
   width: 100%;

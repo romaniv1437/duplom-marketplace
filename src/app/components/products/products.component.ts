@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ProductsFacade} from "../../facades/products.facade";
-import {Product} from "../../models/products.interface";
+import {Product, ProductsModel} from "../../models/products.interface";
 import {Observable, takeUntil} from "rxjs";
 import {PaginationData} from "../../models/core.interface";
 import {CartProduct} from "../../models/cart.interface";
@@ -20,7 +20,7 @@ import {ControlSubscribtionComponent} from "../../control-subscriptions/controlS
 export class ProductsComponent extends ControlSubscribtionComponent implements OnInit {
 
   public category: string = 'no-category'
-  public products$: Observable<Product[]> = new Observable<Product[]>();
+  public productsModel$: Observable<ProductsModel> = new Observable<ProductsModel>();
   public cartProducts$: Observable<CartProduct[]> = new Observable<CartProduct[]>();
   public user$: Observable<User> = new Observable<User>();
 
@@ -42,14 +42,10 @@ export class ProductsComponent extends ControlSubscribtionComponent implements O
     this.route.params
       .subscribe(() => {
         this.category = this.route.snapshot.params['category'] || 'no-category';
-        this.loadProducts(this.category, {} as PaginationData)
+        this.getProducts({page: 0, searchKey: '', count: 4} as PaginationData)
       })
 
-    if (!this.category) {
-      this.products$ = this.productsFacade.homePageProducts$;
-    } else {
-      this.products$ = this.productsFacade.products$;
-    }
+    this.productsModel$ = this.productsFacade.productsModel$;
 
     this.cartProducts$ = this.cartFacade.cartProducts$;
     this.user$ = this.authFacade.user$;
@@ -57,13 +53,11 @@ export class ProductsComponent extends ControlSubscribtionComponent implements O
     this.searchForm.valueChanges
       .pipe(takeUntil(this.destroyed$))
       .subscribe(value => {
-        this.loadProducts('', {searchKey: value.search} as PaginationData)
+        this.getProducts( {page: 0, searchKey: '', count: 4} as PaginationData)
       })
   }
 
-  private loadProducts(category: string, params: PaginationData): void {
-    this.productsFacade.loadProducts(params, category)
+  public getProducts(paginationData: PaginationData) {
+    this.productsFacade.loadProducts(paginationData)
   }
-
-  private searchProducts(category: string, params: PaginationData): void {}
 }

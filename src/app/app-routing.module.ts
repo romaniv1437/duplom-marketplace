@@ -55,12 +55,12 @@ const routes: Routes = [
         path: 'profile/:userId',
         component: ProfileComponent,
       },
+      {
+        path: 'authorization',
+        component: AuthorizationComponent
+      }
     ]
   },
-  {
-    path: 'authorization',
-    component: AuthorizationComponent
-  }
 ];
 
 @NgModule({

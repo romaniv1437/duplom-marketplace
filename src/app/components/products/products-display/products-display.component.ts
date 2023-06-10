@@ -1,8 +1,10 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Product} from 'src/app/models/products.interface';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Product, ProductsModel} from 'src/app/models/products.interface';
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {CartProduct} from "../../../models/cart.interface";
 import {CartFacade} from "../../../facades/cart.facade";
+import {PaginationData} from "../../../models/core.interface";
+import {PlaceholderImages} from "../../../enums/placeholderImage.enum";
 
 @Component({
   selector: 'app-products-display',
@@ -12,6 +14,7 @@ import {CartFacade} from "../../../facades/cart.facade";
 export class ProductsDisplayComponent implements OnInit {
 
   @ViewChild('paginator') paginator!: MatPaginator;
+  @Output() paginationData: EventEmitter<PaginationData> = new EventEmitter<PaginationData>();
   @Input() productsAlign: string = 'start';
   @Input() userId: number | undefined;
   @Input() cartProducts: CartProduct[] = [];
@@ -23,25 +26,24 @@ export class ProductsDisplayComponent implements OnInit {
   pageSize = 4;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   pageEvent!: PageEvent;
-  mockImage: string = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
+  public placeholderImages = PlaceholderImages;
 
   constructor(private cartFacade: CartFacade) {
   }
 
-  @Input() set products(products: Product[]) {
-    this.productsItems = products;
+  @Input() set products(products: ProductsModel) {
+    this.productsItems = products.results || [];
+    this.length = products?.countAll;
     this.paginator?.firstPage();
-    this.length = products?.length;
-    this.getData(this.pageEvent);
   };
 
   ngOnInit(): void {
     this.pageSize = this.maxPageSize || this.pageSize;
+    this.getData(this.pageEvent);
   }
 
   getData(event?: PageEvent) {
-    const page = event ? event : {pageIndex: this.pageIndex, pageSize: this.pageSize};
-    this.productsDataSource = this.productsItems?.slice(page.pageIndex * page.pageSize, page.pageIndex * page.pageSize + page.pageSize);
+    this.paginationData.emit({page: event?.pageIndex || 0, count: event?.pageSize || 8, searchKey: ''})
     return event || this.pageEvent;
   }
 
@@ -49,4 +51,6 @@ export class ProductsDisplayComponent implements OnInit {
     const cartProduct = {...product, qty: 1, userId: 'no-user', totalPrice: product.price} as CartProduct;
     this.cartFacade.addProductToCart(cartProduct)
   }
+
+  protected readonly PlaceholderImages = PlaceholderImages;
 }

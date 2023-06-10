@@ -3,11 +3,16 @@ import {HttpClient} from "@angular/common/http";
 import {MockService} from './mock.service';
 import {PaginationData} from '../models/core.interface';
 import {combineLatestWith, Observable, of, switchMap, tap, throwError, zip} from "rxjs";
-import {Product, ProductModel, ProductsResponse} from '../models/products.interface';
+import {Product, ProductModel, ProductsModel, ProductsResponse} from '../models/products.interface';
 import {catchError, map} from "rxjs/operators";
 import {User, UserModel} from "../models/user.interface";
 import {AuthService} from "./auth.service";
-import {Category, CategoryModel} from "../models/category.interface";
+import {
+  CategoriesModel,
+  CategoriesResponse,
+  Category,
+  CategoryModel,
+} from "../models/category.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -26,18 +31,26 @@ export class ApiService {
     } as UserModel
   }
 
-  loadProducts(loadData: { paginationData: PaginationData, category: string }): Observable<ProductsResponse> {
+  loadProducts(loadData: { paginationData: PaginationData }): Observable<ProductsModel> {
     const search = !!loadData.paginationData.searchKey ? loadData.paginationData.searchKey + '/' : ''
-    return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/' + search)
+    return this.http.get<ProductsResponse>(this.BASE_URL + 'orders/' + `?page=${loadData.paginationData.page+1}`)
       .pipe(
-        map(res => ({items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse)),
+        map(res => ({
+          countAll: res.count,
+          nextPage: res.next,
+          prevPage: res.previous,
+          results: res.results.map((r: any) => this.productsAdapter(r))} as ProductsModel)),
         catchError(this.errorHandler))
   }
 
-  loadUserProducts(): Observable<ProductsResponse> {
-    return this.http.get<ProductModel[]>(this.BASE_URL + 'myorders/')
+  loadUserProducts(): Observable<ProductsModel> {
+    return this.http.get<ProductsResponse>(this.BASE_URL + 'myorders/')
       .pipe(
-        map(res => ({items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse)),
+        map(res => ({
+          countAll: res.count,
+          nextPage: res.next,
+          prevPage: res.previous,
+          results: res.results.map((r: any) => this.productsAdapter(r))} as ProductsModel)),
         catchError(this.errorHandler))
   }
 
@@ -79,10 +92,15 @@ export class ApiService {
         catchError(this.errorHandler))
   }
 
-  loadCategories(): Observable<Category[]> {
-    return this.http.get<CategoryModel[]>(this.BASE_URL + 'category/')
+  loadCategories(): Observable<CategoriesModel> {
+    return this.http.get<CategoriesResponse>(this.BASE_URL + 'category/')
       .pipe(
-        map(res => res.map(category => this.categoryAdapter(category))),
+        map(res => ({
+          countAll: res.count,
+          nextPage: res.next,
+          prevPage: res.previous,
+          results: res.results.map(category => this.categoryAdapter(category))
+        })),
         catchError(this.errorHandler))
   }
 
@@ -108,7 +126,7 @@ export class ApiService {
       .pipe(
         map((userResponse) => of(userResponse)
           .pipe(combineLatestWith(!!user.imageFile ? this.addUserImage(user.imageFile, userResponse.id) : of(userResponse)),
-            map(([userResponse]) => (userResponse)),
+            map(([userResponse, userWithImage]) => ({...userResponse, avatar: userWithImage.profilePicture})),
           ),
         ),
         switchMap((userWithImage: Observable<UserModel>) => userWithImage
@@ -116,13 +134,11 @@ export class ApiService {
         catchError(this.errorHandler))
   }
 
-  addProductImage(imageFile: File, productId: string): Observable<Product> {
+  addProductImage(imageFile: File, productId: string): Observable<any>{
     let formData = new FormData()
     formData.append(imageFile.name, imageFile, imageFile.name)
     return this.http.post<ProductModel>(this.BASE_URL + 'add-photo/' + productId + '/', formData)
-      .pipe(
-        map(res => this.productsAdapter(res)),
-        catchError(this.errorHandler),)
+      .pipe(catchError(this.errorHandler),)
   }
 
   addUserImage(imageFile: File, userId: number): Observable<User> {
@@ -144,7 +160,7 @@ export class ApiService {
       categoryId: product.category,
       image: product.photo ? product.photo[0] : '',
       images: product.photo,
-      user: product.user
+      user: this.userAdapter(product.user)
     } as unknown as Product
   }
 
@@ -162,7 +178,8 @@ export class ApiService {
     return {
       ...user,
       firstName: user.first_name,
-      lastName: user.last_name
+      lastName: user.last_name,
+      profilePicture: user.avatar
     }
   }
 
@@ -176,9 +193,9 @@ export class ApiService {
   private errorHandler(error: any) {
     let errorMessage = "";
     if (error.error instanceof ErrorEvent) {
-      errorMessage = error.error.message;
+      errorMessage = error.error.error_message[0];
     } else {
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.error.error_message[0]}`;
     }
     console.error(errorMessage);
     return throwError(() => {

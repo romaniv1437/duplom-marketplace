@@ -1,5 +1,5 @@
 import {createReducer, on} from '@ngrx/store';
-import {Product} from '../models/products.interface';
+import {Product, ProductsModel} from '../models/products.interface';
 import * as actions from './actions'
 import {Cart, CartProduct} from "../models/cart.interface";
 import {User} from "../models/user.interface";
@@ -15,8 +15,12 @@ export interface State {
 
   cart: Cart;
 
+  productsModel: ProductsModel;
+  userProductsModel: ProductsModel;
+
   products: Product[];
   userProducts: Product[];
+
   currentProduct: Product;
 
   user: User;
@@ -30,8 +34,12 @@ export const initialState: State = {
 
   cart: {} as Cart,
 
+  productsModel: {} as ProductsModel,
+  userProductsModel: {} as ProductsModel,
+
   products: [],
   userProducts: [],
+
   currentProduct: {} as Product,
 
   user: {} as User
@@ -52,7 +60,8 @@ export const baseReducer = createReducer(
       isLoading: false,
       error: '',
 
-      products: action.productsResponse.items
+      products: action.productsResponse.results,
+      productsModel: action.productsResponse
     }
   }),
   on(actions.loadUserProducts, (state) => {
@@ -68,7 +77,8 @@ export const baseReducer = createReducer(
       isLoading: false,
       error: '',
 
-      userProducts: action.productsResponse.items
+      userProducts: action.productsResponse.results,
+      userProductsModel: action.productsResponse
     }
   }),
   on(actions.loadProductById, (state) => {
@@ -139,6 +149,14 @@ export const baseReducer = createReducer(
       error: ''
     }
   }),
+  on(actions.logout, (state) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: '',
+      user: initialState.user
+    }
+  }),
   on(actions.loginSuccess, (state, action) => {
     return {
       ...state,
@@ -155,6 +173,21 @@ export const baseReducer = createReducer(
     }
   }),
   on(actions.registerSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: '',
+      user: action.user
+    }
+  }),
+  on(actions.editProfile, (state) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.editProfileSuccess, (state, action) => {
     return {
       ...state,
       isLoading: false,

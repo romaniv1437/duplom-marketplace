@@ -46,7 +46,7 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-       
+
         return Response(serializer.data)
 
 
@@ -54,7 +54,7 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
         data = request.data
         serializer = UpdateProfileSerializer(data=data)
         serializer.is_valid()
-    
+
         if User.objects.filter(username=data['username'])\
             and data['username'] != self.request.user.username:
             raise serializers.ValidationError({'error_message': 'Обліковий запис існує!'})
@@ -75,11 +75,14 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
             'first_name': data['first_name'],
             'last_name': data['last_name'],
             # 'date_joined': User.objects.filter(username=self.request.user.username)[0].date_joined,
+<<<<<<< HEAD
             'avatar': avatar
+=======
+>>>>>>> origin
         }
-    
+
         return Response(response)
-    
+
 
     def destroy(self, request, *args, **kwargs):
         username = self.request.user.username
@@ -115,12 +118,12 @@ class AddProfilePhotoAPIView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         username = self.request.user.username
-        
+
         for i in request.FILES:
             photo = i
 
         avatar = request.FILES[photo]
-        
+
         if avatar:
             instance = Profile.objects.filter(profile__username=self.request.user.username)[0]
             instance.avatar = avatar
@@ -197,9 +200,9 @@ class RatingUserAPIView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         username = self.kwargs['slug']
-       
+
         return User.objects.filter(username=username)
-    
+
 
     def post(self, request, *args, **kwargs):
         stars = request.data['stars']       # отримую число від 1 до 5
@@ -211,22 +214,22 @@ class RatingUserAPIView(generics.ListCreateAPIView):
 
         if username == self.request.user.username:
             raise serializers.ValidationError({"error_message": "Ставити рейтинг самому собі заборонено!"})
-        
+
 
         if Rating.objects.filter(from_user=from_user, for_user=for_user):
             raise serializers.ValidationError({'error_message': 'Ви оцінили даного користувача!'})
 
-    
+
         rating = Rating.objects.create(
             stars=stars,
             from_user=from_user,
             for_user=for_user
         )
         rating.save()
-        
+
 
         return Response({'stars': stars})
-    
+
 
     def delete(self, *args, **kwargs):
         username = self.kwargs['slug']      #  отримую користувача по слагу

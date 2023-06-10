@@ -1,14 +1,23 @@
 import {Injectable} from '@angular/core';
+import {AuthFacade} from "../facades/auth.facade";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor() {
+  constructor(private authFacade: AuthFacade) {
   }
 
   public get isAuth(): boolean {
+    if (!!localStorage.getItem('life_access')) {
+      if (new Date().getTime() >= new Date(localStorage.getItem('life_access')!).getTime()) {
+        console.error('token expired')
+        this.clearToken();
+        this.authFacade.logout();
+      }
+    }
+
     return !!localStorage.getItem('accessToken');
   }
 
@@ -16,13 +25,15 @@ export class AuthService {
     return localStorage.getItem('accessToken') || '';
   }
 
-  public setToken(token: { access: string, refresh: string }): void {
+  public setToken(token: { access: string, refresh: string, life_access: string }): void {
     localStorage.setItem('accessToken', token.access)
     localStorage.setItem('refreshToken', token.refresh)
+    localStorage.setItem('life_access', token.life_access)
   }
 
   public clearToken(): void {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('life_access');
   }
 }
