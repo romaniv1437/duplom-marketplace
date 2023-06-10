@@ -12,8 +12,6 @@ class OrdersAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
 
-
-
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('pk', 'photo', 'number_photo')
 
