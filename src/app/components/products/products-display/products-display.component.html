@@ -4,9 +4,9 @@
   </p>
 </div>
 
-<div *ngIf="productsDataSource.length !== 0; else noProducts" [ngStyle]="{'justify-content': productsAlign}"
+<div *ngIf="productsItems?.length !== 0; else noProducts" [ngStyle]="{'justify-content': productsAlign}"
      class="products">
-  <mat-card *ngFor="let product of productsDataSource" [routerLink]="'/' + product.url"
+  <mat-card *ngFor="let product of productsItems" [routerLink]="'/' + product.url"
             class="products--card">
     <img [src]="product?.image || mockImage" alt="{{product.title}} image" height="150" mat-card-image width="150">
     <mat-card-header>
@@ -48,7 +48,6 @@
 <mat-paginator
   #paginator
   (page)="pageEvent = getData($event)"
-  *ngIf="productsItems.length > pageSize"
   [length]="length"
   [pageIndex]="pageIndex"
   [pageSizeOptions]="pageSizeOptions"

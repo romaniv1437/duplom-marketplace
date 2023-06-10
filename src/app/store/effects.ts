@@ -27,17 +27,6 @@ import {Router} from "@angular/router";
 @Injectable()
 export class BaseEffects {
 
-  /* loadMovies$ = createEffect(() => this.actions$.pipe(
-       ofType('[Movies Page] Load Movies'),
-       exhaustMap(() => this.moviesService.getAll()
-         .pipe(
-           map(movies => ({ type: '[Movies API] Movies Loaded Success', payload: movies })),
-           catchError(() => EMPTY)
-         ))
-     )
-   );*/
-
-
   loadProducts$ = createEffect(() => this.actions$.pipe(
     ofType(loadProducts),
     switchMap((action) => this.apiService.loadProducts({...action})

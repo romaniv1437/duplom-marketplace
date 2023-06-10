@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {MockService} from './mock.service';
 import {PaginationData} from '../models/core.interface';
 import {combineLatestWith, Observable, of, switchMap, tap, throwError, zip} from "rxjs";
-import {Product, ProductModel, ProductsResponse} from '../models/products.interface';
+import {Product, ProductModel, ProductsModel, ProductsResponse} from '../models/products.interface';
 import {catchError, map} from "rxjs/operators";
 import {User, UserModel} from "../models/user.interface";
 import {AuthService} from "./auth.service";
@@ -31,18 +31,26 @@ export class ApiService {
     } as UserModel
   }
 
-  loadProducts(loadData: { paginationData: PaginationData, category: string }): Observable<ProductsResponse> {
+  loadProducts(loadData: { paginationData: PaginationData }): Observable<ProductsModel> {
     const search = !!loadData.paginationData.searchKey ? loadData.paginationData.searchKey + '/' : ''
-    return this.http.get<ProductModel[]>(this.BASE_URL + 'orders/' + search)
+    return this.http.get<ProductsResponse>(this.BASE_URL + 'orders/' + `?page=${loadData.paginationData.page+1}`)
       .pipe(
-        map(res => ({items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse)),
+        map(res => ({
+          countAll: res.count,
+          nextPage: res.next,
+          prevPage: res.previous,
+          results: res.results.map((r: any) => this.productsAdapter(r))} as ProductsModel)),
         catchError(this.errorHandler))
   }
 
-  loadUserProducts(): Observable<ProductsResponse> {
-    return this.http.get<ProductModel[]>(this.BASE_URL + 'myorders/')
+  loadUserProducts(): Observable<ProductsModel> {
+    return this.http.get<ProductsResponse>(this.BASE_URL + 'myorders/')
       .pipe(
-        map(res => ({items: res.map((r: any) => this.productsAdapter(r))} as ProductsResponse)),
+        map(res => ({
+          countAll: res.count,
+          nextPage: res.next,
+          prevPage: res.previous,
+          results: res.results.map((r: any) => this.productsAdapter(r))} as ProductsModel)),
         catchError(this.errorHandler))
   }
 
@@ -118,7 +126,7 @@ export class ApiService {
       .pipe(
         map((userResponse) => of(userResponse)
           .pipe(combineLatestWith(!!user.imageFile ? this.addUserImage(user.imageFile, userResponse.id) : of(userResponse)),
-            map(([userResponse]) => (userResponse)),
+            map(([userResponse, userWithImage]) => ({...userResponse, avatar: userWithImage.profilePicture})),
           ),
         ),
         switchMap((userWithImage: Observable<UserModel>) => userWithImage
@@ -172,7 +180,8 @@ export class ApiService {
     return {
       ...user,
       firstName: user.first_name,
-      lastName: user.last_name
+      lastName: user.last_name,
+      profilePicture: user.avatar
     }
   }
 

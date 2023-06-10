@@ -1,8 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Store} from "@ngrx/store";
-import {Product} from "../models/products.interface";
+import {Product, ProductsModel} from "../models/products.interface";
 import {Observable} from "rxjs";
-import {selectCurrentProduct, selectProducts, selectProductsForHome, selectUserProducts} from "../store/selectors";
+import {
+  selectCurrentProduct,
+  selectProductsForHome,
+  selectProductsModel,
+  selectUserProductsModel
+} from "../store/selectors";
 import {createProduct, loadProductById, loadProducts, loadUserProducts} from "../store/actions";
 import {PaginationData} from "../models/core.interface";
 
@@ -11,28 +16,29 @@ import {PaginationData} from "../models/core.interface";
 })
 export class ProductsFacade {
 
-  public products$: Observable<Product[]> = new Observable<Product[]>()
-  public userProducts$: Observable<Product[]> = new Observable<Product[]>()
+  public productsModel$: Observable<ProductsModel> = new Observable<ProductsModel>()
+  public userProductsModel$: Observable<ProductsModel> = new Observable<ProductsModel>()
   public product$: Observable<Product> = new Observable<Product>()
   public homePageProducts$: Observable<Product[]> = new Observable<Product[]>()
 
   constructor(private store$: Store) {
-    this.products$ = this.store$.select(selectProducts)
-    this.userProducts$ = this.store$.select(selectUserProducts)
+    this.productsModel$ = this.store$.select(selectProductsModel)
+    this.userProductsModel$ = this.store$.select(selectUserProductsModel)
+
     this.product$ = this.store$.select(selectCurrentProduct)
     this.homePageProducts$ = this.store$.select(selectProductsForHome)
   }
 
-  public loadProducts(paginationData: PaginationData, category: string): void {
-    this.store$.dispatch(loadProducts({paginationData, category}));
+  public loadProducts(paginationData: PaginationData): void {
+    this.store$.dispatch(loadProducts({paginationData}));
   }
 
   public loadProductById(productId: string): void {
     this.store$.dispatch(loadProductById({productId}));
   }
 
-  public loadUserProducts(): void {
-    this.store$.dispatch(loadUserProducts());
+  public loadUserProducts(paginationData: PaginationData): void {
+    this.store$.dispatch(loadUserProducts({paginationData}));
   }
 
   public createProduct(product: Product): void {

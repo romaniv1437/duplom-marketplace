@@ -13,6 +13,7 @@ export class AuthService {
     if (!!localStorage.getItem('life_access')) {
       if (new Date().getTime() >= new Date(localStorage.getItem('life_access')!).getTime()) {
         console.error('token expired')
+        this.clearToken();
         this.authFacade.logout();
       }
     }

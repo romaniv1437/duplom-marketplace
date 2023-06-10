@@ -3,9 +3,10 @@ import {State} from "./reducer";
 
 export const selectFeature = createFeatureSelector<State>('store');
 
-export const selectProducts = createSelector(
+
+export const selectProductsModel = createSelector(
   selectFeature,
-  (state) => state.products
+  (state) => state.productsModel
 );
 export const selectCurrentProduct = createSelector(
   selectFeature,
@@ -51,9 +52,9 @@ export const selectCategories = createSelector(
   (state) => state.categories
 );
 
-export const selectUserProducts = createSelector(
+export const selectUserProductsModel = createSelector(
   selectFeature,
-  (state) => state.userProducts
+  (state) => state.userProductsModel
 );
 
 

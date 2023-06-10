@@ -15,8 +15,18 @@ export interface Product {
   imageFiles: File[];
 }
 
-export interface ProductsResponse extends PaginationData {
-  items: Product[]
+export interface ProductsResponse {
+  count: number;
+  next: string;
+  previous: string;
+  results: ProductModel[];
+}
+
+export interface ProductsModel {
+  countAll: number;
+  nextPage: string;
+  prevPage: string;
+  results: Product[];
 }
 
 export interface ProductModel {

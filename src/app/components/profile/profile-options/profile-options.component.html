@@ -28,8 +28,9 @@
     <mat-card-content>
       <app-products-display
         [maxPageSize]="3"
+        (paginationData)="getProducts($event)"
         [productsAlign]="'start'"
-        [products]="$any(products$ | ngrxPush)"
+        [products]="$any(userProductsModel$ | ngrxPush)"
         [userId]="user?.id"></app-products-display>
     </mat-card-content>
   </mat-card>

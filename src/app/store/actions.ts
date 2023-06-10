@@ -1,17 +1,17 @@
 import {createAction, props} from "@ngrx/store";
 import {CartProduct} from "../models/cart.interface";
 import {PaginationData} from "../models/core.interface";
-import {Product, ProductsResponse} from "../models/products.interface";
+import {Product, ProductsModel, ProductsResponse} from "../models/products.interface";
 import {User} from "../models/user.interface";
 
 export const loadProducts = createAction(
   "[PRODUCTS] load products",
-  props<{ paginationData: PaginationData, category: string }>()
+  props<{ paginationData: PaginationData }>()
 )
 
 export const loadProductsSuccess = createAction(
   "[PRODUCTS] load products success",
-  props<{ productsResponse: ProductsResponse }>()
+  props<{ productsResponse: ProductsModel }>()
 )
 
 export const loadProductById = createAction(
@@ -69,10 +69,11 @@ export const getUserInfoSuccess = createAction(
 
 export const loadUserProducts = createAction(
   "[PRODUCTS] load user products",
+  props<{ paginationData: PaginationData }>()
 )
 export const loadUserProductsSuccess = createAction(
   "[PRODUCTS] load user products success",
-  props<{ productsResponse: ProductsResponse }>()
+  props<{ productsResponse: ProductsModel }>()
 )
 
 export const loadCategories = createAction(
