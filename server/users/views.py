@@ -75,10 +75,7 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
             'first_name': data['first_name'],
             'last_name': data['last_name'],
             # 'date_joined': User.objects.filter(username=self.request.user.username)[0].date_joined,
-<<<<<<< HEAD
             'avatar': avatar
-=======
->>>>>>> origin
         }
 
         return Response(response)
