@@ -34,17 +34,21 @@ export class ProductsDisplayComponent implements OnInit {
 
   @Input() set products(products: ProductsModel) {
     this.productsItems = products.results || [];
-    this.length = products?.countAll;
+    this.length = products?.results?.length;
+    this.getData(this.pageEvent);
     this.paginator?.firstPage();
   };
 
   ngOnInit(): void {
-    this.pageSize = this.maxPageSize || this.pageSize;
-    this.getData(this.pageEvent);
+    if (this.maxPageSize) {
+      this.pageSizeOptions.push(this.maxPageSize);
+      this.pageSize = this.maxPageSize;
+    }
   }
 
   getData(event?: PageEvent) {
-    this.paginationData.emit({page: event?.pageIndex || 0, count: event?.pageSize || 8, searchKey: ''})
+    const page = event ? event : {pageIndex: this.pageIndex, pageSize: this.pageSize};
+    this.productsDataSource = this.productsItems?.slice(page.pageIndex * page.pageSize, page.pageIndex * page.pageSize + page.pageSize);
     return event || this.pageEvent;
   }
 

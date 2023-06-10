@@ -94,9 +94,9 @@ export class ApiService {
 
   getUserByUsername(username: string): Observable<User> {
 
-    return this.http.get<UserModel[]>(this.BASE_URL + 'profile/' + username + '/')
+    return this.http.get<UserModel>(this.BASE_URL + 'profile/' + username + '/')
       .pipe(
-        map(res => this.userAdapter(res[0])),
+        map(res => this.userAdapter(res)),
         catchError(this.errorHandler))
   }
 
@@ -106,7 +106,7 @@ export class ApiService {
         .pipe(
           map(res => this.userAdapter(res)),
           catchError(this.errorHandler));
-    }))
+    })).pipe(catchError(this.errorHandler));
   }
 
   loadCategories(): Observable<CategoriesModel> {

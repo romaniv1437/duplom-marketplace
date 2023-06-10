@@ -22,11 +22,17 @@ export class ProfileComponent extends ControlSubscribtionComponent implements On
   public user$: Observable<User> = new Observable<User>();
   public placeholderImages = PlaceholderImages;
 
+  public userId: number | undefined;
+
   constructor(private authFacade: AuthFacade, private route: ActivatedRoute,) {
     super()
   }
 
   ngOnInit(): void {
+
+    this.authFacade.user$.pipe(takeUntil(this.destroyed$)).subscribe(user => {
+      this.userId = user.id;
+    })
 
     this.route.params
       .pipe(takeUntil(this.destroyed$))
