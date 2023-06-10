@@ -62,7 +62,9 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
 
         user = User.objects.filter(username=self.request.user.username) # тут вар через необроблені дані.
         avatar_image = Profile.objects.filter(profile__username=self.request.user.username)
-        avatar = 'http://127.0.0.1:8000/' + avatar_image[0].avatar.url if avatar_image else None
+        date_joined = User.objects.filter(username=self.request.user.username)[0].date_joined + timedelta(hours=3)
+        avatar = 'http://127.0.0.1:8000' + avatar_image[0].avatar.url if avatar_image[0].avatar else None
+
 
         user.update(
             username=data['username'],
@@ -71,14 +73,12 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
         )
 
         response = {
+            'id': avatar_image[0].pk,
             'username': data['username'],
             'first_name': data['first_name'],
             'last_name': data['last_name'],
-            # 'date_joined': User.objects.filter(username=self.request.user.username)[0].date_joined,
-<<<<<<< HEAD
+            'date_joined': date_joined.strftime(DATETIME_FORMAT),
             'avatar': avatar
-=======
->>>>>>> origin
         }
 
         return Response(response)
