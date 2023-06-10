@@ -162,7 +162,7 @@ export class ApiService {
       categoryId: product.category,
       image: product.photo ? product.photo[0] : '',
       images: product.photo,
-      user: product.user
+      user: this.userAdapter(product.user)
     } as unknown as Product
   }
 

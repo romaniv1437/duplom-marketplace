@@ -1,10 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ProductsFacade} from "../../../facades/products.facade";
 import {Product} from "../../../models/products.interface";
 import {Observable} from "rxjs";
 import {CartProduct} from "../../../models/cart.interface";
 import {CartFacade} from 'src/app/facades/cart.facade';
+import {PlaceholderImages} from "../../../enums/placeholderImage.enum";
+import {User} from "../../../models/user.interface";
+import { BaseFacade } from 'src/app/facades/base.facade';
+import { AuthFacade } from 'src/app/facades/auth.facade';
 
 @Component({
   selector: 'app-products-page',
@@ -12,12 +16,19 @@ import {CartFacade} from 'src/app/facades/cart.facade';
   styleUrls: ['./products-page.component.scss']
 })
 export class ProductsPageComponent implements OnInit {
+
+  public user$: Observable<User> = new Observable<User>();
   public cartProducts$: Observable<CartProduct[]> = new Observable<CartProduct[]>();
   public product$: Observable<Product> = new Observable<Product>();
-  mockImage: string = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
+  placeholderImages = PlaceholderImages;
   private productId: string = ''
 
-  constructor(private route: ActivatedRoute, private productsFacade: ProductsFacade, private cartFacade: CartFacade) {
+  constructor(
+    private route: ActivatedRoute,
+    private productsFacade: ProductsFacade,
+    private cartFacade: CartFacade,
+    private authFacade: AuthFacade
+  ) {
   }
 
   ngOnInit(): void {
@@ -30,6 +41,7 @@ export class ProductsPageComponent implements OnInit {
 
     this.product$ = this.productsFacade.product$;
     this.cartProducts$ = this.cartFacade.cartProducts$;
+    this.user$ = this.authFacade.user$;
   }
 
   addProductToCart(product: Product): void {

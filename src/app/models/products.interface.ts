@@ -1,6 +1,6 @@
 import {Category} from "./category.interface";
 import {PaginationData} from "./core.interface";
-import {User} from "./user.interface";
+import {User, UserModel} from "./user.interface";
 
 export interface Product {
   url: string;
@@ -40,6 +40,6 @@ export interface ProductModel {
   number_photo: number,
   is_active: boolean,
   category: number,
-  user: User,
+  user: UserModel,
   photo: string[]
 }

@@ -4,6 +4,7 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {CartProduct} from "../../../models/cart.interface";
 import {CartFacade} from "../../../facades/cart.facade";
 import {PaginationData} from "../../../models/core.interface";
+import {PlaceholderImages} from "../../../enums/placeholderImage.enum";
 
 @Component({
   selector: 'app-products-display',
@@ -25,7 +26,7 @@ export class ProductsDisplayComponent implements OnInit {
   pageSize = 4;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   pageEvent!: PageEvent;
-  mockImage: string = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
+  public placeholderImages = PlaceholderImages;
 
   constructor(private cartFacade: CartFacade) {
   }
@@ -50,4 +51,6 @@ export class ProductsDisplayComponent implements OnInit {
     const cartProduct = {...product, qty: 1, userId: 'no-user', totalPrice: product.price} as CartProduct;
     this.cartFacade.addProductToCart(cartProduct)
   }
+
+  protected readonly PlaceholderImages = PlaceholderImages;
 }
