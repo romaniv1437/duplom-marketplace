@@ -88,7 +88,7 @@ class AddPhotoOrdersView(generics.ListCreateAPIView):
         photo = request.FILES[data]
         Photo.objects.create(photo=photo, number_photo=order[0].pk)
         
-        return Response({'message': 'Оголошення відправлено!'})
+        return Response()
 
 
 class UpdatePhotoOrdersView(generics.ListCreateAPIView):
