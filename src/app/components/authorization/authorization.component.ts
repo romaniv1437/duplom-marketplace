@@ -15,7 +15,13 @@ import {Router} from '@angular/router';
 export class AuthorizationComponent extends ControlSubscribtionComponent implements OnInit {
   public user$: Observable<User> = new Observable<User>();
   public authSelected = 'login'
-  public authorizationForm: FormGroup = new FormGroup<any>({
+  public loginForm: FormGroup = new FormGroup<any>({
+    username: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required]),
+    firstName: new FormControl(''),
+    lastName: new FormControl(''),
+  });
+  public registerForm: FormGroup = new FormGroup<any>({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
     firstName: new FormControl(''),
@@ -45,10 +51,10 @@ export class AuthorizationComponent extends ControlSubscribtionComponent impleme
   }
 
   public login(): void {
-    this.authFacade.login(this.authorizationForm.controls['username'].value, this.authorizationForm.controls['password'].value);
+    this.authFacade.login(this.loginForm.controls['username'].value, this.loginForm.controls['password'].value);
   }
 
   public register(): void {
-    this.authFacade.register(this.authorizationForm.value, this.authorizationForm.controls['password'].value);
+    this.authFacade.register(this.registerForm.value, this.registerForm.controls['password'].value);
   }
 }
