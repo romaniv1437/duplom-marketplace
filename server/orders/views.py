@@ -62,6 +62,16 @@ class OrdersUpdateView(OrdersMixinUpdate, generics.RetrieveUpdateDestroyAPIView)
         slug = self.kwargs['slug']
 
         return Orders.objects.filter(slug=slug)
+    
+    def update(self, request, *args, **kwargs):
+        super().update_photo(self.kwargs['slug'])
+
+        return super().update(request, *args, **kwargs)
+    
+    # def put(self, request, *args, **kwargs):
+    #     super().update_photo(self.kwargs['slug'])
+
+    #     return Response({'message': 'Фотографії успішно видалені!'})
 
 
 class AddOrdersView(generics.ListCreateAPIView):
@@ -91,11 +101,12 @@ class AddPhotoOrdersView(generics.ListCreateAPIView):
         return Response()
 
 
-class UpdatePhotoOrdersView(generics.ListCreateAPIView):
+class UpdatePhotoOrdersView(OrdersMixinUpdate, generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersPhotoSerializers
     permission_classes = (IsAuthenticatedOrReadOnly,)
     lookup_field = 'slug'
+
 
     def post(self, request, *args, **kwargs):
 
@@ -104,7 +115,7 @@ class UpdatePhotoOrdersView(generics.ListCreateAPIView):
         
         slug = kwargs['slug']
         number_photo = Orders.objects.filter(slug=slug)[0].number_photo
-        Photo.objects.filter(number_photo=number_photo).delete()
+        # Photo.objects.filter(number_photo=number_photo).delete()
         
         for i in request.FILES:
             data = i

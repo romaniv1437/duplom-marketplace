@@ -122,4 +122,3 @@ class AddOrdersSerializer(serializers.ModelSerializer):
         product = Orders.objects.create(**validated_data)
 
         return product
-
