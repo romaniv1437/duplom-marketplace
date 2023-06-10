@@ -73,7 +73,7 @@ export class ApiService {
     const userBody = {
       password: password,
       confirm_password: password,
-      username: user.email,
+      username: user.username,
       first_name: user.firstName,
       last_name: user.lastName
     }
