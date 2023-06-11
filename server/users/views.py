@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from django.contrib.auth.models import User
 from django.contrib.auth import logout, authenticate
 from django_filters import rest_framework as rest_filters
+from django.http import Http404
 
 from datetime import datetime, timedelta
 from django.db.models import Sum
@@ -201,8 +202,14 @@ class RatingUserAPIView(ProfileMixin, generics.ListCreateAPIView):
 
 
     def get(self, request, *args, **kwargs):
+        if not User.objects.filter(username=self.kwargs['slug']):
+            """
+                ПЕРЕВІРКА НА ВМІСТ КОРИСТУВАЧА
+            """
+            raise Http404()
+
         user = User.objects.get(username=self.kwargs['slug'])
-        serializer = ProfileSerializer(user)
+        serializer = ProfileSerializer(user, context={'request': self.request})
 
         return Response(serializer.data)
 

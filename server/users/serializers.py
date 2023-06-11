@@ -66,8 +66,9 @@ class ProfileSerializer(ProfileMixin, serializers.ModelSerializer):
 
 
     def to_representation(self, instance):
+        request = self.context['request']
         representation = super().to_representation(instance)
-        context = super().get_context_data(instance, representation)
+        context = super().get_context_data(instance, representation, request)
         
         return context
 

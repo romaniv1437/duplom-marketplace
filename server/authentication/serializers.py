@@ -57,7 +57,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         del validated_data['confirm_password']
-        validated_data['username'] = validated_data['username'].lower()
         
         return User.objects.create_user(**validated_data)
     

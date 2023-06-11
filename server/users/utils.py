@@ -2,14 +2,13 @@ from datetime import timedelta
 from server.settings import DATETIME_FORMAT
 from django.db.models import Sum
 from .models import Rating, Profile
-from django.contrib.auth.models import User
-from django.forms.models import model_to_dict
+from django.contrib.auth.models import User, AnonymousUser
 
 from rest_framework import serializers
 
 
 class ProfileMixin:
-    def get_context_data(self, instance, representation, *args, **kwargs):
+    def get_context_data(self, instance, representation, request=None, *args, **kwargs):
         try:
             representation['avatar'] = representation['profile']['avatar']
             del representation['profile']
@@ -21,6 +20,13 @@ class ProfileMixin:
         date_joined = instance.date_joined + timedelta(hours=3)
         rating = Rating.objects.filter(for_user=instance)
         n = len(rating)
+        
+        you_stars = None
+
+        if not request.user.is_anonymous:       #  Якщо користувач не анонімний то можна отримати поточний рейтинг
+            you_rating = Rating.objects.filter(from_user=Profile.objects.get(profile=request.user), for_user=instance)   # роблю запит в бд чи я користувач ставив оцінку іншому користувачеві
+            you_stars = you_rating[0].stars if you_rating else None     # якщо запис існує, то отримую оцінку і передаємо на фронт, якщо ні - None
+
 
         representation['username'] = instance.username
         representation['first_name'] = instance.first_name
@@ -28,6 +34,7 @@ class ProfileMixin:
         representation['date_joined'] = date_joined.strftime(DATETIME_FORMAT)
         representation['stars'] = rating.aggregate(Sum('stars'))['stars__sum'] / n if rating else 0.00
         representation['persons'] = n
+        representation['you_stars'] = you_stars
 
         return representation
     
