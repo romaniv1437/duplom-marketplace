@@ -1,7 +1,5 @@
 <main *ngIf="cart$ | ngrxPush as cart" class="cart-container">
-
   <div *ngIf="cart.products?.length; else cartEmpty">
-
     <div class="cart-content">
       <mat-card>
         <mat-card-title>Ваш кошик</mat-card-title>
@@ -11,16 +9,15 @@
         </mat-card-content>
       </mat-card>
     </div>
-
     <section class="selected-products">
       <h4>Вибрані товари</h4>
       <div class="products">
-        <mat-card *ngFor="let product of cart.products" [routerLink]="'/products/item/' + product.url"
+        <mat-card *ngFor="let product of cart.products" [routerLink]="'/' +product.url"
                   class="products--card">
           <mat-card-header>
             <mat-card-title class="title">{{product.title}}</mat-card-title>
           </mat-card-header>
-          <img [src]="product.image || mockImage" alt="{{product.title}} image" height="150" mat-card-image
+          <img [src]="product.image || placeholderImages.productImage" alt="{{product.title}} image" height="150" mat-card-image
                width="150">
           <mat-card-content class="content">
             <p style="flex: 1 1 auto">
@@ -39,7 +36,8 @@
                 <mat-icon>remove</mat-icon>
               </button>
             </div>
-            <span *ngIf="(cart.products | getCartProduct: product.id) as cartProduct">К-сть: {{cartProduct.qty}}, Загалом: {{cartProduct.totalPrice}}</span>
+            <span *ngIf="(cart.products | getCartProduct: product.id) as cartProduct">К-сть: {{cartProduct.qty}},
+              Загалом: {{cartProduct.totalPrice}}</span>
             <button (click)="removeFromCart(product)" mat-icon-button>
               <mat-icon>delete</mat-icon>
             </button>

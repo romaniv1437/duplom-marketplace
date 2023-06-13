@@ -20,14 +20,11 @@ export class ProductsAddFormComponent implements OnInit {
     category: new FormControl(null, [Validators.required]),
     photo: new FormControl<File[] | null>(null, [Validators.required])
   })
-
   constructor(private baseFacade: BaseFacade, private productsFacade: ProductsFacade) {
   }
-
   ngOnInit(): void {
     this.categories$ = this.baseFacade.categories$;
   }
-
   public createProduct(): void {
     const product = {
       title: this.productForm.controls['title'].value,

@@ -12,8 +12,6 @@ import {ControlSubscribtionComponent} from "../../../control-subscriptions/contr
 })
 export class ProfileEditFormComponent extends ControlSubscribtionComponent implements OnInit {
   public user$: Observable<User> = new Observable<User>();
-
-
   profileForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
     firstName: new FormControl('', [Validators.required]),
@@ -24,16 +22,12 @@ export class ProfileEditFormComponent extends ControlSubscribtionComponent imple
   constructor(private authFacade: AuthFacade) {
     super()
   }
-
   ngOnInit(): void {
     this.user$ = this.authFacade.user$;
-
     this.user$.pipe(takeUntil(this.destroyed$)).subscribe(user => {
       this.profileForm.patchValue(user)
     })
   }
-
-
   editProfile(): void {
     const value = this.profileForm.value;
     this.authFacade.edit({...value, imageFile: value.photo ? value.photo[0] : null})

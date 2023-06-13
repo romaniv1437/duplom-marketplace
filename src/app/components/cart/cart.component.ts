@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CartFacade} from 'src/app/facades/cart.facade';
 import {Cart, CartProduct} from "../../models/cart.interface";
 import {Observable} from "rxjs";
+import {PlaceholderImages} from "../../enums/placeholderImage.enum";
 
 @Component({
   selector: 'app-cart',
@@ -11,7 +12,7 @@ import {Observable} from "rxjs";
 export class CartComponent implements OnInit {
 
   cart$: Observable<Cart> = new Observable<Cart>()
-  mockImage: string = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
+  placeholderImages = PlaceholderImages;
 
   constructor(private cartFacade: CartFacade) {
   }

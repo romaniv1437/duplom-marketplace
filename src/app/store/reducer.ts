@@ -79,7 +79,6 @@ export const baseReducer = createReducer(
       isLoading: false,
       error: '',
 
-      userProducts: action.productsResponse.results,
       userProductsModel: action.productsResponse
     }
   }),

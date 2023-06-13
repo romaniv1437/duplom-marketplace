@@ -7,7 +7,6 @@ import {CartProduct} from "../../../models/cart.interface";
 import {CartFacade} from 'src/app/facades/cart.facade';
 import {PlaceholderImages} from "../../../enums/placeholderImage.enum";
 import {User} from "../../../models/user.interface";
-import { BaseFacade } from 'src/app/facades/base.facade';
 import { AuthFacade } from 'src/app/facades/auth.facade';
 
 @Component({

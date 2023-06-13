@@ -57,8 +57,6 @@ export class ProductsDisplayComponent implements OnInit {
     this.cartFacade.addProductToCart(cartProduct)
   }
 
-  protected readonly PlaceholderImages = PlaceholderImages;
-
   editProduct(productId: string) {
     this.productsFacade.loadProductById(productId)
   }

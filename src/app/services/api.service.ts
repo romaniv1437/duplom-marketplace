@@ -33,7 +33,7 @@ export class ApiService {
 
   loadProducts(loadData: { paginationData: PaginationData }): Observable<ProductsModel> {
     const search = !!loadData.paginationData.searchKey ? loadData.paginationData.searchKey + '/' : ''
-    return this.http.get<ProductsResponse>(this.BASE_URL + 'orders/' + `?page=${loadData.paginationData.page+1}`)
+    return this.http.get<ProductsResponse>(this.BASE_URL + 'products/')
       .pipe(
         map(res => ({
           countAll: res.count,
@@ -44,7 +44,7 @@ export class ApiService {
   }
 
   loadUserProducts(): Observable<ProductsModel> {
-    return this.http.get<ProductsResponse>(this.BASE_URL + 'myorders/')
+    return this.http.get<ProductsResponse>(this.BASE_URL + 'myproducts/')
       .pipe(
         map(res => ({
           countAll: res.count,
@@ -55,7 +55,7 @@ export class ApiService {
   }
 
   loadProductById(productId: string): Observable<Product> {
-    return this.http.get<ProductModel>(this.BASE_URL + 'orders/' + productId + '/')
+    return this.http.get<ProductModel>(this.BASE_URL + 'products/' + productId + '/')
       .pipe(
         map(res => (this.productsAdapter(res))),
         catchError(this.errorHandler))
@@ -122,7 +122,7 @@ export class ApiService {
   }
 
   createProduct(product: Product): Observable<Product> {
-    return this.http.post<ProductModel>(this.BASE_URL + 'add-orders/', this.createProductBody(product))
+    return this.http.post<ProductModel>(this.BASE_URL + 'add-products/', this.createProductBody(product))
       .pipe(
         map((productResponse) => of(productResponse)
           .pipe(
@@ -139,7 +139,7 @@ export class ApiService {
   }
 
   editProduct(product: Product): Observable<Product> {
-    return this.http.put<ProductModel>(this.BASE_URL + 'orders/' + product.slug + '/', this.createProductBody(product))
+    return this.http.put<ProductModel>(this.BASE_URL + 'products/' + product.slug + '/', this.createProductBody(product))
       .pipe(
         map((productResponse) => of(productResponse)
           .pipe(
