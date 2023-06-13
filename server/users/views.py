@@ -79,7 +79,6 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
         rating = Rating.objects.filter(for_user=self.request.user)
         n = len(rating)
         
-    
         response = {
             'id': self.request.user.pk,
             'username': data['username'],
@@ -226,7 +225,7 @@ class RatingUserAPIView(ProfileMixin, generics.ListCreateAPIView):
         username = self.kwargs['slug']      #  отримую користувача по слагу
         pk = self.request.user.pk       #  отримую унікальний ідентифікатор
 
-        context = super().rating_create(stars, username, pk)
+        context = super().rating_create(stars, username, pk, request=self.request)
 
         return Response(context)
 
@@ -235,7 +234,7 @@ class RatingUserAPIView(ProfileMixin, generics.ListCreateAPIView):
         username = self.kwargs['slug']      #  отримую користувача по слагу
         pk = self.request.user.pk       #  отримую унікальний ідентифікатор
         
-        context = super().rating_delete(username, pk)
+        context = super().rating_delete(username, pk, request=self.request)
 
         return Response(context)
     
