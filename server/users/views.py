@@ -16,7 +16,7 @@ from .models import Profile, Rating
 from .utils import ProfileMixin
 
 from server.settings import DATETIME_FORMAT
-from orders.views import OrdersListPagination
+from products.permissions import IsOwnerOrReadOnly
 
 
 class MyProfile(generics.RetrieveAPIView):
@@ -26,7 +26,7 @@ class MyProfile(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        serializer = ProfileSerializer(request.user)
+        serializer = ProfileSerializer(request.user, context={'request': self.request})
 
         return Response(serializer.data)
 
@@ -43,14 +43,14 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
         """
             СИСТЕМА НАЛАШТУВАНЬ ДЛЯ ПЕВНОГО КОРИСТУВАЧА
         """
-
+        
         return self.request.user
 
 
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-
+    
         return Response(serializer.data)
 
 
@@ -76,13 +76,20 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
             last_name=data['last_name'],
         )
 
+        rating = Rating.objects.filter(for_user=self.request.user)
+        n = len(rating)
+        
+    
         response = {
-            'id': avatar_image[0].pk,
+            'id': self.request.user.pk,
             'username': data['username'],
             'first_name': data['first_name'],
             'last_name': data['last_name'],
             'date_joined': date_joined.strftime(DATETIME_FORMAT),
-            'avatar': avatar
+            'avatar': avatar,
+            'stars': rating.aggregate(Sum('stars'))['stars__sum'] / n if rating else 0.00,
+            'persons': n,
+            'you_stars': None,
         }
         
         return Response(response)
@@ -100,7 +107,7 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         username = self.request.user.username
-
+    
         return Profile.objects.filter(profile__username=username)
 
 

@@ -1,54 +1,23 @@
 from django.db import models
-from users.models import Profile
-from category.models import Category
-
-
-
-class Photo(models.Model):
-    photo = models.ImageField(upload_to='orders/%Y/%m/%d/', verbose_name='Фотографії')
-    time_create = models.DateTimeField(auto_now_add=True)
-    number_photo = models.IntegerField(null=False, default=True, blank=True)
-
-
-    def __str__(self):
-        return str(self.number_photo)
-    
-
-    class Meta:
-        verbose_name = 'Фотографію'
-        verbose_name_plural = 'Фотографії'
-    
-
-class Currency(models.Model):
-    title = models.CharField(max_length=100, unique=True, db_index=True, verbose_name='Валюти')
-
-    def __str__(self):
-        return self.title
-    
-    class Meta:
-        verbose_name = 'Валюту'
-        verbose_name_plural = 'Валюти'
+from django.contrib.auth.models import User
+from products.models import Products
 
 
 class Orders(models.Model):
-    title = models.CharField(max_length=255, null=True, blank=True)
-    description = models.TextField()
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
-    price = models.FloatField()
-    currency = models.ForeignKey(Currency, on_delete=models.CASCADE, verbose_name='Валюти')
-    time_create = models.DateTimeField(auto_now_add=True)
-    time_update = models.DateTimeField(auto_now=True)
-    number_photo = models.IntegerField(null=True, db_index=True, verbose_name='Фотографії')
-    # number_photo = models.ForeignKey(Photo, on_delete=models.CASCADE, blank=True, null=True, db_index=True, verbose_name='Фотографії')
-    is_active = models.BooleanField(default=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, db_index=True, verbose_name='Категорія')
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    first_name = models.CharField(max_length=100, verbose_name="Ім'я")
+    last_name = models.CharField(max_length=100, verbose_name='Прізвище')
+    email = models.EmailField(verbose_name='Електронна пошта')
+    country = models.CharField(max_length=100, verbose_name='Країна')
+    city = models.CharField(max_length=100, verbose_name='Місто')
+    post_index = models.IntegerField(verbose_name='Поштовий індекс')
+    count_products = models.IntegerField(default=1, verbose_name='Кількість продуктів')
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Час створення')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Замовник')
 
 
-    class Meta:
-        verbose_name = 'Товари'
-        verbose_name_plural = 'Товари'
+class OrdersProducts(models.Model):
+    products = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='Продукт')
+    number_orders = models.IntegerField(null=True, db_index=True, verbose_name='Замовлення')
+    status = models.CharField(max_length=100, default='В процесі', verbose_name='Статус замовлення')
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Продавець')
 
-    
-    def __str__(self):
-        return self.title

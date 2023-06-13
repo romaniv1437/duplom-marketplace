@@ -29,15 +29,7 @@ class Profile(models.Model):
 
 
 class Rating(models.Model):
-    stars = (
-        (1, 1),
-        (2, 2),
-        (3, 3),
-        (4, 4),
-        (5, 5),
-    )
-
-    stars = models.PositiveIntegerField(choices=stars)
+    stars = models.PositiveIntegerField()
     from_user = models.ForeignKey(Profile, on_delete=models.PROTECT)
     for_user = models.ForeignKey(User, on_delete=models.PROTECT)
 

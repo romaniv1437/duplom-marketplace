@@ -17,14 +17,15 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.urls import path, include
 from .settings import DEBUG, MEDIA_ROOT, MEDIA_URL
-# from orders.urls import *
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('orders.urls')),
+    path('', include('products.urls')),
     path('', include('category.urls')),
     path('', include('users.urls')),
-    path('', include('authentication.urls'))
+    path('', include('authentication.urls')),
+    path('', include('orders.urls')),
 ]
 
 if DEBUG:

@@ -32,7 +32,8 @@ class RegisterUserAPIView(generics.CreateAPIView):
 
         token = RefreshToken.for_user(user)
 
-        data = serializer.data
+        # data = serializer.data
+        data = {}
         data['tokens'] = {
             'refresh': str(token),
             'access': str(token.access_token),
