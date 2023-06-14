@@ -23,4 +23,4 @@ class ProductsToCategoryListView(generics.ListAPIView):
     
 
     def get_queryset(self, *args, **kwargs):
-        return Products.objects.filter(category__slug=self.kwargs['slug']).order_by('-id')
+        return Products.objects.filter(category__slug=self.kwargs['slug'])

@@ -21,10 +21,11 @@ class ProductsListView(generics.ListAPIView):
     serializer_class = ProductsSerializer
     pagination_class = ProductsListPagination
     filter_backends = [rest_filters.DjangoFilterBackend, filters.SearchFilter]
+    permission_classes = (IsOwnerOrReadOnly,)
     search_fields = ['title', 'description']
 
     def get_queryset(self):
-        return Products.objects.all().order_by('-id')
+        return Products.objects.exclude(user__profile__username=self.request.user.username)
 
 
 class ProductsUpdateView(ProductsMixinUpdate, generics.RetrieveUpdateDestroyAPIView):

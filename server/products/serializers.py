@@ -61,6 +61,8 @@ class ProductsSerializer(serializers.ModelSerializer):
         }
         representation["photo"] = photo
 
+        print(representation)
+
         return representation
 
 

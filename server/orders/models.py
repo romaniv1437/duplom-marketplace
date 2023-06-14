@@ -22,6 +22,12 @@ class Orders(models.Model):
     seller = models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name='Продавець')
 
 
+    class Meta:
+        verbose_name = 'Замовлення'
+        verbose_name_plural = 'Замовлення'
+        ordering = ['-id']
+
+
     def __str__(self, *args, **kwargs):
         return str(self.products.title)
 
