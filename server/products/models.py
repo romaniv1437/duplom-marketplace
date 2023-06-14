@@ -37,7 +37,6 @@ class Products(models.Model):
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
     number_photo = models.IntegerField(null=True, db_index=True, verbose_name='Фотографії')
-    # number_photo = models.ForeignKey(Photo, on_delete=models.CASCADE, blank=True, null=True, db_index=True, verbose_name='Фотографії')
     is_active = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, db_index=True, verbose_name='Категорія')
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)

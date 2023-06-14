@@ -6,9 +6,6 @@ from django.contrib.auth.models import AbstractUser
 
 
 class Profile(models.Model):
-    """
-        Avatar
-    """
     avatar = models.ImageField(upload_to='profile/%Y/%m/%d/', blank=True, verbose_name='Аватар')
     
     profile = models.OneToOneField(
@@ -34,8 +31,14 @@ class Rating(models.Model):
     for_user = models.ForeignKey(User, on_delete=models.PROTECT)
 
 
+    class Meta:
+        verbose_name = 'Рейтинг'
+        verbose_name_plural = 'Рейтинг'
+
+
     def __str__(self):
         return self.for_user.username
+
 
 
 @receiver(post_save, sender=User)

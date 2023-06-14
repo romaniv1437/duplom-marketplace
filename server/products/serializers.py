@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Products, Photo
 from users.models import Profile
+from datetime import timedelta
 
 from pytils.translit import slugify
 from server.settings import DATETIME_FORMAT
@@ -43,6 +44,7 @@ class ProductsSerializer(serializers.ModelSerializer):
 
         representation = super().to_representation(instance)
         avatar = instance.user.profile.profile.avatar
+        date_joined = instance.user.profile.date_joined + timedelta(hours=3)
 
         if avatar:
             avatar = 'http://127.0.0.1:8000' + avatar.url
@@ -54,7 +56,7 @@ class ProductsSerializer(serializers.ModelSerializer):
             'username': instance.user.profile.username,
             'first_name': instance.user.profile.first_name,
             'last_name': instance.user.profile.last_name,
-            'date_joined': instance.user.profile.date_joined.strftime(DATETIME_FORMAT),
+            'date_joined': date_joined.strftime(DATETIME_FORMAT),
             'avatar': avatar
         }
         representation["photo"] = photo
