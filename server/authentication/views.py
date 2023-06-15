@@ -59,11 +59,10 @@ class LoginUserAPIView(generics.CreateAPIView):
 
         user = serializer.validated_data
 
-        # serializer = LoginSerializer(user)
         serializer = ProfileSerializer(user)
         token = RefreshToken.for_user(user)
 
-        # data = serializer.data
+
         data = {}
         data['tokens'] = {
             'refresh': str(token),

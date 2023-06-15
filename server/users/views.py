@@ -86,7 +86,7 @@ class UpdateMyProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
             'last_name': data['last_name'],
             'date_joined': date_joined.strftime(DATETIME_FORMAT),
             'avatar': avatar,
-            'stars': rating.aggregate(Sum('stars'))['stars__sum'] / n if rating else 0.00,
+            'stars': round(rating.aggregate(Sum('stars'))['stars__sum'] / n if rating else 0.00, 1),
             'persons': n,
             'you_stars': None,
         }

@@ -1,7 +1,5 @@
-from django.shortcuts import render
 from rest_framework import generics, filters
 from django_filters import rest_framework as rest_filters
-
 from products.models import Category, Products
 from products.serializers import ProductsSerializer
 from .serializers import CategorySerializer

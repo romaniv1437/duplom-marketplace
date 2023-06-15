@@ -34,7 +34,7 @@ class ProfileMixin:
         representation['first_name'] = instance.first_name
         representation['last_name'] = instance.last_name
         representation['date_joined'] = date_joined.strftime(DATETIME_FORMAT)
-        representation['stars'] = rating.aggregate(Sum('stars'))['stars__sum'] / n if rating else 0.00
+        representation['stars'] = round(rating.aggregate(Sum('stars'))['stars__sum'] / n if rating else 0.00, 1)
         representation['persons'] = n
         representation['you_stars'] = you_stars
         representation['products'] = products.data
@@ -65,6 +65,8 @@ class ProfileMixin:
         rating.save()
 
         context = self.get_context_data(instance=for_user, request=request)
+        avatar = Profile.objects.get(profile=for_user)
+        context['avatar'] = 'http://127.0.0.1:8000' + avatar.avatar.url if avatar.avatar else None
 
         return context
     

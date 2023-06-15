@@ -1,16 +1,13 @@
 from rest_framework import serializers
-from rest_framework.response import Response
-from users.models import Profile
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.contrib.auth import login, authenticate, get_user_model
+from django.contrib.auth import authenticate
 from datetime import timedelta
 
 from server.settings import DATETIME_FORMAT
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(label='Електронна пошта: ', write_only=True)
+    username = serializers.CharField(label='Псевдонім: ', write_only=True)
     first_name = serializers.CharField(label="Ім'я: ", required=True, write_only=True)
     last_name = serializers.CharField(label='Прізвище: ', required=False, write_only=True)
     password = serializers.CharField(label='Пароль: ', required=True, style={'input_type': 'password'}, write_only=True)
@@ -63,7 +60,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(required=False, read_only=True)
-    username = serializers.CharField(label='Електронна пошта: ', required=True)
+    username = serializers.CharField(label='Псевдонім: ', required=True)
     password = serializers.CharField(label='Пароль: ', required=True, style={'input_type': 'password'}, write_only=True)
 
     class Meta:

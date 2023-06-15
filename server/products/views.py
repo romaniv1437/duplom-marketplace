@@ -21,7 +21,6 @@ class ProductsListView(generics.ListAPIView):
     serializer_class = ProductsSerializer
     pagination_class = ProductsListPagination
     filter_backends = [rest_filters.DjangoFilterBackend, filters.SearchFilter]
-    permission_classes = (IsOwnerOrReadOnly,)
     search_fields = ['title', 'description']
 
     def get_queryset(self):
@@ -34,7 +33,7 @@ class ProductsUpdateView(ProductsMixinUpdate, generics.RetrieveUpdateDestroyAPIV
     """
     # queryset = Products.objects.all()
     serializer_class = ProductsSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     lookup_field = 'slug'
 
 
@@ -50,12 +49,6 @@ class ProductsUpdateView(ProductsMixinUpdate, generics.RetrieveUpdateDestroyAPIV
         return Products.objects.filter(slug=slug)
     
 
-    # def put(self, *args, **kwargs):
-    #     super().update_photo(self.kwargs['slug'])
-    #     print(self.request.user)
-
-    #     return super().put(*args, **kwargs)
-    
     def update(self, request, *args, **kwargs):
         super().update_photo(self.kwargs['slug'])
         
@@ -66,13 +59,12 @@ class AddProductsView(generics.ListCreateAPIView):
     queryset = Products.objects.all()
     serializer_class = AddProductsSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    # parser_classes = (FileUploadParser,)
 
 
 class AddPhotoProductsView(generics.ListCreateAPIView):
     queryset = Products.objects.all()
     serializer_class = ProductsPhotoSerializers
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     lookup_field = 'slug'
 
     def post(self, request, *args, **kwargs):

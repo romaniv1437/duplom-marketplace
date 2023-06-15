@@ -113,7 +113,7 @@ class AddProductsSerializer(serializers.ModelSerializer):
         # image_part_id = 1 if Photo.objects.last() is None else Photo.objects.last().number_photo + 1
         username = self.context['request'].user.pk
         user = Profile.objects.filter(profile=username)[0]
-        post_id =  1 if Products.objects.last() is None else Products.objects.last().pk + 1
+        post_id =  1 if Products.objects.first() is None else Products.objects.first().pk + 1
         validated_data['slug'] = slugify(self.validated_data['title'] + '-' + str(post_id))
         validated_data['user'] = user
 
