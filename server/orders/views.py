@@ -21,7 +21,6 @@ class MyOrdersBuyAPIView(generics.ListAPIView):
     serializer_class = OrdersSerializers
     permission_classes = (IsAuthenticated,)
 
-
     def get_queryset(self):
         return Orders.objects.filter(buyer=self.request.user.pk).order_by('-id')
     
@@ -29,11 +28,6 @@ class MyOrdersBuyAPIView(generics.ListAPIView):
 class MyOrdersSellAPIView(OrdersMixin, generics.ListCreateAPIView):
     serializer_class = OrdersSellSerializers
     permission_classes = (IsAuthenticated,)
-
-    
-    # def post(self, request, *args, **kwargs):
-    #     print(request.data)
-        # return super().post(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         pk = request.data['id']
@@ -47,8 +41,7 @@ class MyOrdersSellAPIView(OrdersMixin, generics.ListCreateAPIView):
         return Response({'message': 'Статус змінено!'})
 
 
-
     def get_queryset(self):
         seller = Profile.objects.get(profile__username=self.request.user.username)
-    
-        return Orders.objects.filter(seller=seller.pk).order_by('-id')
+
+        return Orders.objects.filter(seller=seller.pk, status='В процесі').order_by('-id')

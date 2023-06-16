@@ -47,5 +47,6 @@ class OrdersSellSerializers(OrdersMixin, serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         context = super().get_context_data(instance=instance, representation=representation)
+        context['status'] = instance.status
         
         return context
