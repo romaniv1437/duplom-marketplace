@@ -3,10 +3,19 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {of, switchMap, tap} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {
-  changePassword, changePasswordSuccess,
+  changePassword,
+  changePasswordSuccess,
   createProduct,
-  createProductSuccess, editProduct, editProductSuccess, editProfile, editProfileSuccess,
-  getUserInfo, getUserInfoByUserName, getUserInfoByUserNameSuccess,
+  createProductSuccess,
+  deleteProduct,
+  deleteProductSuccess,
+  editProduct,
+  editProductSuccess,
+  editProfile,
+  editProfileSuccess,
+  getUserInfo,
+  getUserInfoByUserName,
+  getUserInfoByUserNameSuccess,
   getUserInfoSuccess,
   loadCategories,
   loadCategoriesSuccess,
@@ -20,7 +29,9 @@ import {
   loginSuccess,
   register,
   registerSuccess,
-  setError, setUserRating, setUserRatingSuccess
+  setError,
+  setUserRating,
+  setUserRatingSuccess
 } from "./actions";
 import {ApiService} from "../services/api.service";
 import {Router} from "@angular/router";
@@ -48,6 +59,17 @@ export class BaseEffects {
     )
   ))
 
+  deleteProduct$ = createEffect(() => this.actions$.pipe(
+    ofType(deleteProduct),
+    switchMap((action) => this.apiService.deleteProduct(action.productId)
+      .pipe(
+        map(() => deleteProductSuccess()),
+        catchError((error) => of(setError({error})))
+      )
+    )
+  ))
+
+
   editProduct$ = createEffect(() => this.actions$.pipe(
     ofType(editProduct),
     switchMap((action) => this.apiService.editProduct(action.product)
@@ -64,7 +86,7 @@ export class BaseEffects {
   ), {dispatch: false})
 
   editProfileSuccess$ = createEffect(() => this.actions$.pipe(
-    ofType(editProfileSuccess, changePasswordSuccess),
+    ofType(editProfileSuccess, changePasswordSuccess, deleteProductSuccess),
     tap(action => this.router.navigate(['/profile']))
   ), {dispatch: false})
 

@@ -8,7 +8,14 @@ import {
   selectProductsModel,
   selectUserProductsModel
 } from "../store/selectors";
-import {createProduct, editProduct, loadProductById, loadProducts, loadUserProducts} from "../store/actions";
+import {
+  createProduct,
+  deleteProduct,
+  editProduct,
+  loadProductById,
+  loadProducts,
+  loadUserProducts
+} from "../store/actions";
 import {PaginationData} from "../models/core.interface";
 
 @Injectable({
@@ -44,6 +51,11 @@ export class ProductsFacade {
   public createProduct(product: Product): void {
     this.store$.dispatch(createProduct({product}));
   }
+
+  public deleteProduct(productId: string): void {
+    this.store$.dispatch(deleteProduct({productId}));
+  }
+
 
   public editProduct(product: Product): void {
     this.store$.dispatch(editProduct({product}));

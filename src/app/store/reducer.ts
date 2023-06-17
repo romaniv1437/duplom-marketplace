@@ -259,6 +259,20 @@ export const baseReducer = createReducer(
       userProducts: [...state.userProducts, action.product]
     }
   }),
+  on(actions.deleteProduct, (state, action) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.deleteProductSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: ''
+    }
+  }),
   on(actions.editProduct, (state, action) => {
     return {
       ...state,

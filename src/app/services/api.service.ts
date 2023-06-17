@@ -138,6 +138,10 @@ export class ApiService {
         catchError(this.errorHandler))
   }
 
+  deleteProduct(productId: string): Observable<any> {
+    return this.http.delete<ProductModel>(this.BASE_URL +'products/' + productId + '/').pipe(catchError(this.errorHandler))
+  }
+
   editProduct(product: Product): Observable<Product> {
     return this.http.put<ProductModel>(this.BASE_URL + 'products/' + product.slug + '/', this.createProductBody(product))
       .pipe(

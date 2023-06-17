@@ -102,6 +102,15 @@ export const createProductSuccess = createAction(
   props<{ product: Product }>()
 )
 
+export const deleteProduct = createAction(
+  "[PRODUCTS] delete product",
+  props<{ productId: string }>()
+)
+
+export const deleteProductSuccess = createAction(
+  "[PRODUCTS] delete product success"
+)
+
 export const editProduct = createAction(
   "[PRODUCTS] edit product",
   props<{ product: Product }>()
