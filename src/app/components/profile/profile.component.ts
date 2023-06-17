@@ -22,7 +22,7 @@ export class ProfileComponent extends ControlSubscribtionComponent implements On
   public user$: Observable<User> = new Observable<User>();
   public placeholderImages = PlaceholderImages;
 
-  public userId: number | undefined;
+  public userId: string | undefined;
 
   constructor(private authFacade: AuthFacade, private route: ActivatedRoute, private router: Router) {
     super()
@@ -31,7 +31,7 @@ export class ProfileComponent extends ControlSubscribtionComponent implements On
   ngOnInit(): void {
 
     this.authFacade.user$.pipe(takeUntil(this.destroyed$)).subscribe(user => {
-      this.userId = user.id;
+      this.userId = user.username;
     })
 
     this.router.events
@@ -51,6 +51,11 @@ export class ProfileComponent extends ControlSubscribtionComponent implements On
       .pipe(takeUntil(this.destroyed$))
       .subscribe(value => {
         this.setRating(value.rating);
+      })
+
+    this.user$.pipe(takeUntil(this.destroyed$))
+      .subscribe(value => {
+        this.profileRateForm.patchValue({rating: value.you_stars}, {emitEvent: false})
       })
   }
 

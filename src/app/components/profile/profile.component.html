@@ -1,7 +1,7 @@
 <div *ngrxLet="user$ | ngrxPush as user" class="profile-container">
   <div class="profile-content">
     <mat-card class="user-card">
-      <ng-container *ngIf="!!username && user?.id || !username && user?.id; else noProfileFound">
+      <ng-container *ngIf="!!username && user?.username || !username && user?.username; else noProfileFound">
         <mat-card-header>
           <mat-card-title-group style="width: 100%">
             <mat-card-title>{{user?.firstName}} {{user?.lastName}}</mat-card-title>
@@ -18,7 +18,7 @@
               </svg>
             </p>
           </div>
-          <ng-container *ngIf="!!username && user?.id !== userId">
+          <ng-container *ngIf="!!username && user?.username !== userId">
 
             <strong>Ваша оцінка</strong>
             <form [formGroup]="profileRateForm">

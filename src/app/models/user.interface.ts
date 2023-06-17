@@ -15,4 +15,5 @@ export interface User {
   profilePicture: string;
   persons: number;
   stars: number;
+  you_stars: string;
 }
