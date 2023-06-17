@@ -25,8 +25,8 @@ export class AuthorizationComponent extends ControlSubscribtionComponent impleme
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
     confirmPassword: new FormControl('', [Validators.required]),
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
+    firstName: new FormControl('', [Validators.required]),
+    lastName: new FormControl('', [Validators.required]),
   });
 
   constructor(
