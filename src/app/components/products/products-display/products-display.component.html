@@ -53,6 +53,7 @@
 </div>
 <br>
 <mat-paginator
+  *ngIf="productsDataSource?.length !== 0"
   #paginator
   (page)="pageEvent = getData($event)"
   [length]="length"
