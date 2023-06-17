@@ -7,7 +7,7 @@
   <form [formGroup]="searchForm" class="search-form">
     <mat-form-field style="width:100%">
       <mat-label>Пошук</mat-label>
-      <input formControlName="search" matInput placeholder="Пошук оголошень">
+      <input formControlName="search" matInput placeholder="Пошук оголошень" [autofocus]="isProductsPage">
       <button  matSuffix mat-icon-button aria-label="search">
         <mat-icon>search</mat-icon>
       </button>

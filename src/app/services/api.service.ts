@@ -13,6 +13,7 @@ import {
   Category,
   CategoryModel,
 } from "../models/category.interface";
+import {FilterService} from "./filter.service";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,12 @@ import {
 export class ApiService {
   BASE_URL = 'http://127.0.0.1:8000/'
 
-  constructor(private http: HttpClient, private mockService: MockService, private authService: AuthService) {
+  constructor(
+    private http: HttpClient,
+    private mockService: MockService,
+    private authService: AuthService,
+    private filterService: FilterService
+  ) {
   }
 
   private createUserBody(user: User): UserModel {
@@ -35,6 +41,16 @@ export class ApiService {
     return this.http.get<ProductsResponse>(this.BASE_URL + 'products/')
       .pipe(
         map(res => res.results.map((r: any) => this.productsAdapter(r))),
+        catchError(this.errorHandler))
+  }
+
+  searchProducts(search: string, category?: string): Observable<Product[]> {
+    return this.http.get<ProductsResponse>(this.BASE_URL + 'products/')
+      .pipe(
+        map(res =>
+          this.filterService.productsCategoryFilter(res.results.map((r: any) => this.productsAdapter(r)), category || '')
+            .filter(product => this.filterService.productsFilter(product, search))
+        ),
         catchError(this.errorHandler))
   }
 
@@ -130,10 +146,11 @@ export class ApiService {
   }
 
   deleteProduct(productId: string): Observable<any> {
-    return this.http.delete<ProductModel>(this.BASE_URL +'products/' + productId + '/').pipe(catchError(this.errorHandler))
+    return this.http.delete<ProductModel>(this.BASE_URL + 'products/' + productId + '/').pipe(catchError(this.errorHandler))
   }
+
   deleteProfilePicture(username: string): Observable<any> {
-    return this.http.delete<ProductModel>(this.BASE_URL +'settings/').pipe(catchError(this.errorHandler))
+    return this.http.delete<ProductModel>(this.BASE_URL + 'settings/').pipe(catchError(this.errorHandler))
   }
 
   editProduct(product: Product): Observable<Product> {
@@ -158,7 +175,10 @@ export class ApiService {
       .pipe(
         map((userResponse) => of(userResponse)
           .pipe(combineLatestWith(!!user.imageFile ? this.addUserImage(user.imageFile, userResponse.id) : of(this.userAdapter(userResponse))),
-            map(([userResponse, userWithImage]) => ({...userResponse, avatar: userWithImage.profilePicture ? userWithImage.profilePicture : userResponse.avatar})),
+            map(([userResponse, userWithImage]) => ({
+              ...userResponse,
+              avatar: userWithImage.profilePicture ? userWithImage.profilePicture : userResponse.avatar
+            })),
           ),
         ),
         switchMap((userWithImage: Observable<UserModel>) => userWithImage
@@ -166,12 +186,12 @@ export class ApiService {
         catchError(this.errorHandler))
   }
 
-  changePassword(passwords: {old_password: string; new_password: string; confirm_password: string}): Observable<any> {
+  changePassword(passwords: { old_password: string; new_password: string; confirm_password: string }): Observable<any> {
     return this.http.post(this.BASE_URL + 'change-password/', {...passwords})
       .pipe(catchError(this.errorHandler))
   }
 
-  addProductImage(imageFile: File, productId: string): Observable<any>{
+  addProductImage(imageFile: File, productId: string): Observable<any> {
     let formData = new FormData()
     formData.append(imageFile.name, imageFile, imageFile.name)
     return this.http.post<ProductModel>(this.BASE_URL + 'add-photo/' + productId + '/', formData)
@@ -218,7 +238,6 @@ export class ApiService {
   }
 
   private userAdapter(user: UserModel): UserModel {
-    console.log(user)
     return {
       ...user,
       firstName: user.first_name,

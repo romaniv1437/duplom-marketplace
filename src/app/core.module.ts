@@ -47,6 +47,7 @@ import { ProductsEditFormComponent } from './components/profile/products-edit-fo
 import { GetProductSlugPipe } from './pipes/get-product-slug.pipe';
 import { ProfileChangePasswordComponent } from './components/profile/profile-change-password/profile-change-password.component';
 import { StarRatingComponent } from './components/shared/star-rating/star-rating.component';
+import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { StarRatingComponent } from './components/shared/star-rating/star-rating
     GetProductSlugPipe,
     ProfileChangePasswordComponent,
     StarRatingComponent,
+    AutofocusDirective,
   ],
   imports: [
     BrowserModule,

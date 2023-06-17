@@ -16,6 +16,7 @@ export interface State {
   cart: Cart;
 
   products: Product[];
+  filteredProducts: Product[];
   userProducts: Product[];
 
   currentProduct: Product;
@@ -33,6 +34,7 @@ export const initialState: State = {
   cart: {} as Cart,
 
   products: [],
+  filteredProducts: [],
   userProducts: [],
 
   currentProduct: {} as Product,
@@ -57,6 +59,23 @@ export const baseReducer = createReducer(
       error: '',
 
       products: action.products,
+      filteredProducts: action.products,
+    }
+  }),
+  on(actions.searchProducts, (state) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.searchProductsSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: '',
+
+      filteredProducts: action.products,
     }
   }),
   on(actions.loadUserProducts, (state) => {

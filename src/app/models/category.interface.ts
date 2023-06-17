@@ -20,4 +20,5 @@ export interface Category {
   id: number;
   title: string;
   url: string;
+  slug: string;
 }

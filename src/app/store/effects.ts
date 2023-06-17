@@ -28,7 +28,7 @@ import {
   login,
   loginSuccess,
   register,
-  registerSuccess,
+  registerSuccess, searchProducts, searchProductsSuccess,
   setError,
   setUserRating,
   setUserRatingSuccess
@@ -44,6 +44,16 @@ export class BaseEffects {
     switchMap((action) => this.apiService.loadProducts({...action})
       .pipe(
         map(products => loadProductsSuccess({products})),
+        catchError((error) => of(setError({error})))
+      )
+    )
+  ))
+
+  searchProducts$ = createEffect(() => this.actions$.pipe(
+    ofType(searchProducts),
+    switchMap((action) => this.apiService.searchProducts(action.search, action.category)
+      .pipe(
+        map(products => searchProductsSuccess({products})),
         catchError((error) => of(setError({error})))
       )
     )

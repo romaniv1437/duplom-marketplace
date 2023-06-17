@@ -3,7 +3,7 @@ import {Store} from "@ngrx/store";
 import {Product, ProductsModel} from "../models/products.interface";
 import {Observable} from "rxjs";
 import {
-  selectCurrentProduct, selectProducts,
+  selectCurrentProduct, selectFilteredProducts, selectProducts,
   selectProductsForHome, selectProfileProducts, selectUserProducts,
 } from "../store/selectors";
 import {
@@ -12,7 +12,7 @@ import {
   editProduct,
   loadProductById,
   loadProducts,
-  loadUserProducts
+  loadUserProducts, searchProducts
 } from "../store/actions";
 import {PaginationData} from "../models/core.interface";
 
@@ -22,6 +22,7 @@ import {PaginationData} from "../models/core.interface";
 export class ProductsFacade {
 
   public products$: Observable<Product[]> = new Observable<Product[]>()
+  public filteredProducts$: Observable<Product[]> = new Observable<Product[]>()
   public userProducts$: Observable<Product[]> = new Observable<Product[]>()
   public profileProducts$: Observable<Product[]> = new Observable<Product[]>()
   public product$: Observable<Product> = new Observable<Product>()
@@ -29,6 +30,7 @@ export class ProductsFacade {
 
   constructor(private store$: Store) {
     this.products$ = this.store$.select(selectProducts)
+    this.filteredProducts$ = this.store$.select(selectFilteredProducts)
     this.userProducts$ = this.store$.select(selectUserProducts)
     this.profileProducts$ = this.store$.select(selectProfileProducts)
 
@@ -38,6 +40,10 @@ export class ProductsFacade {
 
   public loadProducts(paginationData: PaginationData): void {
     this.store$.dispatch(loadProducts({paginationData}));
+  }
+
+  public searchProducts(search: string, category: string): void {
+    this.store$.dispatch(searchProducts({search, category}));
   }
 
   public loadProductById(productId: string): void {

@@ -14,6 +14,16 @@ export const loadProductsSuccess = createAction(
   props<{ products: Product[] }>()
 )
 
+export const searchProducts = createAction(
+  "[PRODUCTS] search products",
+  props<{ search: string, category: string }>()
+)
+
+export const searchProductsSuccess = createAction(
+  "[PRODUCTS] search products success",
+  props<{ products: Product[] }>()
+)
+
 export const loadProductById = createAction(
   "[PRODUCTS] load product by id",
   props<{ productId: string }>()

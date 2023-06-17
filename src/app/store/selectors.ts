@@ -64,5 +64,10 @@ export const selectProfileProducts = createSelector(
   (state) => state.profile.products
 );
 
+export const selectFilteredProducts = createSelector(
+  selectFeature,
+  (state) => state.filteredProducts
+);
+
 
 
