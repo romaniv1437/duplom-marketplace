@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {User} from '../models/user.interface';
 import {
   changePassword,
+  deleteProfilePicture,
   editProfile,
   getUserInfo,
   getUserInfoByUserName,
@@ -46,6 +47,10 @@ export class AuthFacade {
 
   edit(user: User): void {
     this.store$.dispatch(editProfile({user}))
+  }
+
+  deleteProfilePicture(username: string): void {
+    this.store$.dispatch(deleteProfilePicture({username}))
   }
 
   changePassword(passwords: {oldPassword: string; newPassword: string, confirmPassword: string}): void {

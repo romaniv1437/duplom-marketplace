@@ -273,6 +273,20 @@ export const baseReducer = createReducer(
       error: ''
     }
   }),
+  on(actions.deleteProfilePicture, (state, action) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.deleteProfilePictureSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: ''
+    }
+  }),
   on(actions.editProduct, (state, action) => {
     return {
       ...state,

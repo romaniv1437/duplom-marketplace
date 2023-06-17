@@ -32,4 +32,8 @@ export class ProfileEditFormComponent extends ControlSubscribtionComponent imple
     const value = this.profileForm.value;
     this.authFacade.edit({...value, imageFile: value.photo ? value.photo[0] : null})
   }
+
+  deleteProfilePicture(username: string) {
+    this.authFacade.deleteProfilePicture(username);
+  }
 }

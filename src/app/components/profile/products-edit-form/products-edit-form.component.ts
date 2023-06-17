@@ -18,7 +18,7 @@ export class ProductsEditFormComponent extends ControlSubscribtionComponent impl
   public categories$: Observable<Category[]> = new Observable<Category[]>();
   public productForm: FormGroup = new FormGroup<any>({
     title: new FormControl(null, [Validators.required]),
-    price: new FormControl(null, [Validators.required]),
+    price: new FormControl(null, [Validators.required, Validators.min(1)]),
     description: new FormControl(null, [Validators.required]),
     category: new FormControl(null, [Validators.required]),
     photo: new FormControl<File[] | null>(null, [Validators.required]),

@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {Observable, takeUntil} from "rxjs";
+import {Observable, startWith, takeUntil} from "rxjs";
 import {AuthFacade} from 'src/app/facades/auth.facade';
 import {User} from "../../models/user.interface";
 import {PlaceholderImages} from "../../enums/placeholderImage.enum";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl, FormGroup} from '@angular/forms';
 import {ControlSubscribtionComponent} from "../../control-subscriptions/controlSubscribtion.component";
 
@@ -24,7 +24,7 @@ export class ProfileComponent extends ControlSubscribtionComponent implements On
 
   public userId: number | undefined;
 
-  constructor(private authFacade: AuthFacade, private route: ActivatedRoute,) {
+  constructor(private authFacade: AuthFacade, private route: ActivatedRoute, private router: Router) {
     super()
   }
 
@@ -34,8 +34,8 @@ export class ProfileComponent extends ControlSubscribtionComponent implements On
       this.userId = user.id;
     })
 
-    this.route.params
-      .pipe(takeUntil(this.destroyed$))
+    this.router.events
+      .pipe(takeUntil(this.destroyed$), startWith({}))
       .subscribe(() => {
         this.username = this.route.snapshot.params['userId']
         if (this.username) {

@@ -130,6 +130,14 @@ export const editProfileSuccess = createAction(
   props<{ user: User }>()
 )
 
+export const deleteProfilePicture = createAction(
+  "[USER] delete profile picture",
+  props<{username: string}>()
+)
+
+export const deleteProfilePictureSuccess = createAction(
+  "[USER] delete profile picture success"
+)
 export const changePassword = createAction(
   "[USER] change password",
   props<{ oldPassword: string; newPassword: string, confirmPassword: string}>()

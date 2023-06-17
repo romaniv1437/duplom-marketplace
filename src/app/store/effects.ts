@@ -8,7 +8,7 @@ import {
   createProduct,
   createProductSuccess,
   deleteProduct,
-  deleteProductSuccess,
+  deleteProductSuccess, deleteProfilePicture, deleteProfilePictureSuccess,
   editProduct,
   editProductSuccess,
   editProfile,
@@ -69,6 +69,15 @@ export class BaseEffects {
     )
   ))
 
+  deleteProfilePicture$ = createEffect(() => this.actions$.pipe(
+    ofType(deleteProfilePicture),
+    switchMap((action) => this.apiService.deleteProfilePicture(action.username)
+      .pipe(
+        map(() => deleteProfilePictureSuccess()),
+        catchError((error) => of(setError({error})))
+      )
+    )
+  ))
 
   editProduct$ = createEffect(() => this.actions$.pipe(
     ofType(editProduct),
@@ -86,7 +95,7 @@ export class BaseEffects {
   ), {dispatch: false})
 
   editProfileSuccess$ = createEffect(() => this.actions$.pipe(
-    ofType(editProfileSuccess, changePasswordSuccess, deleteProductSuccess),
+    ofType(editProfileSuccess, changePasswordSuccess, deleteProductSuccess, deleteProfilePictureSuccess),
     tap(action => this.router.navigate(['/profile']))
   ), {dispatch: false})
 
