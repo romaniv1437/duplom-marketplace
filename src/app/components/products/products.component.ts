@@ -20,7 +20,7 @@ import {ControlSubscribtionComponent} from "../../control-subscriptions/controlS
 export class ProductsComponent extends ControlSubscribtionComponent implements OnInit {
 
   public category: string = 'no-category'
-  public productsModel$: Observable<ProductsModel> = new Observable<ProductsModel>();
+  public products$:  Observable<Product[]> = new Observable<Product[]>()
   public cartProducts$: Observable<CartProduct[]> = new Observable<CartProduct[]>();
   public user$: Observable<User> = new Observable<User>();
 
@@ -45,7 +45,7 @@ export class ProductsComponent extends ControlSubscribtionComponent implements O
         this.getProducts({page: 0, searchKey: '', count: 4} as PaginationData)
       })
 
-    this.productsModel$ = this.productsFacade.productsModel$;
+    this.products$ = this.productsFacade.products$;
 
     this.cartProducts$ = this.cartFacade.cartProducts$;
     this.user$ = this.authFacade.user$;

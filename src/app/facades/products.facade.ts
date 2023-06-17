@@ -3,10 +3,8 @@ import {Store} from "@ngrx/store";
 import {Product, ProductsModel} from "../models/products.interface";
 import {Observable} from "rxjs";
 import {
-  selectCurrentProduct,
-  selectProductsForHome,
-  selectProductsModel,
-  selectUserProductsModel
+  selectCurrentProduct, selectProducts,
+  selectProductsForHome, selectProfileProducts, selectUserProducts,
 } from "../store/selectors";
 import {
   createProduct,
@@ -23,14 +21,16 @@ import {PaginationData} from "../models/core.interface";
 })
 export class ProductsFacade {
 
-  public productsModel$: Observable<ProductsModel> = new Observable<ProductsModel>()
-  public userProductsModel$: Observable<ProductsModel> = new Observable<ProductsModel>()
+  public products$: Observable<Product[]> = new Observable<Product[]>()
+  public userProducts$: Observable<Product[]> = new Observable<Product[]>()
+  public profileProducts$: Observable<Product[]> = new Observable<Product[]>()
   public product$: Observable<Product> = new Observable<Product>()
   public homePageProducts$: Observable<Product[]> = new Observable<Product[]>()
 
   constructor(private store$: Store) {
-    this.productsModel$ = this.store$.select(selectProductsModel)
-    this.userProductsModel$ = this.store$.select(selectUserProductsModel)
+    this.products$ = this.store$.select(selectProducts)
+    this.userProducts$ = this.store$.select(selectUserProducts)
+    this.profileProducts$ = this.store$.select(selectProfileProducts)
 
     this.product$ = this.store$.select(selectCurrentProduct)
     this.homePageProducts$ = this.store$.select(selectProductsForHome)

@@ -65,6 +65,12 @@ const routes: Routes = [
       {
         path: 'profile/:userId',
         component: ProfileComponent,
+        children: [
+          {
+            path:'',
+            component: ProfileOptionsComponent
+          },
+        ]
       },
       {
         path: 'authorization',

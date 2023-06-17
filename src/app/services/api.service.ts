@@ -31,26 +31,17 @@ export class ApiService {
     } as UserModel
   }
 
-  loadProducts(loadData: { paginationData: PaginationData }): Observable<ProductsModel> {
-    const search = !!loadData.paginationData.searchKey ? loadData.paginationData.searchKey + '/' : ''
+  loadProducts(loadData: { paginationData: PaginationData }): Observable<Product[]> {
     return this.http.get<ProductsResponse>(this.BASE_URL + 'products/')
       .pipe(
-        map(res => ({
-          countAll: res.count,
-          nextPage: res.next,
-          prevPage: res.previous,
-          results: res.results.map((r: any) => this.productsAdapter(r))} as ProductsModel)),
+        map(res => res.results.map((r: any) => this.productsAdapter(r))),
         catchError(this.errorHandler))
   }
 
-  loadUserProducts(): Observable<ProductsModel> {
+  loadUserProducts(): Observable<Product[]> {
     return this.http.get<ProductsResponse>(this.BASE_URL + 'myproducts/')
       .pipe(
-        map(res => ({
-          countAll: res.count,
-          nextPage: res.next,
-          prevPage: res.previous,
-          results: res.results.map((r: any) => this.productsAdapter(r))} as ProductsModel)),
+        map(res => res.results.map((r: any) => this.productsAdapter(r))),
         catchError(this.errorHandler))
   }
 
@@ -206,7 +197,12 @@ export class ApiService {
       category: product.category,
       image: product.photo ? product.photo[0] : '',
       images: product.photo,
-      user: this.userAdapter(product.user),
+      user: {
+        ...product.user,
+        firstName: product.user.first_name,
+        lastName: product.user.last_name,
+        profilePicture: product.user.avatar,
+      },
       slug: product.slug
     } as unknown as Product
   }
@@ -221,12 +217,14 @@ export class ApiService {
     } as unknown as ProductModel
   }
 
-  private userAdapter(user: UserModel): User {
+  private userAdapter(user: UserModel): UserModel {
+    console.log(user)
     return {
       ...user,
       firstName: user.first_name,
       lastName: user.last_name,
-      profilePicture: user.avatar
+      profilePicture: user.avatar,
+      products: user.products?.map(product => this.productsAdapter(product as any))
     }
   }
 

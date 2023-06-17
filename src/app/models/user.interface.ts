@@ -1,3 +1,5 @@
+import {Product, ProductsResponse} from "./products.interface";
+
 export interface UserModel extends User {
   first_name: string;
   last_name: string;
@@ -16,4 +18,5 @@ export interface User {
   persons: number;
   stars: number;
   you_stars: string;
+  products: Product[]
 }

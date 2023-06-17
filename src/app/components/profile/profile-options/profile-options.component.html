@@ -1,48 +1,71 @@
-<div class="profile-actions" *ngrxLet="user$ | ngrxPush as user">
-  <mat-card class="card">
-    <div class="user-profile-header">
-      <div>
-        <mat-card-header>
-          <mat-card-title>Редагувати профіль</mat-card-title>
-          <mat-card-subtitle>Налаштувати</mat-card-subtitle>
-        </mat-card-header>
+<ng-container *ngrxLet="authFacade.user$ | ngrxPush as authUser">
+  <div class="profile-actions" *ngrxLet="user$ | ngrxPush as user">
+    <mat-card class="card" *ngIf="!username">
+      <div class="user-profile-header">
+        <div>
+          <mat-card-header>
+            <mat-card-title>Редагувати профіль</mat-card-title>
+            <mat-card-subtitle>Налаштувати</mat-card-subtitle>
+          </mat-card-header>
+        </div>
+        <div>
+          <button [routerLink]="'/profile/change-password'" color="primary" mat-raised-button>Змінити пароль</button>
+          <button style="margin-left: 10px" [routerLink]="'/profile/edit-profile'" color="primary" mat-raised-button>
+            Редагувати профіль
+          </button>
+        </div>
       </div>
-      <div>
-        <button [routerLink]="'/profile/change-password'" color="primary" mat-raised-button>Змінити пароль</button>
-        <button style="margin-left: 10px" [routerLink]="'/profile/edit-profile'" color="primary" mat-raised-button>Редагувати профіль</button>
-      </div>
-    </div>
-  </mat-card>
+    </mat-card>
 
-  <mat-card class="card">
-    <div class="user-profile-header">
-      <div>
-        <mat-card-header>
-          <mat-card-title>Мої товари</mat-card-title>
-          <mat-card-subtitle>Налаштувати</mat-card-subtitle>
-        </mat-card-header>
+    <mat-card class="card" *ngIf="!username">
+      <div class="user-profile-header">
+        <div>
+          <mat-card-header>
+            <mat-card-title>Мої товари</mat-card-title>
+            <mat-card-subtitle>Налаштувати</mat-card-subtitle>
+          </mat-card-header>
+        </div>
+        <div>
+          <button [routerLink]="'/profile/add-item'" color="primary" mat-raised-button>Добавити товар</button>
+        </div>
       </div>
-      <div>
-        <button [routerLink]="'/profile/add-item'" color="primary" mat-raised-button>Добавити товар</button>
-      </div>
-    </div>
-    <mat-card-content>
-      <app-products-display
-        [maxPageSize]="3"
-        (paginationData)="getProducts($event)"
-        [productsAlign]="'start'"
-        [products]="$any(userProductsModel$ | ngrxPush)"
-        [userId]="user?.id"></app-products-display>
-    </mat-card-content>
-  </mat-card>
+      <mat-card-content>
+        <app-products-display
+          [maxPageSize]="3"
+          (paginationData)="getProducts($event)"
+          [productsAlign]="'start'"
+          [products]="$any(userProducts$ | ngrxPush)"
+          [userId]="authUser?.id"></app-products-display>
+      </mat-card-content>
+    </mat-card>
 
-  <mat-card class="card">
-    <mat-card-header>
-      <mat-card-title>Мої замовлення</mat-card-title>
-      <mat-card-subtitle>Переглянути</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      в розробці
-    </mat-card-content>
-  </mat-card>
-</div>
+    <mat-card class="card" *ngIf="!username">
+      <mat-card-header>
+        <mat-card-title>Мої замовлення</mat-card-title>
+        <mat-card-subtitle>Переглянути</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        в розробці
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card" *ngIf="username">
+      <div class="user-profile-header">
+        <div>
+          <mat-card-header>
+            <mat-card-title>Товари користувача</mat-card-title>
+          </mat-card-header>
+        </div>
+      </div>
+      <mat-card-content>
+        <app-products-display
+          [maxPageSize]="3"
+          (paginationData)="getProducts($event)"
+          [productsAlign]="'start'"
+          [products]="$any(userProducts$ | ngrxPush)"
+          [cartProducts]="$any(cartProducts$ | ngrxPush)"
+          [userId]="authUser?.id"></app-products-display>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-container>

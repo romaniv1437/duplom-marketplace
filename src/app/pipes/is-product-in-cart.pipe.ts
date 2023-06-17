@@ -11,7 +11,7 @@ export class IsProductInCartPipe implements PipeTransform {
     if (!cartProducts) {
       return;
     }
-
+    console.log(cartProducts, cartProducts.some(cartProduct => cartProduct.id === productId))
     return cartProducts.some(cartProduct => cartProduct.id === productId);
   }
 

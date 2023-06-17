@@ -43,7 +43,7 @@ export class BaseEffects {
     ofType(loadProducts),
     switchMap((action) => this.apiService.loadProducts({...action})
       .pipe(
-        map(products => loadProductsSuccess({productsResponse: products})),
+        map(products => loadProductsSuccess({products})),
         catchError((error) => of(setError({error})))
       )
     )
@@ -127,7 +127,7 @@ export class BaseEffects {
     ofType(loadUserProducts),
     switchMap((action) => this.apiService.loadUserProducts()
       .pipe(
-        map(products => loadUserProductsSuccess({productsResponse: products})),
+        map(products => loadUserProductsSuccess({products})),
         catchError((error) => of(setError({error})))
       )
     )

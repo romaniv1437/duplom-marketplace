@@ -11,7 +11,7 @@ export const loadProducts = createAction(
 
 export const loadProductsSuccess = createAction(
   "[PRODUCTS] load products success",
-  props<{ productsResponse: ProductsModel }>()
+  props<{ products: Product[] }>()
 )
 
 export const loadProductById = createAction(
@@ -82,7 +82,7 @@ export const loadUserProducts = createAction(
 )
 export const loadUserProductsSuccess = createAction(
   "[PRODUCTS] load user products success",
-  props<{ productsResponse: ProductsModel }>()
+  props<{ products: Product[] }>()
 )
 
 export const loadCategories = createAction(

@@ -32,9 +32,9 @@ export class ProductsDisplayComponent implements OnInit {
   constructor(private cartFacade: CartFacade, private productsFacade: ProductsFacade) {
   }
 
-  @Input() set products(products: ProductsModel) {
-    this.productsItems = products.results || [];
-    this.length = products?.results?.length;
+  @Input() set products(products: Product[]) {
+    this.productsItems = products || [];
+    this.length = products?.length;
     this.getData(this.pageEvent);
     this.paginator?.firstPage();
   };
