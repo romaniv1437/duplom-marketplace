@@ -18,4 +18,5 @@ urlpatterns = [
     path('products/<slug:slug>/', ProductsUpdateView.as_view()),
     path('add-photo/<slug:slug>/', AddPhotoProductsView.as_view(), name='add-photo'),
     path('update-photo/<slug:slug>/', UpdatePhotoProductsView.as_view(), name='update-photo'),
+    path('currency/', ListCurrencyAPIView.as_view(), name='currency')
 ]

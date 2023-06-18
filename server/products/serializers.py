@@ -1,10 +1,16 @@
 from rest_framework import serializers
-from .models import Products, Photo
+from .models import Products, Photo, Currency
 from users.models import Profile
 from datetime import timedelta
 
 from pytils.translit import slugify
 from server.settings import DATETIME_FORMAT
+
+
+class CurrencySerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Currency
+        fields = '__all__'
 
 
 class ProductsPhotoSerializers(serializers.ModelSerializer):
@@ -61,18 +67,7 @@ class ProductsSerializer(serializers.ModelSerializer):
         }
         representation["photo"] = photo
 
-        print(representation)
-
         return representation
-
-
-
-
-
-
-
-
-
 
 
 class AddProductsSerializer(serializers.ModelSerializer):

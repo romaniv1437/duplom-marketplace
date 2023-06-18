@@ -3,8 +3,8 @@ from rest_framework import generics, filters, pagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters import rest_framework as rest_filters 
 
-from .serializers import ProductsSerializer, AddProductsSerializer, ProductsPhotoSerializers
-from .models import Products, Photo
+from .serializers import ProductsSerializer, AddProductsSerializer, ProductsPhotoSerializers, CurrencySerializers
+from .models import Products, Photo, Currency
 from .permissions import IsOwnerOrReadOnly
 from .utils import ProductsMixinUpdate
 
@@ -106,12 +106,10 @@ class UpdatePhotoProductsView(ProductsMixinUpdate, generics.ListCreateAPIView):
         return Response({'message': 'Оголошення відправлено!'})
 
     
-
-
-# class ProductsDestroyView(generics.RetrieveDestroyAPIView):
-#     queryset = Products.objects.all()
-#     serializer_class = ProductsSerializer
-#     permission_classes = (IsOwnerOrReadOnly,)
+class ListCurrencyAPIView(generics.ListAPIView):
+    queryset = Currency.objects.all()
+    serializer_class = CurrencySerializers
+    permission_classes = (IsOwnerOrReadOnly,)
 
 
 class MyProductsView(generics.ListAPIView):
