@@ -1,0 +1,48 @@
+<div class="order" *ngIf="cart$ | ngrxPush as cart">
+
+  <div class="order-form">
+    <h4>Форма замовлення</h4>
+    <form>
+
+    </form>
+  </div>
+
+  <section class="selected-products">
+    <h4>Вибрані товари</h4>
+    <div class="products">
+      <mat-card *ngFor="let product of cart.products" [routerLink]="'/' +product.url"
+                class="products--card">
+        <mat-card-header>
+          <mat-card-title class="title">{{product.title}}</mat-card-title>
+        </mat-card-header>
+        <img [src]="product.image || placeholderImages.productImage" alt="{{product.title}} image" height="150"
+             mat-card-image
+             width="150">
+        <mat-card-content class="content">
+          <p style="flex: 1 1 auto">
+            {{product.description}}
+          </p>
+          <p class="price">
+            {{product.price}} ₴
+          </p>
+        </mat-card-content>
+        <mat-card-actions (click)="$event.stopPropagation()" class="actions">
+          <div class="actions-qty">
+            <button (click)="changeProductQty(product.id, true)" mat-icon-button>
+              <mat-icon>add</mat-icon>
+            </button>
+            <button (click)="changeProductQty(product.id, false)" mat-icon-button>
+              <mat-icon>remove</mat-icon>
+            </button>
+          </div>
+          <span *ngIf="(cart.products | getCartProduct: product.id) as cartProduct">К-сть: {{cartProduct.qty}},
+              Загалом: {{cartProduct.totalPrice}}</span>
+          <button (click)="removeFromCart(product)" mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+    </div>
+  </section>
+</div>

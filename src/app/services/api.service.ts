@@ -14,6 +14,7 @@ import {
   CategoryModel,
 } from "../models/category.interface";
 import {FilterService} from "./filter.service";
+import {CartProduct, Order} from "../models/cart.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -188,6 +189,16 @@ export class ApiService {
 
   changePassword(passwords: { old_password: string; new_password: string; confirm_password: string }): Observable<any> {
     return this.http.post(this.BASE_URL + 'change-password/', {...passwords})
+      .pipe(catchError(this.errorHandler))
+  }
+
+  sendOrder(order: Order): Observable<any> {
+    return this.http.post(this.BASE_URL, {...order})
+      .pipe(catchError(this.errorHandler))
+  }
+
+  addOrderProduct(product: CartProduct): Observable<any> {
+    return this.http.post(this.BASE_URL, {...product})
       .pipe(catchError(this.errorHandler))
   }
 

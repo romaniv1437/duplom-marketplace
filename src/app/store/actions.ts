@@ -1,5 +1,5 @@
 import {createAction, props} from "@ngrx/store";
-import {CartProduct} from "../models/cart.interface";
+import {CartProduct, Order} from "../models/cart.interface";
 import {PaginationData} from "../models/core.interface";
 import {Product, ProductsModel, ProductsResponse} from "../models/products.interface";
 import {User} from "../models/user.interface";
@@ -166,6 +166,16 @@ export const setUserRatingSuccess = createAction(
   "[USER] set user rating success",
   props<{ user: User }>()
 )
+export const sendOrder = createAction(
+  "[CART] send order",
+  props<{ order: Order }>()
+)
+
+export const sendOrderSuccess = createAction(
+  "[CART] send order success",
+  props<{ order: Order }>()
+)
+
 
 
 export const setError = createAction(

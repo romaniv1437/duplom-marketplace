@@ -14,6 +14,7 @@ import {ProductsEditFormComponent} from "./components/profile/products-edit-form
 import {
   ProfileChangePasswordComponent
 } from "./components/profile/profile-change-password/profile-change-password.component";
+import {OrderFormComponent} from "./components/order-form/order-form.component";
 
 const routes: Routes = [
   {
@@ -35,6 +36,10 @@ const routes: Routes = [
       {
         path: 'cart',
         component: CartComponent,
+      },
+      {
+        path: 'order',
+        component: OrderFormComponent
       },
       {
         path: 'profile',

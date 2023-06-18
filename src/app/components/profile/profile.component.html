@@ -18,7 +18,7 @@
               </svg>
             </p>
           </div>
-          <ng-container *ngIf="!!username && user?.username !== userId">
+          <ng-container *ngIf="!!username && user?.username !== userId && !!userId">
 
             <strong>Ваша оцінка</strong>
             <form [formGroup]="profileRateForm">

@@ -28,7 +28,7 @@ import {
   login,
   loginSuccess,
   register,
-  registerSuccess, searchProducts, searchProductsSuccess,
+  registerSuccess, searchProducts, searchProductsSuccess, sendOrder, sendOrderSuccess,
   setError,
   setUserRating,
   setUserRatingSuccess
@@ -208,6 +208,16 @@ export class BaseEffects {
     switchMap((action) => this.apiService.register(action.user, action.password, action.confirmPassword)
       .pipe(
         map(user => registerSuccess({user})),
+        catchError((error) => of(setError({error})))
+      )
+    )
+  ))
+
+  sendOrder$ = createEffect(() => this.actions$.pipe(
+    ofType(sendOrder),
+    switchMap((action) => this.apiService.sendOrder(action.order)
+      .pipe(
+        map(order => sendOrderSuccess({order})),
         catchError((error) => of(setError({error})))
       )
     )
