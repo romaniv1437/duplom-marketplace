@@ -18,16 +18,18 @@ export interface Order {
 }
 
 export interface OrderResponse {
+  id: number;
   first_name: string;
   last_name: string;
   email: string;
   country: string;
   city: string;
   post_index: number;
+  count_products: number;
   time_create: Date;
+  buyer: User;
   products: CartProduct[];
   totalPrice: number;
   status: string;
   is_read: boolean;
-  user: User;
 }
