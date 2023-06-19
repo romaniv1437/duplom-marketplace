@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework import generics, filters, pagination
+from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters import rest_framework as rest_filters 
 
@@ -9,17 +9,9 @@ from .permissions import IsOwnerOrReadOnly
 from .utils import ProductsMixinUpdate
 
 
-
-class ProductsListPagination(pagination.PageNumberPagination):
-    page_size = 5
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
-
-
 class ProductsListView(generics.ListAPIView):
     # queryset = Products.objects.all().order_by('-time_create')
     serializer_class = ProductsSerializer
-    pagination_class = ProductsListPagination
     filter_backends = [rest_filters.DjangoFilterBackend, filters.SearchFilter]
     search_fields = ['title', 'description']
 

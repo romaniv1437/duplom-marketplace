@@ -17,29 +17,10 @@ class CreateOrdersAPIView(generics.CreateAPIView):
     serializer_class = OrdersSerializer
     permission_classes = (IsAuthenticated,)
 
-    # def post(self, request, *args, **kwargs):
-    #     products = Products.objects.get(pk=1)
-    #     count_products = 2
-    #     total_price = 250
-    #     currency = '$'
-    #     number_orders = 1 if Orders.objects.first() is None else Orders.objects.first().pk + 1
-    #     seller = products.user.profile
-        
-    #     order = OrdersProducts.objects.create(
-    #         products=products,
-    #         count_products=count_products,
-    #         total_price=total_price,
-    #         currency=currency,
-    #         number_orders=number_orders,
-    #         seller=seller
-    #     )
-    #     order.save()
-
-
-    #     return super().post(request, *args, **kwargs)
 
 class CreateOrdersProductsAPIView(generics.CreateAPIView):
     serializer_class = OrdersProductsSerializer
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
@@ -47,21 +28,15 @@ class CreateOrdersProductsAPIView(generics.CreateAPIView):
 
 class OrdersListBuyAPIView(generics.ListAPIView):
     serializer_class = OrdersBuySerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Orders.objects.filter(buyer=self.request.user)
-
-
-class OrdersListPagination(pagination.PageNumberPagination):
-    page_size = 5
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
+        return Orders.objects.filter(buyer=self.request.user, is_published=True)
 
 
 class OrdersListSellAPIView(generics.ListCreateAPIView):
     serializer_class = OrdersSellSerializer
-    pagination_class = OrdersListPagination
-
+    permission_classes = (IsAuthenticated,)
 
     def put(self, request, *args, **kwargs):
         pk = request.data['number_orders']
@@ -71,6 +46,13 @@ class OrdersListSellAPIView(generics.ListCreateAPIView):
         
         return Response({'message': 'Статус замовлення успішно змінений!'})
 
-
     def get_queryset(self):
         return OrdersProducts.objects.filter(seller=self.request.user, status='В процесі')
+    
+
+class OrdersListHistorySellAPIView(generics.ListAPIView):
+    serializer_class = OrdersSellSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return OrdersProducts.objects.filter(seller=self.request.user, status='Відправлено')
