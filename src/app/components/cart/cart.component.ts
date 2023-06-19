@@ -3,6 +3,9 @@ import {CartFacade} from 'src/app/facades/cart.facade';
 import {Cart, CartProduct} from "../../models/cart.interface";
 import {Observable} from "rxjs";
 import {PlaceholderImages} from "../../enums/placeholderImage.enum";
+import {User} from "../../models/user.interface";
+import { AuthFacade } from 'src/app/facades/auth.facade';
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-cart',
@@ -12,9 +15,10 @@ import {PlaceholderImages} from "../../enums/placeholderImage.enum";
 export class CartComponent implements OnInit {
 
   cart$: Observable<Cart> = new Observable<Cart>()
+  user$: Observable<User> = new Observable<User>();
   placeholderImages = PlaceholderImages;
 
-  constructor(private cartFacade: CartFacade) {
+  constructor(private cartFacade: CartFacade, public authService: AuthService) {
   }
 
   ngOnInit(): void {

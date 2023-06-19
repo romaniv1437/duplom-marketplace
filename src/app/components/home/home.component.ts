@@ -61,7 +61,6 @@ export class HomeComponent extends ControlSubscribtionComponent implements OnIni
   }
 
   ngOnInit(): void {
-
     this.baseFacade.isLoading$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(isLoading => isLoading ? this.spinner.show() : this.spinner.hide())

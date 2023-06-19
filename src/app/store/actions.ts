@@ -176,7 +176,33 @@ export const sendOrderSuccess = createAction(
   props<{ order: Order }>()
 )
 
+export const getUserOrders = createAction(
+  "[USER] get user orders",
+)
 
+export const getUserOrdersSuccess = createAction(
+  "[USER] get user orders success",
+  props<{ orders: Order[] }>()
+)
+
+export const getUserSells = createAction(
+  "[USER] get user Sells",
+)
+
+export const getUserSellsSuccess = createAction(
+  "[USER] get user Sells success",
+  props<{ orders: Order[] }>()
+)
+
+export const setSellStatus = createAction(
+  "[USER] set Sell Status",
+  props<{status: string, productId: number}>()
+)
+
+export const setSellStatusSuccess = createAction(
+  "[USER]  set Sell Status success",
+  props<{ orders: Order[] }>()
+)
 
 export const setError = createAction(
   "[ERROR] set error",

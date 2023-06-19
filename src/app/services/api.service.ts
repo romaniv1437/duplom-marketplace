@@ -14,7 +14,7 @@ import {
   CategoryModel,
 } from "../models/category.interface";
 import {FilterService} from "./filter.service";
-import {CartProduct, Order} from "../models/cart.interface";
+import {CartProduct, Order, OrderProductModel, OrderProductPayload, OrderResponse} from "../models/cart.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -73,7 +73,8 @@ export class ApiService {
     return this.http.post<UserModel>(this.BASE_URL + 'login/', {username: email, password})
       .pipe(
         tap(res => this.authService.setToken(res.tokens)),
-        map(res => this.userAdapter(res)),
+        switchMap(() => this.getUser()),
+        map(res => res),
         catchError(this.errorHandler))
   }
 
@@ -88,7 +89,8 @@ export class ApiService {
     return this.http.post<UserModel>(this.BASE_URL + 'register/', userBody)
       .pipe(
         tap(res => this.authService.setToken(res.tokens)),
-        map(res => this.userAdapter(res)),
+        switchMap(() => this.getUser()),
+        map(res => res),
         catchError(this.errorHandler))
   }
 
@@ -163,8 +165,7 @@ export class ApiService {
               ? zip(product.imageFiles.map(imageFile => this.addProductImage(imageFile, productResponse.slug)))
               : of([])
             ),
-            map(([productResponse]) => (productResponse)),
-            map(products => products)
+            map(([productResponse]) => (productResponse))
           ),
         ),
         switchMap((productWithImageResponse: Observable<ProductModel>) => productWithImageResponse.pipe(map(prWI => this.productsAdapter(prWI)))),
@@ -193,13 +194,44 @@ export class ApiService {
   }
 
   sendOrder(order: Order): Observable<any> {
-    return this.http.post(this.BASE_URL, {...order})
+    return this.http.post<OrderResponse>(this.BASE_URL + 'create-orders/', this.createOrderBody(order))
+      .pipe(
+        map((orderResponse) => of(orderResponse)
+          .pipe(
+            combineLatestWith(order.products.length
+              ? zip(order.products.map(cartProduct => this.addOrderProduct(cartProduct, orderResponse.id)))
+              : of([])
+            ),
+            map(([orderResponse, products]) => ({...orderResponse, products})),
+            tap(res => console.log(res))
+          ),
+        ),
+        switchMap((productWithImageResponse: any) => productWithImageResponse),
+      tap(res => console.log(res)),
+        catchError(this.errorHandler))
+  }
+
+  addOrderProduct(product: CartProduct, orderId: number): Observable<OrderProductModel> {
+    return this.http.post<OrderProductModel>(this.BASE_URL + 'create-orders-products/', this.createOrderProductBody(product, orderId))
       .pipe(catchError(this.errorHandler))
   }
 
-  addOrderProduct(product: CartProduct): Observable<any> {
-    return this.http.post(this.BASE_URL, {...product})
-      .pipe(catchError(this.errorHandler))
+  getUserOrders(): Observable<Order[]> {
+    return this.http.get<any>(this.BASE_URL + 'myorders/buy/')
+      .pipe(map(res => res.results.map((order: OrderResponse) => this.orderAdapter(order))),
+        catchError(this.errorHandler))
+  }
+
+  getUserSells(): Observable<Order[]> {
+    return this.http.get<any>(this.BASE_URL + 'myorders/sell/')
+      .pipe(map(res => res.results.map((order: OrderResponse) => this.sellAdapter(order))),
+        catchError(this.errorHandler))
+  }
+
+  setSellStatus(status: string, productId: number): Observable<Order[]> {
+    return this.http.put<any>(this.BASE_URL + 'myorders/sell/', {status, id: productId})
+      .pipe(map(res => res.results.map((order: OrderResponse) => this.sellAdapter(order))),
+        catchError(this.errorHandler))
   }
 
   addProductImage(imageFile: File, productId: string): Observable<any> {
@@ -263,6 +295,67 @@ export class ApiService {
       ...category,
       url: '/products/' + category.slug,
     }
+  }
+
+  private orderAdapter(order: OrderResponse): Order {
+    const products = order.info
+      .map(info => this.orderProductAdapter(info))
+    return {
+      firstName: order.first_name,
+      lastName: order.last_name,
+      email: order.email,
+      postalCode: order.post_index,
+      productsQuantity: products
+        .map(product => product.qty)
+        .reduce((acc, curr) => acc + curr, 0), //order.count_products
+      products: products,
+      timeCreated: new Date(order.time_create),
+      totalPrice: products
+        .map(product => product.totalPrice)
+        .reduce((acc, curr) => acc + curr, 0)
+    } as unknown as Order
+  }
+
+  private sellAdapter(order: any): Order {
+    const orderInfo = order.info[0];
+    return {
+      ...this.orderAdapter({...orderInfo, info: order.products}),
+    } as unknown as Order
+  }
+
+  private createOrderBody(order: Order): OrderResponse {
+    return {
+      ...order,
+      first_name: order.firstName,
+      last_name: order.lastName,
+      email: order.email,
+      post_index: order.postalCode,
+      count_products: order.productsQuantity,
+      country: order.country,
+      city: order.city
+    } as unknown as OrderResponse
+  }
+
+  private orderProductAdapter(product: OrderProductModel): CartProduct {
+    return {
+      ...this.productsAdapter(product.products[0]),
+      totalPrice: product.total_price,
+      qty: product.count_products,
+      image: product.products[0].photo[0],
+      status: product.status
+
+    } as unknown as CartProduct
+  }
+
+  private createOrderProductBody(product: CartProduct, orderId: number): OrderProductPayload {
+    return {
+      total_price: product.totalPrice,
+      count_products: product.qty,
+      seller: product.user.id,
+      products: product.id,
+      currency: "$",
+      number_orders: orderId,
+    } as OrderProductPayload
   }
 
   private errorHandler(error: any) {

@@ -16,7 +16,7 @@ import {
   getUserInfo,
   getUserInfoByUserName,
   getUserInfoByUserNameSuccess,
-  getUserInfoSuccess,
+  getUserInfoSuccess, getUserOrders, getUserOrdersSuccess, getUserSells, getUserSellsSuccess,
   loadCategories,
   loadCategoriesSuccess,
   loadProductById,
@@ -29,7 +29,7 @@ import {
   loginSuccess,
   register,
   registerSuccess, searchProducts, searchProductsSuccess, sendOrder, sendOrderSuccess,
-  setError,
+  setError, setSellStatus, setSellStatusSuccess,
   setUserRating,
   setUserRatingSuccess
 } from "./actions";
@@ -218,6 +218,36 @@ export class BaseEffects {
     switchMap((action) => this.apiService.sendOrder(action.order)
       .pipe(
         map(order => sendOrderSuccess({order})),
+        catchError((error) => of(setError({error})))
+      )
+    )
+  ))
+
+  getUserOrders$ = createEffect(() => this.actions$.pipe(
+    ofType(getUserOrders),
+    switchMap((action) => this.apiService.getUserOrders()
+      .pipe(
+        map(orders => getUserOrdersSuccess({orders})),
+        catchError((error) => of(setError({error})))
+      )
+    )
+  ))
+
+  getUserSells$ = createEffect(() => this.actions$.pipe(
+    ofType(getUserSells),
+    switchMap((action) => this.apiService.getUserSells()
+      .pipe(
+        map(orders => getUserSellsSuccess({orders})),
+        catchError((error) => of(setError({error})))
+      )
+    )
+  ))
+
+  setSellStatus$ = createEffect(() => this.actions$.pipe(
+    ofType(setSellStatus),
+    switchMap((action) => this.apiService.setSellStatus(action.status, action.productId)
+      .pipe(
+        map(orders => setSellStatusSuccess({orders})),
         catchError((error) => of(setError({error})))
       )
     )

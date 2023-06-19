@@ -50,7 +50,7 @@
     <section class="total">
       <h4>Загалом: {{cart.totalPrice}} ₴</h4>
 
-      <button [routerLink]="'/order'" color="primary" mat-raised-button>Перейти до оформлення</button>
+      <button *ngIf="authService.isAuth;else unauthorized" [routerLink]="'/order'" color="primary" mat-raised-button>Перейти до оформлення</button>
     </section>
 
   </div>
@@ -58,3 +58,4 @@
 
 
 <ng-template #cartEmpty><span style="text-align: center; width: 100%">Ваш кошик порожній</span></ng-template>
+<ng-template #unauthorized><a [routerLink]="'/authorization'">Будь-ласка авторизуйтесь</a></ng-template>

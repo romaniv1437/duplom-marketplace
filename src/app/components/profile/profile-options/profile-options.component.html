@@ -32,12 +32,13 @@
       <mat-card-content>
         <app-products-display
           [maxPageSize]="3"
-          (paginationData)="getProducts($event)"
           [productsAlign]="'start'"
           [products]="$any(userProducts$ | ngrxPush)"
           [userId]="authUser?.id"></app-products-display>
       </mat-card-content>
     </mat-card>
+
+    <ng-container *ngrxLet="userOrders$ | ngrxPush as userOrders">
 
     <mat-card class="card" *ngIf="!username">
       <mat-card-header>
@@ -45,9 +46,118 @@
         <mat-card-subtitle>Переглянути</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        в розробці
+
+        <mat-accordion  multi *ngIf="userOrders?.length !== 0;else noData">
+          <mat-expansion-panel *ngFor="let order of userOrders" class="panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h4>{{order.timeCreated | date}}</h4>
+              </mat-panel-title>
+              <mat-panel-description>
+                <div class="order-description">
+                  <h4>Кількість товарів: {{order.productsQuantity}}</h4>
+                  <h4>Загальна ціна: {{order.totalPrice}}</h4>
+                </div>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div class="expanded">
+              <mat-card *ngFor="let product of order.products" [routerLink]="'/' +product.url"
+                        class="products--card">
+                <mat-card-header>
+                  <mat-card-title class="title">{{product.title}}</mat-card-title>
+                </mat-card-header>
+                <img [src]="product.image" alt="{{product.title}} image" height="150" mat-card-image
+                     width="150">
+                <mat-card-content class="content">
+                  <p style="flex: 1 1 auto">
+                    Опис: {{product.description}}
+                  </p>
+                  <p>
+                    Кількість: {{product.qty}}
+
+                  </p>
+                  <p>
+                    Статус: {{product.status}}
+                  </p>
+                  <p class="price">
+                    Загальна ціна: {{product.totalPrice}} ₴
+                  </p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+          </mat-expansion-panel>
+        </mat-accordion>
       </mat-card-content>
     </mat-card>
+    </ng-container>
+    <ng-container *ngrxLet="userSells$ | ngrxPush as userSells">
+
+      <mat-card class="card" *ngIf="!username">
+        <mat-card-header>
+          <mat-card-title>Мої продажі</mat-card-title>
+          <mat-card-subtitle>Переглянути</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content >
+
+          <mat-accordion class="example-headers-align" multi *ngIf="userSells?.length !== 0;else noData">
+            <mat-expansion-panel *ngFor="let sell of userSells" class="panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{sell.timeCreated | date}}
+                </mat-panel-title>
+                <mat-panel-description>
+                  <div class="order-description">
+                    <h4>Кількість товарів: {{sell.productsQuantity}}</h4>
+                    <h4>Загальна ціна: {{sell.totalPrice}}</h4>
+                  </div>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <div class="expanded">
+                <mat-card *ngFor="let product of sell.products"
+                          class="products--card">
+                  <mat-card-header>
+                    <mat-card-title class="title">{{product.title}}</mat-card-title>
+                  </mat-card-header>
+                  <img [src]="product.image" alt="{{product.title}} image" height="150" mat-card-image
+                       width="150">
+                  <mat-card-content class="content">
+                    <p style="flex: 1 1 auto">
+                      Опис: {{product.description}}
+                    </p>
+                    <p>
+                      Кількість: {{product.qty}}
+                    </p>
+                    <form [formGroup]="orderProductStatusForm">
+                      <mat-form-field >
+                        <mat-label>Статус</mat-label>
+                        <mat-select [formControl]="getFormControl(product.id)">
+                          <mat-option value="В процесі">
+                            В процесі
+                          </mat-option>
+                          <mat-option value="Відправлено">
+                            Відправлено
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="getFormControl(product.id).hasError('required')">
+                          Це поле обов'язкове
+                        </mat-error>
+                      </mat-form-field>
+                    </form>
+                    <p class="price">
+                      Загальна ціна: {{product.totalPrice}} ₴
+                    </p>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+
+            </mat-expansion-panel>
+          </mat-accordion>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
 
     <mat-card class="card" *ngIf="username">
       <div class="user-profile-header">
@@ -60,7 +170,6 @@
       <mat-card-content>
         <app-products-display
           [maxPageSize]="3"
-          (paginationData)="getProducts($event)"
           [productsAlign]="'start'"
           [products]="$any(userProducts$ | ngrxPush)"
           [cartProducts]="$any(cartProducts$ | ngrxPush)"
@@ -69,3 +178,5 @@
     </mat-card>
   </div>
 </ng-container>
+
+<ng-template #noData>Пусто</ng-template>

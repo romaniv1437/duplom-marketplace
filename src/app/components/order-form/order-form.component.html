@@ -1,16 +1,71 @@
 <div class="order" *ngIf="cart$ | ngrxPush as cart">
 
   <div class="order-form">
-    <h4>Форма замовлення</h4>
-    <form>
-
-    </form>
+    <mat-card>
+      <mat-card-header>
+        <h4>Форма замовлення</h4>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="orderForm" class="form">
+          <mat-form-field>
+            <mat-label>Ім'я</mat-label>
+            <input formControlName="firstName" type="text" matInput placeholder="Як вас звати?">
+            <mat-error *ngIf="orderForm.controls['firstName'].hasError('required')">
+              Це поле обов'язкове
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Фамілія</mat-label>
+            <input formControlName="lastName" type="text" matInput placeholder="Ваша фамілія?">
+            <mat-error *ngIf="orderForm.controls['lastName'].hasError('required')">
+              Це поле обов'язкове
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Електронна пошта</mat-label>
+            <input formControlName="email" type="text" matInput placeholder="Введіть пошту">
+            <mat-error *ngIf="orderForm.controls['email'].hasError('required')">
+              Це поле обов'язкове
+            </mat-error>
+            <mat-error *ngIf="orderForm.controls['email'].hasError('email')">
+              Введіть правильну електронну пошту
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Країна</mat-label>
+            <input formControlName="country" type="text" matInput placeholder="Країна">
+            <mat-error *ngIf="orderForm.controls['country'].hasError('required')">
+              Це поле обов'язкове
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Місто</mat-label>
+            <input formControlName="city" type="text" matInput placeholder="Місто">
+            <mat-error *ngIf="orderForm.controls['city'].hasError('required')">
+              Це поле обов'язкове
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Поштовий індекс</mat-label>
+            <input formControlName="postalCode" type="number" matInput placeholder="Поштовий індекс">
+            <mat-error *ngIf="orderForm.controls['postalCode'].hasError('required')">
+              Це поле обов'язкове
+            </mat-error>
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+      <mat-card-actions align='end'>
+      <button [disabled]="!orderForm.valid" *ngrxLet="$any(user$ | ngrxPush) as user" (click)="order(user, cart)" mat-raised-button color="primary">
+        Замовити
+      </button>
+      </mat-card-actions>
+    </mat-card>
   </div>
 
   <section class="selected-products">
     <h4>Вибрані товари</h4>
     <div class="products">
-      <mat-card *ngFor="let product of cart.products" [routerLink]="'/' +product.url"
+      <mat-card *ngFor="let product of cart.products"
                 class="products--card">
         <mat-card-header>
           <mat-card-title class="title">{{product.title}}</mat-card-title>

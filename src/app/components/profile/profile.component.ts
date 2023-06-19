@@ -6,6 +6,8 @@ import {PlaceholderImages} from "../../enums/placeholderImage.enum";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl, FormGroup} from '@angular/forms';
 import {ControlSubscribtionComponent} from "../../control-subscriptions/controlSubscribtion.component";
+import {AuthService} from "../../services/auth.service";
+import {CartFacade} from "../../facades/cart.facade";
 
 @Component({
   selector: 'app-profile',
@@ -24,7 +26,12 @@ export class ProfileComponent extends ControlSubscribtionComponent implements On
 
   public userId: string | undefined;
 
-  constructor(private authFacade: AuthFacade, private route: ActivatedRoute, private router: Router) {
+  constructor(
+    private authFacade: AuthFacade,
+    private cartFacade: CartFacade,
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService) {
     super()
   }
 
@@ -41,8 +48,10 @@ export class ProfileComponent extends ControlSubscribtionComponent implements On
         if (this.username) {
           this.authFacade.getUserByUsername(this.username)
           this.user$ = this.authFacade.profile$;
-        } else {
+        } else if (this.authService.isAuth) {
           this.authFacade.getUser();
+          this.cartFacade.getUserOrders();
+          this.cartFacade.getUserSells();
           this.user$ = this.authFacade.user$;
         }
       })

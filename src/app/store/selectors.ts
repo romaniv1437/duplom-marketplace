@@ -59,6 +59,17 @@ export const selectUserProducts = createSelector(
   selectFeature,
   (state) => state.user.products
 );
+
+export const selectUserOrders = createSelector(
+  selectFeature,
+  (state) => state.userOrders
+);
+
+export const selectUserSells = createSelector(
+  selectFeature,
+  (state) => state.userSells
+);
+
 export const selectProfileProducts = createSelector(
   selectFeature,
   (state) => state.profile.products

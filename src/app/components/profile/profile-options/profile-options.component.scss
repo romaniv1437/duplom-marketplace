@@ -1,1 +1,48 @@
 @import url('.././profile.component.scss');
+
+
+.order-description {
+  display: flex;
+  gap: 40px;
+}
+
+.panel {
+  .expanded {
+    max-width: 900px;
+    overflow-y: scroll;
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+    .products--card {
+      display: flex;
+      flex-direction: column;
+      min-width: 300px;
+      width: 300px;
+
+      .title {
+        width: 100%;
+      }
+
+      .content {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+
+        .price {
+          flex: 0 1 auto;
+          text-align: end;
+        }
+      }
+
+      .actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+    }
+  }
+
+  h4 {
+    margin: 0 !important;;
+  }
+}

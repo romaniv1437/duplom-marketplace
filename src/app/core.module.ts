@@ -49,6 +49,7 @@ import { ProfileChangePasswordComponent } from './components/profile/profile-cha
 import { StarRatingComponent } from './components/shared/star-rating/star-rating.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { OrderFormComponent } from './components/order-form/order-form.component';
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @NgModule({
   declarations: [
@@ -75,33 +76,34 @@ import { OrderFormComponent } from './components/order-form/order-form.component
     AutofocusDirective,
     OrderFormComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    StoreModule.forRoot({[baseFeatureKey]: baseReducer}),
-    EffectsModule.forRoot([BaseEffects]),
-    StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    HttpClientModule,
-    PushModule,
-    MatCardModule,
-    NgOptimizedImage,
-    MatSidenavModule,
-    MatTreeModule,
-    MatPaginatorModule,
-    LetModule,
-    MatBadgeModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatSnackBarModule,
-    FormsModule,
-    MatSelectModule,
-    NgImageSliderModule,
-    NgxSpinnerModule.forRoot({type: 'ball-scale-multiple'})
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        StoreModule.forRoot({[baseFeatureKey]: baseReducer}),
+        EffectsModule.forRoot([BaseEffects]),
+        StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        HttpClientModule,
+        PushModule,
+        MatCardModule,
+        NgOptimizedImage,
+        MatSidenavModule,
+        MatTreeModule,
+        MatPaginatorModule,
+        LetModule,
+        MatBadgeModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatSnackBarModule,
+        FormsModule,
+        MatSelectModule,
+        NgImageSliderModule,
+        NgxSpinnerModule.forRoot({type: 'ball-scale-multiple'}),
+        MatExpansionModule
+    ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
