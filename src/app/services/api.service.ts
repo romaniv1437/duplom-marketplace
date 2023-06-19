@@ -11,7 +11,7 @@ import {
   CategoriesModel,
   CategoriesResponse,
   Category,
-  CategoryModel,
+  CategoryModel, CurrencyModel,
 } from "../models/category.interface";
 import {FilterService} from "./filter.service";
 import {CartProduct, Order, OrderProductModel, OrderProductPayload, OrderResponse} from "../models/cart.interface";
@@ -127,6 +127,18 @@ export class ApiService {
           nextPage: res.next,
           prevPage: res.previous,
           results: res.results.map(category => this.categoryAdapter(category))
+        })),
+        catchError(this.errorHandler))
+  }
+
+  loadCurrencies(): Observable<CurrencyModel> {
+    return this.http.get<CurrencyModel>(this.BASE_URL + 'currency/')
+      .pipe(
+        map(res => ({
+          countAll: res.countAll,
+          nextPage: res.nextPage,
+          prevPage: res.prevPage,
+          results: res.results,
         })),
         catchError(this.errorHandler))
   }
@@ -258,6 +270,7 @@ export class ApiService {
       price: parseFloat(product.price),
       description: product.description,
       category: product.category,
+      currency: product.currency,
       image: product.photo ? product.photo[0] : '',
       images: product.photo,
       user: {
@@ -275,7 +288,7 @@ export class ApiService {
       title: product.title,
       price: product.price,
       description: product.description,
-      currency: 1,
+      currency: product.currency,
       category: product.category
     } as unknown as ProductModel
   }

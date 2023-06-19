@@ -9,7 +9,7 @@
         ></ng-image-slider>
         <mat-card-content class="content">
           <p class="price">
-            {{product?.price}} ₴
+            {{product?.price}} {{product.currency.title}}
           </p>
         </mat-card-content>
         <mat-card-actions (click)="$event.stopPropagation()" class="actions">

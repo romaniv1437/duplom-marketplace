@@ -78,6 +78,7 @@ export class HomeComponent extends ControlSubscribtionComponent implements OnIni
       this.authFacade.getUser();
     }
     this.baseFacade.loadCategories();
+    this.baseFacade.loadCurrencies();
     this.countProductsInCart$ = this.cartFacade.countCartProducts$;
 
     this.baseFacade.categories$

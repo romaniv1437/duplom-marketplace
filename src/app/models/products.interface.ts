@@ -10,6 +10,7 @@ export interface Product {
   images: string[];
   price: number;
   description: string;
+  currency: any;
   category: Category;
   user: User;
   imageFiles: File[];
@@ -37,6 +38,7 @@ export interface ProductModel {
   slug: string,
   price: string,
   time_create: Date,
+  currency: any;
   time_update: Date,
   number_photo: number,
   is_active: boolean,

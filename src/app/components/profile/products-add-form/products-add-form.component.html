@@ -31,6 +31,17 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field>
+          <mat-label>Валюта</mat-label>
+          <mat-select formControlName="currency">
+            <mat-option *ngFor="let currency of currencies$ | ngrxPush" [value]="currency">
+              {{currency.title}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="productForm.controls['category'].hasError('required')">
+            Це поле обов'язкове
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
           <mat-label>Ціна</mat-label>
           <input formControlName="price" type="number" matInput placeholder="Ціна оголошення">
           <mat-error *ngIf="productForm.controls['price'].hasError('required')">

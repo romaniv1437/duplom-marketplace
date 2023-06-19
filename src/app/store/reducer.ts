@@ -3,7 +3,7 @@ import {Product, ProductsModel} from '../models/products.interface';
 import * as actions from './actions'
 import {Cart, CartProduct, Order} from "../models/cart.interface";
 import {User} from "../models/user.interface";
-import {Category} from "../models/category.interface";
+import {Category, Currency} from "../models/category.interface";
 import {getUserOrders} from "./actions";
 
 export const baseFeatureKey = "store";
@@ -13,6 +13,7 @@ export interface State {
   error: string;
 
   categories: Category[];
+  currencies: Currency[];
 
   cart: Cart;
 
@@ -33,6 +34,7 @@ export const initialState: State = {
   error: '',
 
   categories: [],
+  currencies: [],
 
   cart: {} as Cart,
 
@@ -262,6 +264,20 @@ export const baseReducer = createReducer(
       categories: action.categories
     }
   }),
+  on(actions.loadCurrencies, (state, action) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: ''
+    }
+  }),
+  on(actions.loadCurrenciesSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      currencies: action.currencies
+    }
+  }),
   on(actions.createProduct, (state, action) => {
     return {
       ...state,
@@ -395,5 +411,17 @@ export const baseReducer = createReducer(
 );
 
 const getTotalPrice = (products: CartProduct[]): number => {
+  const possibleCurrencies = [...new Map(products.map(product => product.currency).map(item =>
+    [item['id'], item])).values()];
+
+  let totalPrice = {
+  }
+  possibleCurrencies.map(currency => (totalPrice = {
+    ...totalPrice,
+    [currency.title]: parseFloat(products.filter(product => product.currency.id === currency.id)
+      .reduce((totalPrice, product) => totalPrice + (product.totalPrice), 0).toFixed(2))
+  }))
+
+  console.log(totalPrice)
   return parseFloat(products.reduce((totalPrice, product) => totalPrice + (product.totalPrice), 0).toFixed(2));
 }

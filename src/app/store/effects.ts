@@ -18,7 +18,7 @@ import {
   getUserInfoByUserNameSuccess,
   getUserInfoSuccess, getUserOrders, getUserOrdersSuccess, getUserSells, getUserSellsSuccess,
   loadCategories,
-  loadCategoriesSuccess,
+  loadCategoriesSuccess, loadCurrencies, loadCurrenciesSuccess,
   loadProductById,
   loadProductByIdSuccess,
   loadProducts,
@@ -119,6 +119,15 @@ export class BaseEffects {
     switchMap((action) => this.apiService.loadCategories()
       .pipe(
         map(categories => loadCategoriesSuccess({categories: categories.results})),
+        catchError((error) => of(setError({error})))
+      )
+    )
+  ))
+  loadCurrencies$ = createEffect(() => this.actions$.pipe(
+    ofType(loadCurrencies),
+    switchMap((action) => this.apiService.loadCurrencies()
+      .pipe(
+        map(currencies => loadCurrenciesSuccess({currencies: currencies.results})),
         catchError((error) => of(setError({error})))
       )
     )

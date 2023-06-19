@@ -103,6 +103,14 @@ export const loadCategoriesSuccess = createAction(
   props<{ categories: any }>()
 )
 
+export const loadCurrencies = createAction(
+  "[CATEGORIES] load Currencies",
+)
+export const loadCurrenciesSuccess = createAction(
+  "[PRODUCTS] load Currencies success",
+  props<{ currencies: any }>()
+)
+
 export const createProduct = createAction(
   "[PRODUCTS] create product",
   props<{ product: Product }>()

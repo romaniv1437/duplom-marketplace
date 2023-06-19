@@ -55,6 +55,11 @@ export const selectCategories = createSelector(
   (state) => state.categories
 );
 
+export const selectCurrencies = createSelector(
+  selectFeature,
+  (state) => state.currencies
+);
+
 export const selectUserProducts = createSelector(
   selectFeature,
   (state) => state.user.products

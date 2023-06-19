@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable, takeUntil} from "rxjs";
-import {Category} from "../../../models/category.interface";
+import {Category, Currency} from "../../../models/category.interface";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {BaseFacade} from "../../../facades/base.facade";
 import {ProductsFacade} from "../../../facades/products.facade";
@@ -15,11 +15,13 @@ import {ControlSubscribtionComponent} from "../../../control-subscriptions/contr
 export class ProductsEditFormComponent extends ControlSubscribtionComponent implements OnInit {
 
   public currentProduct$: Observable<Product> = new Observable<Product>();
+  public currencies$: Observable<Currency[]> = new Observable<Currency[]>();
   public categories$: Observable<Category[]> = new Observable<Category[]>();
   public productForm: FormGroup = new FormGroup<any>({
     title: new FormControl(null, [Validators.required]),
     price: new FormControl(null, [Validators.required, Validators.min(1)]),
     description: new FormControl(null, [Validators.required]),
+    currency: new FormControl(null, [Validators.required]),
     category: new FormControl(null, [Validators.required]),
     photo: new FormControl<File[] | null>(null, [Validators.required]),
     slug: new FormControl('')
@@ -31,6 +33,7 @@ export class ProductsEditFormComponent extends ControlSubscribtionComponent impl
 
   ngOnInit(): void {
     this.categories$ = this.baseFacade.categories$;
+    this.currencies$ = this.baseFacade.currencies$;
 
     this.currentProduct$ = this.productsFacade.product$;
 
@@ -63,6 +66,7 @@ export class ProductsEditFormComponent extends ControlSubscribtionComponent impl
       price: this.productForm.controls['price'].value,
       description: this.productForm.controls['description'].value,
       category: this.productForm.controls['category'].value.id,
+      currency: this.productForm.controls['currency'].value.id,
       slug: this.productForm.controls['slug'].value,
       imageFiles: this.productForm.controls['photo'].value.map((file: File) => file),
     } as Product;
