@@ -30,6 +30,14 @@ class OrdersListBuyAPIView(generics.ListAPIView):
     serializer_class = OrdersBuySerializer
     permission_classes = (IsAuthenticated,)
 
+    def delete(self, request, *args, **kwargs):
+        pk = request.data['id']
+        orders = Orders.objects.get(pk=pk)
+        orders.is_published = False
+        orders.save()
+
+        return Response({'message': 'Ваше замовлення переміщено до історії'})
+
     def get_queryset(self):
         return Orders.objects.filter(buyer=self.request.user, is_published=True)
 
@@ -56,3 +64,11 @@ class OrdersListHistorySellAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return OrdersProducts.objects.filter(seller=self.request.user, status='Відправлено')
+
+
+class OrdersListHistoryBuyAPIView(generics.ListAPIView):
+    serializer_class = OrdersBuySerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Orders.objects.filter(buyer=self.request.user, is_published=False)

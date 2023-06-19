@@ -18,10 +18,28 @@ class OrdersSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
-        representanion = super().to_representation(instance)
-        representanion['username'] = instance.buyer.username
+        """
+            DATA WITH /myorders/sell/
+        """
+        representation = super().to_representation(instance)
+        avatar = instance.buyer.profile.avatar
+        date_joined = instance.buyer.date_joined + timedelta(hours=3)
 
-        return representanion
+        if avatar:
+            avatar = 'http://127.0.0.1:8000' + avatar.url
+        else:
+            avatar = None
+
+        representation['buyer'] = {
+            'id': instance.buyer.pk,
+            'username': instance.buyer.username,
+            'first_name': instance.buyer.first_name,
+            'last_name': instance.buyer.last_name,
+            'date_joined': date_joined.strftime(DATETIME_FORMAT),
+            'avatar': avatar
+        }
+
+        return representation 
 
 
 class OrdersProductsSerializer(serializers.ModelSerializer):
@@ -47,7 +65,6 @@ class OrdersBuySerializer(serializers.ModelSerializer):
     class Meta:
         model = Orders
         fields = '__all__'
-
 
     def to_representation(self, instance):
         represenation = super().to_representation(instance)
