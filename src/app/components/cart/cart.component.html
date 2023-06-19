@@ -24,7 +24,7 @@
               {{product.description}}
             </p>
             <p class="price">
-              {{product.price}} ₴
+              {{product.price}} {{product.currency.title}}
             </p>
           </mat-card-content>
           <mat-card-actions (click)="$event.stopPropagation()" class="actions">
@@ -37,7 +37,7 @@
               </button>
             </div>
             <span *ngIf="(cart.products | getCartProduct: product.id) as cartProduct">К-сть: {{cartProduct.qty}},
-              Загалом: {{cartProduct.totalPrice}}</span>
+              Загалом: {{cartProduct.totalPrice}} {{product.currency.title}}</span>
             <button (click)="removeFromCart(product)" mat-icon-button>
               <mat-icon>delete</mat-icon>
             </button>
