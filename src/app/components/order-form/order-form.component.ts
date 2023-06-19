@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import {Cart, CartProduct, Order} from "../../models/cart.interface";
-import {Observable} from "rxjs";
+import {Observable, takeUntil} from "rxjs";
 import { CartFacade } from 'src/app/facades/cart.facade';
 import {User} from "../../models/user.interface";
 import { AuthFacade } from 'src/app/facades/auth.facade';
 import {PlaceholderImages} from "../../enums/placeholderImage.enum";
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { Product } from 'src/app/models/products.interface';
+import {ControlSubscribtionComponent} from "../../control-subscriptions/controlSubscribtion.component";
 
 @Component({
   selector: 'app-order-form',
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss']
 })
-export class OrderFormComponent implements OnInit {
+export class OrderFormComponent extends ControlSubscribtionComponent implements OnInit {
 
   public orderForm: FormGroup = new FormGroup<any>({
     firstName: new FormControl('', [Validators.required]),
@@ -28,11 +29,21 @@ export class OrderFormComponent implements OnInit {
   public user$: Observable<User> = new Observable<User>()
   public placeholderImages = PlaceholderImages;
 
-  constructor(private cartFacade: CartFacade, private authFacade: AuthFacade) { }
+  constructor(private cartFacade: CartFacade, private authFacade: AuthFacade) {
+    super()
+  }
 
   ngOnInit(): void {
     this.cart$ = this.cartFacade.cart$;
     this.user$ = this.authFacade.user$;
+
+    this.user$.pipe(takeUntil(this.destroyed$)).subscribe(user => {
+      this.orderForm.patchValue({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email
+      }, {emitEvent: false})
+    })
   }
 
   public removeFromCart(product: CartProduct): void {
