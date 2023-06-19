@@ -320,6 +320,11 @@ export class ApiService {
     const orderInfo = order.info[0];
     return {
       ...this.orderAdapter({...orderInfo, info: order.products}),
+      user: {
+        firstName: orderInfo.first_name,
+        lastName: orderInfo.last_name,
+        username: orderInfo.username || '',
+      } as User,
     } as unknown as Order
   }
 

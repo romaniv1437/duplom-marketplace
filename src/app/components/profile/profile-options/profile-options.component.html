@@ -130,6 +130,9 @@
                     <p>
                       Кількість: {{product.qty}}
                     </p>
+                    <p style="margin-bottom: 5px">
+                      Покупець: <a [routerLink]="'/profile/' + sell.user.username">{{sell.user.firstName}} {{sell.user.lastName}}</a>
+                    </p>
                     <form [formGroup]="orderProductStatusForm">
                       <mat-form-field >
                         <mat-label>Статус</mat-label>
