@@ -37,7 +37,7 @@ class OrdersProducts(models.Model):
     count_products = models.IntegerField(default=1)
     total_price = models.FloatField()
     currency = models.CharField(max_length=100)
-    status = models.CharField(max_length=100, default='В процесі', verbose_name='Статус замовлення')
+    status = models.CharField(null=True, max_length=100, default='В процесі', verbose_name='Статус замовлення')
     seller = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Продавець')
 
 

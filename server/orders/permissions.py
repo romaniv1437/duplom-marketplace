@@ -7,8 +7,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
        
         return str(obj.user) == str(request.user)
-        # return obj.owner == request.user
-        # return obj.user == request.user.profile
+       
 
     def has_permission(self, request, view):
         """

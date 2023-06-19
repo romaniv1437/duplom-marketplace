@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from .models import Orders, OrdersProducts
 from django.db.models import Sum
 from products.serializers import ProductsSerializer
@@ -20,6 +19,7 @@ class OrdersSerializer(serializers.ModelSerializer):
 
 
 class OrdersProductsSerializer(serializers.ModelSerializer):
+    status = serializers.CharField(read_only=True)
     class Meta:
         model = OrdersProducts
         fields = '__all__'
@@ -45,8 +45,8 @@ class OrdersBuySerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         represenation = super().to_representation(instance)
-        order = Orders.objects.get(buyer=instance.buyer)
-        orders_products = OrdersProducts.objects.filter(number_orders=order.pk)
+        order = Orders.objects.filter(buyer=instance.buyer)
+        orders_products = OrdersProducts.objects.filter(number_orders=order[0].pk)
     
         s = OrdersProductsSerializer(data=orders_products, many=True)
         
