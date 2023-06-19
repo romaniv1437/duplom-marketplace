@@ -127,7 +127,7 @@ export class BaseEffects {
     ofType(loadCurrencies),
     switchMap((action) => this.apiService.loadCurrencies()
       .pipe(
-        map(currencies => loadCurrenciesSuccess({currencies: currencies.results})),
+        map(currencies => loadCurrenciesSuccess({currencies: currencies})),
         catchError((error) => of(setError({error})))
       )
     )
