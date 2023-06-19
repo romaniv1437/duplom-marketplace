@@ -42,7 +42,6 @@ class CreateOrdersProductsAPIView(generics.CreateAPIView):
     serializer_class = OrdersProductsSerializer
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
         return super().post(request, *args, **kwargs)
 
 
@@ -62,6 +61,16 @@ class OrdersListPagination(pagination.PageNumberPagination):
 class OrdersListSellAPIView(generics.ListCreateAPIView):
     serializer_class = OrdersSellSerializer
     pagination_class = OrdersListPagination
+
+
+    def put(self, request, *args, **kwargs):
+        pk = request.data['number_orders']
+        orders = OrdersProducts.objects.get(pk=pk)
+        orders.status = 'Відправлено'
+        orders.save()
+        
+        return Response({'message': 'Статус замовлення успішно змінений!'})
+
 
     def get_queryset(self):
         return OrdersProducts.objects.filter(seller=self.request.user, status='В процесі')

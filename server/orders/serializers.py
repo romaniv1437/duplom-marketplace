@@ -45,10 +45,7 @@ class OrdersBuySerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         represenation = super().to_representation(instance)
-        # order = Orders.objects.filter(buyer=instance.buyer)
         orders_products = OrdersProducts.objects.filter(number_orders=instance.pk)
-        # print(instance.pk)
-        # print(OrdersProducts.objects.filter(number_orders=instance.pk))
     
         s = OrdersProductsSerializer(data=orders_products, many=True)
         
@@ -78,9 +75,11 @@ class OrdersSellSerializer(serializers.ModelSerializer):
     status = serializers.CharField(write_only=True)
     number_orders = serializers.IntegerField(read_only=True)
 
+
     class Meta:
         model = OrdersProducts
         fields = ('status', 'number_orders')
+
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -92,9 +91,6 @@ class OrdersSellSerializer(serializers.ModelSerializer):
         
         orders_products = OrdersProducts.objects.filter(pk=instance.pk, products=instance.products.pk)
         
-        print(instance.pk)
-        # print(orders_products)
-        # print(OrdersProducts.objects.filter(products=instance.products.pk))
         products = OrdersProductsSerializer(data=orders_products, many=True)
         products.is_valid()
         
