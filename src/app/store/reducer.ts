@@ -1,10 +1,9 @@
 import {createReducer, on} from '@ngrx/store';
-import {Product, ProductsModel} from '../models/products.interface';
+import {Product} from '../models/products.interface';
 import * as actions from './actions'
 import {Cart, CartProduct, Order} from "../models/cart.interface";
 import {User} from "../models/user.interface";
 import {Category, Currency} from "../models/category.interface";
-import {getUserOrders} from "./actions";
 
 export const baseFeatureKey = "store";
 
@@ -410,7 +409,7 @@ export const baseReducer = createReducer(
   }),
 );
 
-const getTotalPrice = (products: CartProduct[]): number => {
+const getTotalPrice = (products: CartProduct[]): string => {
   const possibleCurrencies = [...new Map(products.map(product => product.currency).map(item =>
     [item['id'], item])).values()];
 
@@ -422,6 +421,5 @@ const getTotalPrice = (products: CartProduct[]): number => {
       .reduce((totalPrice, product) => totalPrice + (product.totalPrice), 0).toFixed(2))
   }))
 
-  console.log(totalPrice)
-  return parseFloat(products.reduce((totalPrice, product) => totalPrice + (product.totalPrice), 0).toFixed(2));
+  return Object.keys(totalPrice).map(key => (`${totalPrice[key as keyof typeof totalPrice]} ${key}`)).join(', ')
 }

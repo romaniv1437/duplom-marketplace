@@ -4,7 +4,7 @@ import {User, UserModel} from "./user.interface";
 export interface Cart {
   userId: string;
   products: CartProduct[],
-  totalPrice: number;
+  totalPrice: string;
 }
 
 export interface CartProduct extends Product {

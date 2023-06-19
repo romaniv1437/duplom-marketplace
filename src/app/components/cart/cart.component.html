@@ -48,7 +48,7 @@
     </section>
 
     <section class="total">
-      <h4>Загалом: {{cart.totalPrice}} ₴</h4>
+      <h4>Загалом: {{cart.totalPrice}}</h4>
 
       <button *ngIf="authService.isAuth;else unauthorized" [routerLink]="'/order'" color="primary" mat-raised-button>Перейти до оформлення</button>
     </section>
