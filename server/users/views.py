@@ -181,17 +181,9 @@ class ChangePasswordAPIView(generics.CreateAPIView):
         return Response({'message': 'Ваш пароль успішно змінений!'})
 
 
-
-class UserListPagination(pagination.PageNumberPagination):
-    page_size = 5
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
-
-
 class UsersListAPIView(generics.ListAPIView):
     queryset = User.objects.all().order_by('-id')
     serializer_class = ProfileSerializer
-    pagination_class = UserListPagination
     filter_backends = [rest_filters.DjangoFilterBackend, filters.SearchFilter]
     search_fields = ['username', 'first_name', 'last_name']
 
@@ -204,7 +196,6 @@ class RatingUserAPIView(ProfileMixin, generics.ListCreateAPIView):
     """
     serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    pagination_class = None
 
 
     def get(self, request, *args, **kwargs):

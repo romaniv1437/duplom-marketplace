@@ -17,6 +17,12 @@ class OrdersSerializer(serializers.ModelSerializer):
         model = Orders
         fields = '__all__'
 
+    def to_representation(self, instance):
+        representanion = super().to_representation(instance)
+        representanion['username'] = instance.buyer.username
+
+        return representanion
+
 
 class OrdersProductsSerializer(serializers.ModelSerializer):
     status = serializers.CharField(read_only=True)

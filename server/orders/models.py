@@ -18,7 +18,7 @@ class Orders(models.Model):
     post_index = models.IntegerField(verbose_name='Поштовий індекс')
     count_products = models.IntegerField(default=1, verbose_name='Загальна кількість продуктів')
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Час створення')
-    # status = models.CharField(max_length=100, default='В процесі', verbose_name='Статус замовлення')
+    is_published = models.BooleanField(default=True, verbose_name='Опубліковано')
     buyer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Замовник')
 
     class Meta:

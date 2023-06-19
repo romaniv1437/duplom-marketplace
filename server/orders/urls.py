@@ -1,4 +1,4 @@
-from .views import CreateOrdersAPIView, OrdersListBuyAPIView, OrdersListSellAPIView, CreateOrdersProductsAPIView
+from .views import CreateOrdersAPIView, OrdersListBuyAPIView, OrdersListSellAPIView, CreateOrdersProductsAPIView, OrdersListHistorySellAPIView
 from django.urls import path, include
 
 urlpatterns = [
@@ -6,4 +6,5 @@ urlpatterns = [
     path('myorders/buy/', OrdersListBuyAPIView.as_view(), name='myorders-buy'),
     path('myorders/sell/', OrdersListSellAPIView.as_view(), name='myorders-sell'),
     path('create-orders-products/', CreateOrdersProductsAPIView.as_view(), name='create-orders-products'),
+    path('myorders/sell/history/', OrdersListHistorySellAPIView.as_view(), name='myorders-sell_history'),
 ]
