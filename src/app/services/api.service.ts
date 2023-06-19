@@ -39,26 +39,26 @@ export class ApiService {
   }
 
   loadProducts(loadData: { paginationData: PaginationData }): Observable<Product[]> {
-    return this.http.get<ProductsResponse>(this.BASE_URL + 'products/')
+    return this.http.get<ProductModel[]>(this.BASE_URL + 'products/')
       .pipe(
-        map(res => res.results.map((r: any) => this.productsAdapter(r))),
+        map(res => res.map((r: any) => this.productsAdapter(r))),
         catchError(this.errorHandler))
   }
 
   searchProducts(search: string, category?: string): Observable<Product[]> {
-    return this.http.get<ProductsResponse>(this.BASE_URL + 'products/')
+    return this.http.get<ProductModel[]>(this.BASE_URL + 'products/')
       .pipe(
         map(res =>
-          this.filterService.productsCategoryFilter(res.results.map((r: any) => this.productsAdapter(r)), category || '')
+          this.filterService.productsCategoryFilter(res.map((r: any) => this.productsAdapter(r)), category || '')
             .filter(product => this.filterService.productsFilter(product, search))
         ),
         catchError(this.errorHandler))
   }
 
   loadUserProducts(): Observable<Product[]> {
-    return this.http.get<ProductsResponse>(this.BASE_URL + 'myproducts/')
+    return this.http.get<ProductModel[]>(this.BASE_URL + 'myproducts/')
       .pipe(
-        map(res => res.results.map((r: any) => this.productsAdapter(r))),
+        map(res => res.map((r: any) => this.productsAdapter(r))),
         catchError(this.errorHandler))
   }
 
@@ -119,27 +119,16 @@ export class ApiService {
     })).pipe(catchError(this.errorHandler));
   }
 
-  loadCategories(): Observable<CategoriesModel> {
-    return this.http.get<CategoriesResponse>(this.BASE_URL + 'category/')
+  loadCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>(this.BASE_URL + 'category/')
       .pipe(
-        map(res => ({
-          countAll: res.count,
-          nextPage: res.next,
-          prevPage: res.previous,
-          results: res.results.map(category => this.categoryAdapter(category))
-        })),
+        map(res => (res.map(category => this.categoryAdapter(category)))),
         catchError(this.errorHandler))
   }
 
   loadCurrencies(): Observable<CurrencyModel> {
     return this.http.get<CurrencyModel>(this.BASE_URL + 'currency/')
       .pipe(
-        map(res => ({
-          countAll: res.countAll,
-          nextPage: res.nextPage,
-          prevPage: res.prevPage,
-          results: res.results,
-        })),
         catchError(this.errorHandler))
   }
 
@@ -230,13 +219,13 @@ export class ApiService {
 
   getUserOrders(): Observable<Order[]> {
     return this.http.get<any>(this.BASE_URL + 'myorders/buy/')
-      .pipe(map(res => res.results.map((order: OrderResponse) => this.orderAdapter(order))),
+      .pipe(map(res => res.map((order: OrderResponse) => this.orderAdapter(order))),
         catchError(this.errorHandler))
   }
 
   getUserSells(): Observable<Order[]> {
     return this.http.get<any>(this.BASE_URL + 'myorders/sell/')
-      .pipe(map(res => res.results.map((order: OrderResponse) => this.sellAdapter(order))),
+      .pipe(map(res => res.map((order: OrderResponse) => this.sellAdapter(order))),
         catchError(this.errorHandler))
   }
 

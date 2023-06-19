@@ -118,7 +118,7 @@ export class BaseEffects {
     ofType(loadCategories),
     switchMap((action) => this.apiService.loadCategories()
       .pipe(
-        map(categories => loadCategoriesSuccess({categories: categories.results})),
+        map(categories => loadCategoriesSuccess({categories: categories})),
         catchError((error) => of(setError({error})))
       )
     )
