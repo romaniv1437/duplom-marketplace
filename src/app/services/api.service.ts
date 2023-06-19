@@ -229,7 +229,7 @@ export class ApiService {
   }
 
   setSellStatus(status: string, productId: number): Observable<Order[]> {
-    return this.http.put<any>(this.BASE_URL + 'myorders/sell/', {status, id: productId})
+    return this.http.put<any>(this.BASE_URL + 'myorders/sell/', {status, product: productId})
       .pipe(map(res => res.results.map((order: OrderResponse) => this.sellAdapter(order))),
         catchError(this.errorHandler))
   }

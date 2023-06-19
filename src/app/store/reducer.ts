@@ -377,6 +377,21 @@ export const baseReducer = createReducer(
       userSells: action.orders
     }
   }),
+  on(actions.sendOrder, (state, action) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: '',
+    }
+  }),
+  on(actions.sendOrderSuccess, (state, action) => {
+    return {
+      ...state,
+      isLoading: false,
+      error: '',
+      cart: {} as Cart
+    }
+  }),
 );
 
 const getTotalPrice = (products: CartProduct[]): number => {
