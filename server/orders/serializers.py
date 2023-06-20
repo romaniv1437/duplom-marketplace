@@ -69,11 +69,14 @@ class OrdersBuySerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         represenation = super().to_representation(instance)
         orders_products = OrdersProducts.objects.filter(number_orders=instance.pk)
-    
-        s = OrdersProductsSerializer(data=orders_products, many=True)
+        print(OrdersProducts.objects.filter(number_orders=instance.pk))
+        if not OrdersProducts.objects.filter(number_orders=instance.pk):
+            Orders.objects.get(pk=instance.pk).delete()
+
+        info = OrdersProductsSerializer(data=orders_products, many=True)
         
-        s.is_valid()
-        represenation['info'] = s.data
+        info.is_valid()
+        represenation['info'] = info.data
         avatar = instance.buyer.profile.avatar
         date_joined = instance.buyer.date_joined + timedelta(hours=3)
 

@@ -47,7 +47,7 @@ class OrdersListSellAPIView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def put(self, request, *args, **kwargs):
-        pk = request.data['number_orders']
+        pk = request.data['product']
         orders = OrdersProducts.objects.get(pk=pk)
         orders.status = 'Відправлено'
         orders.save()
