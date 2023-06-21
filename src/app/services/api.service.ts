@@ -33,6 +33,7 @@ export class ApiService {
   private createUserBody(user: User): UserModel {
     return {
       ...user,
+      username: user.username.toLowerCase(),
       first_name: user.firstName,
       last_name: user.lastName
     } as UserModel
