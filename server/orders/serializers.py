@@ -101,7 +101,6 @@ class OrdersSellSerializer(serializers.ModelSerializer):
     status = serializers.CharField(write_only=True)
     number_orders = serializers.IntegerField(read_only=True)
 
-
     class Meta:
         model = OrdersProducts
         fields = ('status', 'number_orders')
@@ -109,6 +108,7 @@ class OrdersSellSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
+        print(representation)
         del representation['number_orders']
         
         buyer = OrdersSerializer(data=Orders.objects.filter(pk=instance.number_orders), many=True)

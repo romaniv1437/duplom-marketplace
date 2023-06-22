@@ -8,7 +8,7 @@ from .models import Orders, OrdersProducts
 from users.models import Profile
 from products.models import Products
 from products.serializers import ProductsSerializer
-
+from pprint import pprint
 
 class CreateOrdersAPIView(generics.CreateAPIView):
     """
@@ -17,12 +17,17 @@ class CreateOrdersAPIView(generics.CreateAPIView):
     serializer_class = OrdersSerializer
     permission_classes = (IsAuthenticated,)
 
+    def post(self, request, *args, **kwargs):
+        pprint(request.data)
+        return super().post(request, *args, **kwargs)
+
 
 class CreateOrdersProductsAPIView(generics.CreateAPIView):
     serializer_class = OrdersProductsSerializer
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
+        print(request.data)
         return super().post(request, *args, **kwargs)
 
 
@@ -48,8 +53,10 @@ class OrdersListSellAPIView(generics.ListCreateAPIView):
 
     def put(self, request, *args, **kwargs):
         pk = request.data['product']
+        status = request.data['status']
         orders = OrdersProducts.objects.get(pk=pk)
-        orders.status = 'Відправлено'
+    
+        orders.status = status
         orders.save()
         
         return Response({'message': 'Статус замовлення успішно змінений!'})
