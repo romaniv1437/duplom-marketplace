@@ -71,7 +71,7 @@ export class ApiService {
   }
 
   login(email: string, password: string): Observable<User> {
-    return this.http.post<UserModel>(this.BASE_URL + 'login/', {username: email, password})
+    return this.http.post<UserModel>(this.BASE_URL + 'login/', {username: email.toLowerCase(), password})
       .pipe(
         tap(res => this.authService.setToken(res.tokens)),
         switchMap(() => this.getUser()),
@@ -83,7 +83,7 @@ export class ApiService {
     const userBody = {
       password: password,
       confirm_password: confirmPassword,
-      username: user.username,
+      username: user.username.toLowerCase(),
       first_name: user.firstName,
       last_name: user.lastName
     }
@@ -230,10 +230,9 @@ export class ApiService {
         catchError(this.errorHandler))
   }
 
-  setSellStatus(status: string, productId: number): Observable<Order[]> {
+  setSellStatus(status: string, productId: number): Observable<any> {
     return this.http.put<any>(this.BASE_URL + 'myorders/sell/', {status, product: productId})
-      .pipe(map(res => res.results.map((order: OrderResponse) => this.sellAdapter(order))),
-        catchError(this.errorHandler))
+      .pipe(catchError(this.errorHandler))
   }
 
   addProductImage(imageFile: File, productId: string): Observable<any> {
@@ -326,7 +325,7 @@ export class ApiService {
       user: {
         firstName: orderInfo.first_name,
         lastName: orderInfo.last_name,
-        username: orderInfo.username || '',
+        username: orderInfo.buyer.username || '',
       } as User,
     } as unknown as Order
   }
@@ -345,8 +344,10 @@ export class ApiService {
   }
 
   private orderProductAdapter(product: OrderProductModel): CartProduct {
+    console.log(product)
     return {
       ...this.productsAdapter(product.products[0]),
+      id: product.id,
       totalPrice: product.total_price,
       qty: product.count_products,
       image: product.products[0].photo[0],

@@ -39,7 +39,7 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Валюта</mat-label>
-          <mat-select formControlName="currency">
+          <mat-select formControlName="currency" [compareWith]="compareFn">
             <mat-option *ngFor="let currency of currencies$ | ngrxPush" [value]="currency">
               {{currency.title}}
             </mat-option>

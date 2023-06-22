@@ -60,11 +60,16 @@ export class ProfileOptionsComponent extends ControlSubscribtionComponent implem
 
 
     this.userSells$.pipe(takeUntil(this.destroyed$)).subscribe(orders => {
-      orders.map(order => order.products.map(product => this.orderProductStatusForm.addControl(String(product.id), this.fb.control(product.status), {emitEvent: false})))
+      orders.map(order => order.products.map(product => {
+        console.log(product)
+        this.orderProductStatusForm.addControl(String(product.id), this.fb.control(product.status), {emitEvent: false})
+      }))
     })
     this.authFacade.user$.pipe(takeUntil(this.destroyed$)).subscribe(user => {
       this.userId = user.username;
     })
+
+    console.log(this.orderProductStatusForm.valueChanges.subscribe(val => console.log(val)))
 
     this.productsFacade.loadUserProducts({page: 0, count: 4, searchKey: ''} as PaginationData);
 

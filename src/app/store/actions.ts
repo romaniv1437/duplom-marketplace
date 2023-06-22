@@ -209,10 +209,13 @@ export const setSellStatus = createAction(
 
 export const setSellStatusSuccess = createAction(
   "[USER]  set Sell Status success",
-  props<{ orders: Order[] }>()
 )
 
 export const setError = createAction(
   "[ERROR] set error",
   props<{ error: string }>()
+)
+
+export const clearState = createAction(
+  "[STATE] clear state",
 )

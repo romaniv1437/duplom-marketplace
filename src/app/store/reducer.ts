@@ -407,6 +407,15 @@ export const baseReducer = createReducer(
       cart: {} as Cart
     }
   }),
+  on(actions.clearState, (state, action) => {
+    return {
+      ...initialState,
+      categories: state.categories,
+      currencies: state.currencies,
+      user: state.user,
+      cart: state.cart
+    }
+  }),
 );
 
 const getTotalPrice = (products: CartProduct[]): string => {

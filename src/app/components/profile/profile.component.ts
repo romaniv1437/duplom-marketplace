@@ -8,6 +8,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {ControlSubscribtionComponent} from "../../control-subscriptions/controlSubscribtion.component";
 import {AuthService} from "../../services/auth.service";
 import {CartFacade} from "../../facades/cart.facade";
+import {BaseFacade} from "../../facades/base.facade";
 
 @Component({
   selector: 'app-profile',
@@ -30,6 +31,7 @@ export class ProfileComponent extends ControlSubscribtionComponent implements On
     private authFacade: AuthFacade,
     private cartFacade: CartFacade,
     private route: ActivatedRoute,
+    private baseFacade: BaseFacade,
     private router: Router,
     private authService: AuthService) {
     super()
@@ -44,6 +46,7 @@ export class ProfileComponent extends ControlSubscribtionComponent implements On
     this.router.events
       .pipe(takeUntil(this.destroyed$), startWith({}))
       .subscribe(() => {
+        this.baseFacade.clearState();
         this.username = this.route.snapshot.params['userId']
         if (this.username) {
           this.authFacade.getUserByUsername(this.username)

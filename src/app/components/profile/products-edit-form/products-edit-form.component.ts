@@ -46,7 +46,9 @@ export class ProductsEditFormComponent extends ControlSubscribtionComponent impl
         description: product.description,
         category: product.category,
         slug: product.slug,
+        currency: product.currency
       })
+      console.log(product.images)
       product.images?.map(async (image, index) => {
         const response = await fetch(image);
         return await response.blob().then(r => this.productForm

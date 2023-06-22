@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
-import {loadCategories, loadCurrencies} from '../store/actions';
+import {clearState, loadCategories, loadCurrencies} from '../store/actions';
 import {selectCategories, selectCurrencies, selectError, selectIsLoading} from "../store/selectors";
 import {Category, Currency} from "../models/category.interface";
 
@@ -26,5 +26,7 @@ export class BaseFacade {
   }
   public loadCurrencies(): void {
     this.store$.dispatch(loadCurrencies());
+  }  public clearState(): void {
+    this.store$.dispatch(clearState());
   }
 }

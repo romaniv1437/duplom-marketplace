@@ -42,14 +42,14 @@
       }
     }
   }
-
-  .profile-products {
-    .products {
-      justify-content: start !important;
-    }
-  }
 }
 
+.products {
+  max-width: 1000px;
+  overflow-y: scroll !important;
+  justify-content: start !important;
+  flex-wrap: nowrap !important;
+}
 
 .stars {
   display: flex;

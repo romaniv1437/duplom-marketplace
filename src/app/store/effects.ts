@@ -261,7 +261,7 @@ export class BaseEffects {
     ofType(setSellStatus),
     switchMap((action) => this.apiService.setSellStatus(action.status, action.productId)
       .pipe(
-        map(orders => setSellStatusSuccess({orders})),
+        map(() => setSellStatusSuccess()),
         catchError((error) => of(setError({error})))
       )
     )

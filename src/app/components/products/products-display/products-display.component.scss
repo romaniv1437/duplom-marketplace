@@ -1,10 +1,11 @@
 @import url('.././products.component.scss');
 
 .products {
+  overflow-y: scroll;
   display: flex;
   justify-content: center;
   gap: 10px 10px;
-  flex-wrap: wrap;
+  padding-bottom: 3px;
 }
 
 .product-owner-container {
