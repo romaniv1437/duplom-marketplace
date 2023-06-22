@@ -300,8 +300,21 @@ export class ApiService {
   }
 
   private orderAdapter(order: OrderResponse): Order {
+
     const products = order.info
       .map(info => this.orderProductAdapter(info))
+
+    const possibleCurrencies = [...new Map(products.map(product => product.currency).map(item =>
+      [item['id'], item])).values()];
+
+    let totalPrice = {
+    }
+    possibleCurrencies.map(currency => (totalPrice = {
+      ...totalPrice,
+      [currency.title]: parseFloat(products.filter(product => product.currency.id === currency.id)
+        .reduce((totalPrice, product) => totalPrice + (product.totalPrice), 0).toFixed(2))
+    }))
+
     return {
       firstName: order.first_name,
       lastName: order.last_name,
@@ -312,9 +325,7 @@ export class ApiService {
         .reduce((acc, curr) => acc + curr, 0), //order.count_products
       products: products,
       timeCreated: new Date(order.time_create),
-      totalPrice: products
-        .map(product => product.totalPrice)
-        .reduce((acc, curr) => acc + curr, 0)
+      totalPrice:  Object.keys(totalPrice).map(key => (`${totalPrice[key as keyof typeof totalPrice]} ${key}`)).join(', ')
     } as unknown as Order
   }
 
