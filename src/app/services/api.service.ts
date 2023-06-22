@@ -33,7 +33,7 @@ export class ApiService {
   private createUserBody(user: User): UserModel {
     return {
       ...user,
-      username: user.username.toLowerCase(),
+      username: user.username,
       first_name: user.firstName,
       last_name: user.lastName
     } as UserModel
@@ -71,7 +71,7 @@ export class ApiService {
   }
 
   login(email: string, password: string): Observable<User> {
-    return this.http.post<UserModel>(this.BASE_URL + 'login/', {username: email.toLowerCase(), password})
+    return this.http.post<UserModel>(this.BASE_URL + 'login/', {username: email, password})
       .pipe(
         tap(res => this.authService.setToken(res.tokens)),
         switchMap(() => this.getUser()),
@@ -83,7 +83,7 @@ export class ApiService {
     const userBody = {
       password: password,
       confirm_password: confirmPassword,
-      username: user.username.toLowerCase(),
+      username: user.username,
       first_name: user.firstName,
       last_name: user.lastName
     }

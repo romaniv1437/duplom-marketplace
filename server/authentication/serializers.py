@@ -70,6 +70,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         username = data['username']
+        print(username)
 
         registered = User.objects.filter(username=username)
         
